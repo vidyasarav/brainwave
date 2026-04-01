@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAINWAVE — Where Neuroscience Meets the Classroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<style>
+  /* ─── Design Tokens ─────────────────────────────────────────────────── */
+  :root {
+    --navy:       #070d28;
+    --navy-mid:   #0f1a45;
+    --navy-light: #1a2a6c;
+    --teal:       #00c9b8;
+    --teal-dim:   #009e90;
+    --teal-glow:  rgba(0,201,184,0.18);
+    --amber:      #f0a500;
+    --amber-soft: rgba(240,165,0,0.12);
+    --white:      #ffffff;
+    --off-white:  #f6f7fa;
+    --gray-1:     #f0f1f5;
+    --gray-2:     #d8dae6;
+    --gray-3:     #9097b8;
+    --gray-4:     #5a6080;
+    --text:       #0d1235;
+    --text-soft:  #4a5070;
+    --radius:     12px;
+    --radius-lg:  20px;
+    --shadow-sm:  0 2px 12px rgba(7,13,40,0.08);
+    --shadow-md:  0 8px 32px rgba(7,13,40,0.12);
+    --shadow-lg:  0 24px 64px rgba(7,13,40,0.18);
+    --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ─── Reset & Base ──────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ─── Annotation Label ──────────────────────────────────────────────── */
+  .section-label {
+    position: absolute;
+    top: 16px; left: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--gray-3);
+    opacity: 0.55;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* ─── Typography Scale ──────────────────────────────────────────────── */
+  .display { font-family: 'Fraunces', serif; }
+  h1,h2,h3,h4 { font-family: 'Fraunces', serif; line-height: 1.15; }
+  h1 { font-size: clamp(2.6rem, 6vw, 5rem); font-weight: 600; }
+  h2 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 600; }
+  h3 { font-size: clamp(1.25rem, 2vw, 1.55rem); font-weight: 600; }
+  p  { line-height: 1.72; color: var(--text-soft); }
+
+  /* ─── Buttons ───────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem; font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer; border: none;
+    transition: var(--transition);
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--teal); color: var(--navy);
+  }
+  .btn-primary:hover {
+    background: #00e5d2;
+    box-shadow: 0 0 28px rgba(0,201,184,0.45);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.5);
+  }
+  .btn-ghost:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent; color: var(--teal);
+    border: 1.5px solid var(--teal);
+  }
+  .btn-outline:hover {
+    background: var(--teal-glow);
+    transform: translateY(-1px);
+  }
+  .btn-navy {
+    background: var(--navy); color: var(--white);
+  }
+  .btn-navy:hover {
+    background: var(--navy-light);
+    transform: translateY(-1px);
+  }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ─── Layout Utilities ──────────────────────────────────────────────── */
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  section { position: relative; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § NAV
+  ══════════════════════════════════════════════════════════════════════ */
+  #nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 0 32px;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.4s, box-shadow 0.4s;
+  }
+  #nav.scrolled {
+    background: rgba(7,13,40,0.92);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem; font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .nav-logo-mark {
+    width: 34px; height: 34px;
+    position: relative;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.78);
+    font-size: 0.88rem; font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-right {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .nav-ucl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+  .nav-cta { padding: 10px 22px; font-size: 0.84rem; }
+  .nav-burger {
+    display: none;
+    flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px;
+  }
+  .nav-burger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--white); border-radius: 2px;
+    transition: var(--transition);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § HERO
+  ══════════════════════════════════════════════════════════════════════ */
+  #hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex; align-items: center;
+    overflow: hidden;
+    padding: 100px 0 80px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    overflow: hidden;
+  }
+  .hero-gradient {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 70% at 65% 40%, rgba(0,100,120,0.35) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 20% 80%, rgba(26,42,108,0.6) 0%, transparent 55%),
+                linear-gradient(160deg, #070d28 0%, #0a1540 50%, #061428 100%);
+  }
+  #neural-canvas {
+    position: absolute; inset: 0;
+    opacity: 0.55;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 720px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    background: rgba(0,201,184,0.12);
+    border: 1px solid rgba(0,201,184,0.3);
+    border-radius: 50px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.7); }
+  }
+  #hero h1 {
+    color: var(--white);
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  #hero h1 em {
+    font-style: italic;
+    color: var(--teal);
+  }
+  .hero-sub {
+    font-size: 1.15rem; font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    max-width: 580px;
+    margin-bottom: 44px;
+    line-height: 1.75;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-btns {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 2;
+    animation: fadeIn 1s 1.2s both;
+  }
+  .hero-scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3));
+    animation: scrollDrop 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollDrop {
+    0%,100% { transform: scaleY(1) translateY(0); opacity: 0.3; }
+    50%      { transform: scaleY(1.3) translateY(4px); opacity: 0.6; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § MANIFESTO
+  ══════════════════════════════════════════════════════════════════════ */
+  #manifesto {
+    background: var(--white);
+    padding: 96px 0;
+    border-bottom: 1px solid var(--gray-1);
+  }
+  .manifesto-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+    border: 1px solid var(--gray-2);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .manifesto-card {
+    padding: 52px 44px;
+    background: var(--white);
+    border-right: 1px solid var(--gray-2);
+    transition: background var(--transition);
+  }
+  .manifesto-card:last-child { border-right: none; }
+  .manifesto-card:hover { background: var(--off-white); }
+  .manifesto-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    background: var(--teal-glow);
+  }
+  .manifesto-card h3 {
+    font-size: 1.25rem; font-weight: 600;
+    margin-bottom: 14px; color: var(--text);
+  }
+  .manifesto-card p { font-size: 0.94rem; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § IMPACT
+  ══════════════════════════════════════════════════════════════════════ */
+  #impact {
+    background: var(--navy);
+    padding: 112px 0 96px;
+    overflow: hidden;
+  }
+  .impact-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  #impact h2 {
+    color: var(--white);
+    margin-bottom: 70px;
+    max-width: 560px;
+  }
+  #impact h2 span { color: var(--teal); font-style: italic; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 72px;
+  }
+  .stat-cell {
+    padding: 40px 28px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: background var(--transition);
+    cursor: default;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell:hover { background: rgba(255,255,255,0.04); }
+  .stat-number {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+    margin-bottom: 10px;
+    display: flex; align-items: baseline; gap: 2px;
+  }
+  .stat-suffix {
+    font-size: 0.55em;
+    color: var(--teal); opacity: 0.7;
+  }
+  .stat-label {
+    font-size: 0.82rem; font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.4;
+  }
+  .stat-bar {
+    height: 2px;
+    background: rgba(0,201,184,0.15);
+    border-radius: 2px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 2px;
+    width: 0;
+    transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* Testimonial Scroll */
+  .testimonial-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .testimonial-track-wrap {
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+  .testimonial-track-wrap::-webkit-scrollbar { display: none; }
+  .testimonial-track {
+    display: flex; gap: 20px;
+    width: max-content;
+  }
+  .testimonial-card {
+    width: 380px;
+    padding: 36px 36px 30px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+    transition: border-color var(--transition), background var(--transition);
+    position: relative;
+  }
+  .testimonial-card:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(0,201,184,0.25);
+  }
+  .testimonial-quote-mark {
+    font-family: 'Fraunces', serif;
+    font-size: 4rem; line-height: 0.5;
+    color: var(--teal); opacity: 0.25;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .testimonial-text {
+    font-size: 1.02rem; line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+  .testimonial-meta { display: flex; align-items: center; gap: 14px; }
+  .testimonial-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-dim), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--teal);
+    border: 1.5px solid rgba(0,201,184,0.3);
+    flex-shrink: 0;
+  }
+  .testimonial-name {
+    font-size: 0.88rem; font-weight: 600;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+  .testimonial-school {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.4);
+  }
+  .testimonial-cohort {
+    position: absolute; top: 22px; right: 22px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--teal); opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § JOURNEY
+  ══════════════════════════════════════════════════════════════════════ */
+  #journey {
+    background: var(--off-white);
+    padding: 112px 0;
+  }
+  #journey .section-header {
+    text-align: center; margin-bottom: 72px;
+  }
+  .journey-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .journey-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    position: relative;
+    gap: 0;
+  }
+  .journey-steps::before {
+    content: '';
+    position: absolute;
+    top: 36px; left: calc(12.5% + 20px); right: calc(12.5% + 20px);
+    height: 1px;
+    background: linear-gradient(to right, var(--teal), var(--teal-dim), var(--gray-2));
+    z-index: 0;
+  }
+  .journey-step {
+    padding: 0 28px;
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .step-number-wrap {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .step-number-wrap.active-step {
+    background: var(--teal);
+    box-shadow: 0 0 0 8px rgba(0,201,184,0.12), 0 0 24px rgba(0,201,184,0.3);
+  }
+  .step-number-wrap.future-step {
+    background: var(--white);
+    border: 2px solid var(--gray-2);
+  }
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem; font-weight: 700;
+  }
+  .step-number-wrap.active-step .step-num { color: var(--navy); }
+  .step-number-wrap.future-step .step-num { color: var(--gray-3); }
+  .step-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal-dim);
+    margin-bottom: 10px;
+  }
+  .journey-step h3 { font-size: 1.1rem; margin-bottom: 10px; }
+  .journey-step p { font-size: 0.88rem; line-height: 1.65; }
+  .journey-cta { text-align: center; margin-top: 56px; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § PROGRAMS
+  ══════════════════════════════════════════════════════════════════════ */
+  #programs {
+    background: var(--white);
+    padding: 112px 0;
+    border-top: 1px solid var(--gray-1);
+  }
+  .programs-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 52px;
+  }
+  .programs-header h2 { max-width: 400px; }
+  .programs-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .program-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-2);
+    border-radius: var(--radius-lg);
+    padding: 44px 36px 38px;
+    position: relative; overflow: hidden;
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    cursor: default;
+  }
+  .program-card:hover {
+    border-color: var(--teal);
+    box-shadow: var(--shadow-md), 0 0 0 4px rgba(0,201,184,0.06);
+    transform: translateY(-4px);
+  }
+  .program-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--teal), transparent);
+    opacity: 0; transition: opacity var(--transition);
+  }
+  .program-card:hover::before { opacity: 1; }
+  .program-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+  }
+  .program-icon.blue  { background: rgba(0,100,200,0.08); }
+  .program-icon.teal  { background: var(--teal-glow); }
+  .program-icon.amber { background: var(--amber-soft); }
+  .program-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+  .badge-free { background: rgba(0,201,184,0.1); color: var(--teal-dim); }
+  .badge-ngss { background: rgba(240,165,0,0.1); color: #c07a00; }
+  .badge-alumni { background: rgba(26,42,108,0.08); color: var(--navy-light); }
+  .program-card h3 { font-size: 1.2rem; margin-bottom: 14px; }
+  .program-card p  { font-size: 0.91rem; margin-bottom: 28px; }
+  .program-link {
+    font-size: 0.88rem; font-weight: 600;
+    color: var(--teal-dim);
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: gap var(--transition), color var(--transition);
+  }
+  .program-card:hover .program-link { gap: 10px; color: var(--teal); }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § STORY
+  ══════════════════════════════════════════════════════════════════════ */
+  #story {
+    background: var(--navy);
+    padding: 0;
+    overflow: hidden;
+  }
+  .story-inner {
+    display: grid; grid-template-columns: 1fr 1fr; min-height: 560px;
+  }
+  .story-image {
+    position: relative;
+    background: linear-gradient(135deg, #0a1e4a, #1a2a6c);
+    overflow: hidden;
+    min-height: 400px;
+  }
+  .story-image-placeholder {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+  }
+  .story-image-placeholder svg { opacity: 0.2; }
+  .story-image-placeholder-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+  }
+  .story-image-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 60%, var(--navy));
+  }
+  .story-content {
+    padding: 80px 72px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+  }
+  .story-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.18em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .story-pullquote {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 300; font-style: italic;
+    color: var(--white);
+    line-height: 1.55;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .story-pullquote::before {
+    content: '"';
+    font-size: 4em; line-height: 0.3;
+    color: var(--teal); opacity: 0.3;
+    position: absolute; left: -28px; top: 12px;
+    font-style: normal;
+  }
+  .story-attribution {
+    font-size: 0.88rem; font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+  .story-attribution strong { color: rgba(255,255,255,0.85); }
+  .story-role {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 36px;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § PARTNERS
+  ══════════════════════════════════════════════════════════════════════ */
+  #partners {
+    background: var(--white);
+    padding: 80px 0;
+    border-top: 1px solid var(--gray-1);
+  }
+  .partners-label {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-3);
+    margin-bottom: 40px;
+  }
+  .partners-row {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 48px;
+    margin-bottom: 32px;
+  }
+  .partner-logo {
+    height: 44px; display: flex; align-items: center; justify-content: center;
+    opacity: 0.45; filter: grayscale(1);
+    transition: opacity var(--transition), filter var(--transition);
+  }
+  .partner-logo:hover { opacity: 1; filter: none; }
+  .partner-logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem; font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .partners-note {
+    text-align: center;
+    font-size: 0.86rem;
+    color: var(--gray-3);
+    max-width: 520px; margin: 0 auto;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § CTA STRIP
+  ══════════════════════════════════════════════════════════════════════ */
+  #cta {
+    background: linear-gradient(135deg, #0a1540 0%, var(--navy) 40%, #04233a 100%);
+    padding: 100px 0;
+    position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,201,184,0.15), transparent 65%);
+    pointer-events: none;
+  }
+  #cta::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 10%;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,165,0,0.08), transparent 65%);
+    pointer-events: none;
+  }
+  .cta-inner {
+    position: relative; z-index: 2;
+    text-align: center;
+    max-width: 640px; margin: 0 auto;
+  }
+  #cta h2 { color: var(--white); margin-bottom: 18px; }
+  .cta-sub {
+    font-size: 1.05rem; font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 44px; line-height: 1.7;
+  }
+  .cta-sub strong { color: var(--amber); font-weight: 500; }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-white {
+    background: var(--white); color: var(--navy);
+    font-weight: 700;
+  }
+  .btn-white:hover {
+    background: var(--off-white);
+    box-shadow: 0 0 28px rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+  .cta-note {
+    margin-top: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § FOOTER
+  ══════════════════════════════════════════════════════════════════════ */
+  #footer {
+    background: #050a1f;
+    padding: 72px 0 40px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 36px;
+  }
+  .footer-brand .nav-logo { margin-bottom: 16px; font-size: 1.2rem; }
+  .footer-tagline {
+    font-size: 0.86rem;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.65;
+    margin-bottom: 24px;
+    max-width: 220px;
+  }
+  .footer-social {
+    display: flex; gap: 12px;
+  }
+  .social-btn {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color var(--transition), background var(--transition);
+    color: rgba(255,255,255,0.4);
+  }
+  .social-btn:hover {
+    border-color: rgba(0,201,184,0.4);
+    background: var(--teal-glow);
+    color: var(--teal);
+  }
+  .footer-col h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col li a {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+    transition: color 0.2s;
+  }
+  .footer-col li a:hover { color: var(--white); }
+  .footer-newsletter h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 12px;
+  }
+  .footer-newsletter p {
+    font-size: 0.84rem;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 16px; line-height: 1.6;
+  }
+  .newsletter-form {
+    display: flex; gap: 8px;
+  }
+  .newsletter-input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.84rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .newsletter-input::placeholder { color: rgba(255,255,255,0.25); }
+  .newsletter-input:focus { border-color: rgba(0,201,184,0.4); }
+  .newsletter-btn {
+    padding: 10px 18px;
+    background: var(--teal); color: var(--navy);
+    border: none; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .newsletter-btn:hover { background: #00e5d2; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-copy {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.2);
+  }
+  .footer-ucl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     Scroll Reveal
+  ══════════════════════════════════════════════════════════════════════ */
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+                transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     Responsive
+  ══════════════════════════════════════════════════════════════════════ */
+  @media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(3,1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr 1fr; }
+    .footer-brand { grid-column: 1/-1; }
+  }
+  @media (max-width: 768px) {
+    .nav-links, .nav-ucl { display: none; }
+    .nav-burger { display: flex; }
+    .manifesto-grid { grid-template-columns: 1fr; }
+    .manifesto-card { border-right: none; border-bottom: 1px solid var(--gray-2); }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .journey-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .journey-steps::before { display: none; }
+    .programs-grid { grid-template-columns: 1fr; }
+    .story-inner { grid-template-columns: 1fr; }
+    .story-image { min-height: 280px; }
+    .story-content { padding: 56px 32px; }
+    .story-pullquote::before { display: none; }
+    .programs-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1/-1; }
+  }
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .journey-steps { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; }
+    .cta-buttons { flex-direction: column; align-items: center; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § ACRONYM TOOLTIP
+  ══════════════════════════════════════════════════════════════════════ */
+  .acronym-wrap { position: relative; display: inline-block; cursor: pointer; }
+  .acronym-popup {
+    position: absolute; top: calc(100% + 14px); left: 0;
+    background: rgba(7,13,40,0.97); border: 1px solid rgba(0,201,184,0.25);
+    border-radius: 12px; padding: 18px 22px;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 50;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .acronym-wrap:hover .acronym-popup { opacity: 1; transform: translateY(0); }
+  .acronym-row { display: flex; align-items: baseline; gap: 10px; line-height: 1.9; }
+  .acronym-letter {
+    font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 700;
+    color: var(--teal); min-width: 18px;
+  }
+  .acronym-word { font-size: 0.82rem; color: rgba(255,255,255,0.7); }
+  .hero-badge-hint {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    color: rgba(0,201,184,0.5); margin-left: 6px; letter-spacing: 0.05em;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § LAUSD BADGE
+  ══════════════════════════════════════════════════════════════════════ */
+  .lausd-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 20px;
+    background: var(--amber-soft); border: 1px solid rgba(240,165,0,0.25);
+    border-radius: 10px; margin-top: 28px;
+  }
+  .lausd-badge-icon { width: 28px; height: 28px; flex-shrink: 0; }
+  .lausd-badge-text { font-size: 0.82rem; line-height: 1.5; }
+  .lausd-badge-text strong { color: var(--text); font-weight: 600; display: block; }
+  .lausd-badge-text span { color: var(--text-soft); font-size: 0.78rem; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § TEACHER NETWORK
+  ══════════════════════════════════════════════════════════════════════ */
+  #network { background: var(--off-white); padding: 112px 0; overflow: hidden; }
+  .network-header { text-align: center; margin-bottom: 56px; }
+  .network-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .network-layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; align-items: start; }
+  .network-map-wrap {
+    background: var(--navy); border-radius: var(--radius-lg);
+    overflow: hidden; position: relative;
+    box-shadow: var(--shadow-lg);
+  }
+  .network-map-header {
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .network-map-title {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.4); text-transform: uppercase;
+  }
+  .network-map-live {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .network-map-live-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+    animation: pulse-dot 2s infinite;
+  }
+  #network-map { width: 100%; height: 400px; display: block; }
+  .network-map-legend {
+    padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; flex-wrap: wrap; gap: 16px;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; color: rgba(255,255,255,0.45);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Network stats sidebar */
+  .network-sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .network-stat-card {
+    background: var(--white); border: 1px solid var(--gray-2);
+    border-radius: var(--radius); padding: 20px 24px;
+    transition: border-color var(--transition), transform var(--transition);
+  }
+  .network-stat-card:hover { border-color: var(--teal); transform: translateX(4px); }
+  .nsc-label {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray-3); margin-bottom: 8px;
+  }
+  .nsc-value {
+    font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700;
+    color: var(--text); line-height: 1;
+  }
+  .nsc-sub { font-size: 0.8rem; color: var(--text-soft); margin-top: 4px; }
+
+  /* Filter buttons */
+  .network-filters {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+  }
+  .filter-btn {
+    padding: 6px 14px; border-radius: 50px; border: 1px solid var(--gray-2);
+    background: var(--white); font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif; color: var(--text-soft);
+  }
+  .filter-btn.active, .filter-btn:hover {
+    border-color: var(--teal); background: var(--teal-glow); color: var(--teal-dim);
+  }
+
+  /* Teacher cards */
+  .teacher-cards-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;
+  }
+  .teacher-card {
+    background: var(--white); border: 1px solid var(--gray-2);
+    border-radius: var(--radius); padding: 14px 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .teacher-card:hover { border-color: var(--teal); box-shadow: var(--shadow-sm); }
+  .tc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .tc-avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 600;
+  }
+  .tc-name { font-size: 0.86rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .tc-school { font-size: 0.75rem; color: var(--text-soft); }
+  .tc-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tc-tag {
+    font-size: 0.65rem; padding: 2px 8px; border-radius: 50px;
+    font-family: 'DM Mono', monospace; letter-spacing: 0.05em;
+  }
+  .tc-tag.grade { background: rgba(0,201,184,0.1); color: var(--teal-dim); }
+  .tc-tag.district { background: rgba(26,42,108,0.08); color: var(--navy-light); }
+  .tc-tag.subject { background: var(--amber-soft); color: #a06a00; }
+  .network-data-note {
+    margin-top: 20px; padding: 12px 16px;
+    background: rgba(0,201,184,0.06); border: 1px solid rgba(0,201,184,0.18);
+    border-radius: 8px;
+    font-size: 0.78rem; color: var(--text-soft); line-height: 1.6;
+  }
+  .network-data-note strong { color: var(--teal-dim); }
+  .network-see-all {
+    text-align: center; margin-top: 20px;
+  }
+  @media (max-width: 1024px) {
+    .network-layout { grid-template-columns: 1fr; }
+    #network-map { height: 320px; }
+  }
+  @media (max-width: 600px) { .teacher-cards-grid { grid-template-columns: 1fr; } }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § WORKSHOP ARCHIVE
+  ══════════════════════════════════════════════════════════════════════ */
+  #workshops { background: var(--navy); padding: 112px 0; overflow: hidden; }
+  .workshops-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal); text-transform: uppercase; margin-bottom: 16px;
+  }
+  #workshops h2 { color: var(--white); margin-bottom: 56px; }
+  #workshops h2 em { color: var(--teal); font-style: italic; }
+
+  /* Featured workshop */
+  .workshop-featured {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 32px;
+  }
+  .workshop-featured-inner { display: grid; grid-template-columns: 1fr 1fr; min-height: 440px; }
+  .workshop-photo-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
+    background: var(--navy-mid);
+  }
+  .workshop-photo-slot {
+    position: relative; overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    min-height: 140px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .workshop-photo-slot:hover { background: rgba(0,201,184,0.08); }
+  .workshop-photo-slot img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0.85;
+  }
+  .workshop-photo-slot.empty svg { opacity: 0.2; }
+  .workshop-photo-slot.empty span {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.1em;
+    text-align: center; padding: 0 12px; position: relative; z-index: 1;
+  }
+  .workshop-info { padding: 44px 48px; display: flex; flex-direction: column; justify-content: center; }
+  .workshop-date-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 20px;
+  }
+  .wdt-latest {
+    background: var(--teal); color: var(--navy); padding: 3px 10px;
+    border-radius: 50px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
+  }
+  .workshop-info h3 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem); font-weight: 600;
+    color: var(--white); margin-bottom: 16px; line-height: 1.3;
+  }
+  .workshop-info p { font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+  .workshop-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn-video {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 50px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white); font-size: 0.84rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-video:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); }
+  .btn-video svg { width: 14px; height: 14px; }
+  .video-coming-soon {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    color: rgba(255,255,255,0.25); letter-spacing: 0.08em;
+    padding: 10px 16px; border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 50px;
+  }
+  .workshop-stats-row {
+    display: flex; gap: 24px; margin-top: 28px;
+    padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .ws-stat { }
+  .ws-stat-num {
+    font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--teal);
+  }
+  .ws-stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+
+  /* Past workshops grid */
+  .past-workshops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .past-workshop-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg); overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .past-workshop-card:hover { border-color: rgba(0,201,184,0.3); transform: translateY(-3px); }
+  .pwc-photos {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    height: 180px;
+  }
+  .pwc-photo {
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .pwc-photo img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+  .pwc-photo.empty { opacity: 0.4; }
+  .pwc-photo.empty::after {
+    content: '+'; font-size: 1.5rem; color: rgba(255,255,255,0.2);
+  }
+  .pwc-body { padding: 28px; }
+  .pwc-date {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em;
+    color: var(--amber); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .pwc-body h3 { font-size: 1.05rem; color: var(--white); margin-bottom: 10px; line-height: 1.4; }
+  .pwc-body p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+  .pwc-footer { display: flex; justify-content: space-between; align-items: center; }
+  .pwc-attendees {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    color: rgba(255,255,255,0.25); letter-spacing: 0.08em;
+  }
+
+  /* Upcoming workshops strip */
+  .upcoming-strip {
+    margin-top: 56px; padding-top: 48px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .upcoming-label {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 24px;
+  }
+  .upcoming-topics { display: flex; flex-wrap: wrap; gap: 10px; }
+  .upcoming-topic {
+    padding: 10px 18px; border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.85rem; color: rgba(255,255,255,0.6);
+    transition: all 0.2s;
+  }
+  .upcoming-topic:hover {
+    border-color: rgba(0,201,184,0.4); color: var(--teal);
+    background: rgba(0,201,184,0.06);
+  }
+
+  /* Video modal */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.88); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    width: min(820px, 94vw); background: var(--navy-mid);
+    border-radius: var(--radius-lg); overflow: hidden;
+    transform: scale(0.95); transition: transform 0.3s;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  }
+  .modal-overlay.open .modal-box { transform: scale(1); }
+  .modal-header {
+    padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .modal-title { font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.08);
+    border: none; color: white; cursor: pointer; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.16); }
+  .modal-video { position: relative; padding-bottom: 56.25%; height: 0; }
+  .modal-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+  @media (max-width: 768px) {
+    .workshop-featured-inner { grid-template-columns: 1fr; }
+    .workshop-photo-grid { height: 220px; }
+    .past-workshops-grid { grid-template-columns: 1fr; }
+    .workshop-info { padding: 28px 24px; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § TEAM
+  ══════════════════════════════════════════════════════════════════════ */
+  #team { background: var(--white); padding: 112px 0; border-top: 1px solid var(--gray-1); }
+  .team-header { margin-bottom: 56px; }
+  .team-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .team-card {
+    border: 1.5px solid var(--gray-2); border-radius: var(--radius-lg);
+    overflow: hidden; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .team-card:hover {
+    border-color: var(--teal); transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+  .team-photo {
+    height: 200px; overflow: hidden; position: relative;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  }
+  .team-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .team-photo-placeholder {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 600; color: var(--teal);
+    opacity: 0.6;
+  }
+  .team-body { padding: 22px 20px; }
+  .team-name { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .team-role {
+    font-size: 0.78rem; color: var(--teal-dim); font-weight: 500; margin-bottom: 10px;
+  }
+  .team-research {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em;
+    color: var(--gray-3); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .team-bio {
+    font-size: 0.82rem; color: var(--text-soft); line-height: 1.65;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .team-card:hover .team-bio { -webkit-line-clamp: unset; }
+  .team-ops-card { border-color: var(--amber-soft); background: rgba(240,165,0,0.02); }
+  .team-ops-card:hover { border-color: var(--amber); }
+  @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .team-grid { grid-template-columns: 1fr; } }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § TEAM MODAL (full bio popup)
+  ══════════════════════════════════════════════════════════════════════ */
+  .team-card { cursor: pointer; }
+  .team-read-more {
+    margin-top: 10px; font-size: 0.8rem; font-weight: 600;
+    color: var(--teal-dim); display: inline-flex; align-items: center; gap: 4px;
+    transition: gap 0.2s, color 0.2s;
+  }
+  .team-card:hover .team-read-more { gap: 8px; color: var(--teal); }
+
+  .team-modal-overlay {
+    position: fixed; inset: 0; z-index: 3000;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .team-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .team-modal-box {
+    width: min(760px, 100%); max-height: 90vh; overflow-y: auto;
+    background: var(--white); border-radius: var(--radius-lg);
+    transform: scale(0.96) translateY(12px); transition: transform 0.3s;
+    box-shadow: var(--shadow-lg);
+  }
+  .team-modal-overlay.open .team-modal-box { transform: scale(1) translateY(0); }
+  .team-modal-inner { display: grid; grid-template-columns: 220px 1fr; }
+  .team-modal-photo {
+    height: 100%; min-height: 280px; position: relative; overflow: hidden;
+    background: linear-gradient(160deg, var(--navy-mid), var(--navy-light));
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+  .team-modal-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .team-modal-photo-init {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 600;
+    color: var(--teal); opacity: 0.5;
+  }
+  .team-modal-body { padding: 36px 36px 32px; }
+  .team-modal-role {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal-dim); margin-bottom: 8px;
+  }
+  .team-modal-name {
+    font-family: 'Fraunces', serif; font-size: 1.55rem; font-weight: 600;
+    color: var(--text); margin-bottom: 4px; line-height: 1.2;
+  }
+  .team-modal-research {
+    font-size: 0.82rem; color: var(--text-soft); margin-bottom: 20px;
+    padding-bottom: 20px; border-bottom: 1px solid var(--gray-1);
+  }
+  .team-modal-bio {
+    font-size: 0.92rem; color: var(--text-soft); line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .team-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,0.08); border: none; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; color: var(--text);
+  }
+  .team-modal-close:hover { background: rgba(0,0,0,0.15); }
+  @media (max-width: 580px) {
+    .team-modal-inner { grid-template-columns: 1fr; }
+    .team-modal-photo { min-height: 180px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § IMPACT QUOTES
+  ══════════════════════════════════════════════════════════════════════ */
+  #impact-quotes {
+    background: var(--off-white); padding: 100px 0;
+    border-top: 1px solid var(--gray-1);
+  }
+  .iq-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
+  }
+  #impact-quotes h2 { margin-bottom: 56px; }
+  #impact-quotes h2 em { font-style: italic; color: var(--teal-dim); }
+  .quotes-masonry {
+    columns: 3; column-gap: 24px;
+  }
+  .quote-block {
+    break-inside: avoid; margin-bottom: 24px;
+    background: var(--white); border: 1px solid var(--gray-2);
+    border-radius: var(--radius-lg); padding: 28px 28px 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .quote-block:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .quote-block.featured {
+    background: var(--navy); border-color: transparent;
+    grid-column: span 1;
+  }
+  .quote-block.featured .qb-text { color: rgba(255,255,255,0.88); }
+  .quote-block.featured .qb-source { color: rgba(255,255,255,0.45); }
+  .qb-mark {
+    font-family: 'Fraunces', serif; font-size: 3.5rem; line-height: 0.4;
+    color: var(--teal); opacity: 0.4; margin-bottom: 16px; display: block;
+  }
+  .quote-block.featured .qb-mark { opacity: 0.6; }
+  .qb-text {
+    font-family: 'Fraunces', serif; font-size: 1.0rem; font-weight: 300;
+    font-style: italic; line-height: 1.7; color: var(--text); margin-bottom: 18px;
+  }
+  .qb-source {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray-3);
+  }
+  @media (max-width: 768px) { .quotes-masonry { columns: 2; } }
+  @media (max-width: 480px) { .quotes-masonry { columns: 1; } }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § LEAFLET MAP overrides
+  ══════════════════════════════════════════════════════════════════════ */
+  #school-map { width: 100%; height: 460px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+  .leaflet-container { font-family: 'DM Sans', sans-serif; }
+  .school-popup h4 { font-family:'Fraunces',serif; font-size:1rem; margin-bottom:4px; color: var(--navy); }
+  .school-popup p { font-size:0.78rem; color: var(--text-soft); margin: 0; }
+  .school-popup .sp-tag {
+    display: inline-block; margin-top: 6px;
+    font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 50px;
+    background: rgba(0,201,184,0.1); color: var(--teal-dim);
+  }
+  .map-stats-bar {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    background: var(--navy); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    overflow: hidden;
+  }
+  .msb-cell {
+    padding: 20px 24px; border-right: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .msb-cell:last-child { border-right: none; }
+  .msb-num {
+    font-family: 'Fraunces', serif; font-size: 1.9rem; font-weight: 700;
+    color: var(--teal); line-height: 1;
+  }
+  .msb-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 5px; }
+  @media (max-width: 600px) {
+    .map-stats-bar { grid-template-columns: repeat(2,1fr); }
+    #school-map { height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════ § NAV ══════════════════════════════════ -->
+<nav id="nav">
+  <span class="section-label">§ NAV</span>
+  <a href="#" class="nav-logo" aria-label="BRAINWAVE Home">
+    <svg class="nav-logo-mark" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+      <circle cx="17" cy="17" r="16.5" stroke="rgba(0,201,184,0.35)" stroke-width="1"/>
+      <!-- Neural nodes -->
+      <circle cx="17" cy="8"  r="2.5" fill="#00c9b8" opacity="0.9"/>
+      <circle cx="27" cy="14" r="2"   fill="#00c9b8" opacity="0.7"/>
+      <circle cx="25" cy="25" r="2.5" fill="#00c9b8" opacity="0.5"/>
+      <circle cx="10" cy="26" r="2"   fill="#00c9b8" opacity="0.6"/>
+      <circle cx="8"  cy="14" r="2.5" fill="#00c9b8" opacity="0.8"/>
+      <circle cx="17" cy="19" r="3"   fill="#00c9b8" opacity="1"/>
+      <!-- Connections -->
+      <line x1="17" y1="10.5" x2="17"  y2="16" stroke="#00c9b8" stroke-width="0.8" opacity="0.5"/>
+      <line x1="25" y1="16"   x2="20"  y2="18" stroke="#00c9b8" stroke-width="0.8" opacity="0.4"/>
+      <line x1="23" y1="24"   x2="19"  y2="21" stroke="#00c9b8" stroke-width="0.8" opacity="0.4"/>
+      <line x1="12" y1="24"   x2="15"  y2="21" stroke="#00c9b8" stroke-width="0.8" opacity="0.4"/>
+      <line x1="10" y1="16"   x2="14"  y2="18" stroke="#00c9b8" stroke-width="0.8" opacity="0.4"/>
+      <line x1="19" y1="8"    x2="26"  y2="13" stroke="#00c9b8" stroke-width="0.8" opacity="0.3"/>
+      <line x1="15" y1="8"    x2="9"   y2="13" stroke="#00c9b8" stroke-width="0.8" opacity="0.3"/>
+    </svg>
+    BRAINWAVE
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#manifesto">About</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#programs">Resources</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#cta">Get Involved</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <span class="nav-ucl">UCLA Initiative</span>
+    <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary nav-cta">Apply Now</a>
+  </div>
+  <button class="nav-burger" aria-label="Menu" onclick="toggleMenu(this)">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+
+<!-- ══════════════════════════════════ § HERO ══════════════════════════════════ -->
+<section id="hero">
+  <span class="section-label" style="color:rgba(255,255,255,0.2)">§ HERO</span>
+  <div class="hero-bg">
+    <div class="hero-gradient"></div>
+    <canvas id="neural-canvas"></canvas>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        UCLA Brain Research Institute · Est. 2016
+        <span class="hero-badge-hint">↓ hover logo to expand</span>
+      </div>
+      <h1>
+        <span class="acronym-wrap">BRAINWAVE
+          <div class="acronym-popup" role="tooltip" aria-label="BRAINWAVE acronym">
+            <div class="acronym-row"><span class="acronym-letter">B</span><span class="acronym-word">Bringing</span></div>
+            <div class="acronym-row"><span class="acronym-letter">R</span><span class="acronym-word">Research And</span></div>
+            <div class="acronym-row"><span class="acronym-letter">I</span><span class="acronym-word">Innovation in</span></div>
+            <div class="acronym-row"><span class="acronym-letter">N</span><span class="acronym-word">Neuroscience to</span></div>
+            <div class="acronym-row"><span class="acronym-letter">W</span><span class="acronym-word">Workshops for</span></div>
+            <div class="acronym-row"><span class="acronym-letter">A</span><span class="acronym-word">Advancing</span></div>
+            <div class="acronym-row"><span class="acronym-letter">V</span><span class="acronym-word">Visionary</span></div>
+            <div class="acronym-row"><span class="acronym-letter">E</span><span class="acronym-word">Educators</span></div>
+          </div>
+        </span><br>
+        <em>Teaching</em> the Brain.
+      </h1>
+      <p class="hero-sub">
+        BRAINWAVE is a pioneering neuroscience education initiative that bridges cutting-edge brain research with dynamic classroom teaching. Led by UCLA postdoctoral fellows, we empower K–12 teachers across Los Angeles to revolutionize how every student — in every community — understands their own brain.
+      </p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn btn-primary">
+          Apply for a Workshop
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <a href="#impact" class="btn btn-ghost">Explore Our Impact</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § MANIFESTO ══════════════════════════════════ -->
+<section id="manifesto">
+  <span class="section-label">§ MANIFESTO</span>
+  <div class="container">
+    <div class="manifesto-grid reveal">
+      <div class="manifesto-card">
+        <div class="manifesto-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00c9b8" stroke-width="1.8">
+            <path d="M9.5 2a2.5 2.5 0 0 1 5 0v.5A6.5 6.5 0 0 1 12 16a6.5 6.5 0 0 1-2.5-13.5V2z"/>
+            <path d="M12 16v4M8 20h8M6.5 9a5.5 5.5 0 0 0 11 0"/>
+          </svg>
+        </div>
+        <h3>The Science of Learning</h3>
+        <p>We believe every teacher has the potential to be a catalyst for change. Through immersive workshops, hands-on activities, and exclusive tours of UCLA neuroscience labs, we equip teachers with the latest brain research — translated into tools they can use starting Monday morning.</p>
+        <div class="lausd-badge">
+          <svg class="lausd-badge-icon" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="13" stroke="#f0a500" stroke-width="1.5"/>
+            <path d="M8 14l4 4 8-8" stroke="#f0a500" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="lausd-badge-text">
+            <strong>LAUSD-Approved Professional Development</strong>
+            <span>JSPCC-approved workshops · Salary point credit for teachers</span>
+          </div>
+        </div>
+      </div>
+      <div class="manifesto-card">
+        <div class="manifesto-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00c9b8" stroke-width="1.8">
+            <circle cx="12" cy="7" r="4"/>
+            <path d="M5.5 20a6.5 6.5 0 0 1 13 0"/>
+            <path d="M18 12l3 3-3 3"/>
+          </svg>
+        </div>
+        <h3>Teachers as Change Agents</h3>
+        <p>Educators are the most powerful force in a child's scientific journey. We equip them with cutting-edge neuroscience knowledge, evidence-based pedagogy, and a community of forward-thinking peers — because when a teacher grows, every student in their classroom grows with them.</p>
+      </div>
+      <div class="manifesto-card">
+        <div class="manifesto-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00c9b8" stroke-width="1.8">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3a6 9 0 0 1 0 18M12 3a6 9 0 0 0 0 18M3 12h18"/>
+          </svg>
+        </div>
+        <h3>Equity at the Core</h3>
+        <p>We prioritize under-resourced schools across Los Angeles where neuroscience education is rare but needed most. By emphasizing early exposure to brain science, we inspire students from all backgrounds to explore STEM fields and see themselves as future scientists.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § IMPACT ══════════════════════════════════ -->
+<section id="impact">
+  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ IMPACT</span>
+  <div class="container">
+    <div class="impact-eyebrow reveal">A Living Measure of Change</div>
+    <h2 class="reveal reveal-delay-1">A Movement in Numbers —<br><span>and in Lives</span></h2>
+
+    <div class="stats-grid reveal reveal-delay-2">
+      <div class="stat-cell">
+        <div class="stat-number">
+          <span class="count-up" data-target="182">0</span><span class="stat-suffix">+</span>
+        </div>
+        <div class="stat-label">Teachers<br>Engaged</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-width="88"></div></div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">
+          <span class="count-up" data-target="60">0</span><span class="stat-suffix">+</span>
+        </div>
+        <div class="stat-label">Schools<br>Represented</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-width="75"></div></div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">
+          <span class="count-up" data-target="100">0</span><span class="stat-suffix">%</span>
+        </div>
+        <div class="stat-label">Would Attend<br>Again</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-width="100"></div></div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">
+          <span class="count-up" data-target="95">0</span><span class="stat-suffix">%</span>
+        </div>
+        <div class="stat-label">Rated Workshop<br>5/5 Stars</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-width="95"></div></div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">
+          <span class="count-up" data-target="107">0</span>
+        </div>
+        <div class="stat-label">Teachers<br>Waitlisted</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-width="80"></div></div>
+      </div>
+    </div>
+
+    <div class="testimonial-label reveal">Voices from the Field</div>
+    <div class="testimonial-track-wrap reveal reveal-delay-1" id="testimonial-track-wrap">
+      <div class="testimonial-track">
+
+        <div class="testimonial-card">
+          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
+          <span class="testimonial-quote-mark">"</span>
+          <p class="testimonial-text">This was my first neuroscience education workshop, and I learned so much. Can't wait to bring these activities to my classroom. Very grateful for the invitation!</p>
+          <div class="testimonial-meta">
+            <div class="testimonial-avatar">BW</div>
+            <div>
+              <div class="testimonial-name">Workshop Participant</div>
+              <div class="testimonial-school">LAUSD · Los Angeles</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
+          <span class="testimonial-quote-mark">"</span>
+          <p class="testimonial-text">The best part was the environment — everyone was so nice and genuinely excited to share their research and explain it in a way that was easily digestible. I loved the variety of research that was shared!</p>
+          <div class="testimonial-meta">
+            <div class="testimonial-avatar">BW</div>
+            <div>
+              <div class="testimonial-name">Workshop Participant</div>
+              <div class="testimonial-school">LAUSD · Los Angeles</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
+          <span class="testimonial-quote-mark">"</span>
+          <p class="testimonial-text">Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far!</p>
+          <div class="testimonial-meta">
+            <div class="testimonial-avatar">BW</div>
+            <div>
+              <div class="testimonial-name">Workshop Participant</div>
+              <div class="testimonial-school">LAUSD · Los Angeles</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
+          <span class="testimonial-quote-mark">"</span>
+          <p class="testimonial-text">This experience was amazing. I had a blast learning from scientists and collaborating with educators I wouldn't have otherwise had the chance to work with. I'd love to participate again.</p>
+          <div class="testimonial-meta">
+            <div class="testimonial-avatar">BW</div>
+            <div>
+              <div class="testimonial-name">Workshop Participant</div>
+              <div class="testimonial-school">LAUSD · Los Angeles</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
+          <span class="testimonial-quote-mark">"</span>
+          <p class="testimonial-text">I anticipate this workshop will impact my students' learning by helping me become a more aware teacher. A big takeaway was the idea of the "weekend brain" — I'll be rethinking my exam schedule to better support students.</p>
+          <div class="testimonial-meta">
+            <div class="testimonial-avatar">BW</div>
+            <div>
+              <div class="testimonial-name">Workshop Participant</div>
+              <div class="testimonial-school">LAUSD · Los Angeles</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § JOURNEY ══════════════════════════════════ -->
+<section id="journey">
+  <span class="section-label">§ JOURNEY</span>
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="journey-eyebrow">For Educators</div>
+      <h2>Your Journey with BRAINWAVE</h2>
+    </div>
+    <div class="journey-steps">
+      <div class="journey-step reveal reveal-delay-1">
+        <div class="step-number-wrap active-step">
+          <span class="step-num">1</span>
+        </div>
+        <div class="step-tag">Discover</div>
+        <h3>Explore</h3>
+        <p>Browse our evidence-based neuroscience curriculum and see what a BRAINWAVE classroom looks like — lesson previews, teacher stories, and research behind the program.</p>
+      </div>
+      <div class="journey-step reveal reveal-delay-2">
+        <div class="step-number-wrap active-step">
+          <span class="step-num">2</span>
+        </div>
+        <div class="step-tag">Apply</div>
+        <h3>Register</h3>
+        <p>Submit a free application for our intensive 5-day Summer Workshop on the UCLA campus. No neuroscience background required — just a passion for your students.</p>
+      </div>
+      <div class="journey-step reveal reveal-delay-3">
+        <div class="step-number-wrap active-step">
+          <span class="step-num">3</span>
+        </div>
+        <div class="step-tag">Transform</div>
+        <h3>Teach</h3>
+        <p>Return to your classroom equipped with activities, materials, and the science to back every lesson. Watch your students engage with learning in a completely new way.</p>
+      </div>
+      <div class="journey-step reveal reveal-delay-4">
+        <div class="step-number-wrap active-step">
+          <span class="step-num">4</span>
+        </div>
+        <div class="step-tag">Connect</div>
+        <h3>Grow</h3>
+        <p>Join our national educator network — monthly webinars, peer collaboration, alumni resources, and an ongoing relationship with UCLA neuroscientists.</p>
+      </div>
+    </div>
+    <div class="journey-cta reveal">
+      <a href="#cta" class="btn btn-navy">
+        Start Your Journey
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § PROGRAMS ══════════════════════════════════ -->
+<section id="programs">
+  <span class="section-label">§ PROGRAMS</span>
+  <div class="container">
+    <div class="programs-header reveal">
+      <h2>What We Offer</h2>
+      <a href="#" class="btn btn-outline">View All Programs</a>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card reveal reveal-delay-1">
+        <div class="program-icon teal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00c9b8" stroke-width="1.8">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+            <path d="M7 7h10M7 11h6"/>
+          </svg>
+        </div>
+        <span class="program-badge badge-free">Free · Residential</span>
+        <h3>Summer Intensive Workshop</h3>
+        <p>A 5-day residential training on the UCLA campus. Neuroscience lectures from faculty, hands-on lab experiences, and collaborative curriculum design. Fully funded for qualifying teachers.</p>
+        <a href="#" class="program-link">
+          Learn More
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+      </div>
+      <div class="program-card reveal reveal-delay-2">
+        <div class="program-icon amber">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f0a500" stroke-width="1.8">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <path d="M8 7h8M8 11h6M8 15h4"/>
+          </svg>
+        </div>
+        <span class="program-badge badge-ngss">NGSS-Aligned · Free</span>
+        <h3>Classroom Activity Library</h3>
+        <p>50+ ready-to-use neuroscience lessons designed for K–12 classrooms. Activities aligned to Next Generation Science Standards, available for immediate download at no cost.</p>
+        <a href="#" class="program-link">
+          Learn More
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+      </div>
+      <div class="program-card reveal reveal-delay-3">
+        <div class="program-icon blue">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8">
+            <circle cx="12" cy="5" r="3"/>
+            <circle cx="5" cy="19" r="3"/>
+            <circle cx="19" cy="19" r="3"/>
+            <path d="M12 8v4M9.5 17.5l-2-2M14.5 17.5l2-2M9.5 9.5l-2 5M14.5 9.5l2 5"/>
+          </svg>
+        </div>
+        <span class="program-badge badge-alumni">Alumni Network</span>
+        <h3>Educator Community Network</h3>
+        <p>Monthly webinars with UCLA neuroscientists, peer collaboration forums, and ongoing professional development. Stay connected and keep growing after the workshop ends.</p>
+        <a href="#" class="program-link">
+          Learn More
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § IMPACT QUOTES ══════════════════════════════════ -->
+<section id="impact-quotes">
+  <span class="section-label">§ QUOTES</span>
+  <div class="container">
+    <div class="iq-eyebrow reveal">In Teachers' Own Words</div>
+    <h2 class="reveal reveal-delay-1">What Educators Say About <em>BRAINWAVE</em></h2>
+    <div class="quotes-masonry reveal reveal-delay-2">
+
+      <div class="quote-block featured">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">Behavior IS Communication! Sleep, attention and the student's wellness are part of the WHOLE Child — if the basic need is not being met, the student will have challenges. BRAINWAVE helped me understand that. Now I know how to help.</p>
+        <div class="qb-source">LAUSD Teacher · Waitlist Survey 2025</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">It was probably the BEST professional development we have ever attended thus far!</p>
+        <div class="qb-source">Workshop Participant · LAUSD</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">ASAP! I'm going to make it my mission to improve the sleep hygiene of my students. I want to have sleep journals in class.</p>
+        <div class="qb-source">Teacher · June 2025 Workshop</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">I will be more flexible when I teach heavy content in the morning, checking to see for symptoms of sleep deprivation. My students deserve that awareness from me.</p>
+        <div class="qb-source">Teacher · December 2025 Workshop</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">I am most excited to introduce a sleep schedule challenge to my homeroom class — so many strategies I can apply right away, including calming, connecting, and cognitive techniques.</p>
+        <div class="qb-source">Teacher · June 2025 Workshop</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">Seeing — and touching — a real human brain was the most exciting thing. It made the science completely real for me. I can't wait to bring that sense of wonder back to my classroom.</p>
+        <div class="qb-source">Teacher · December 2025 Workshop</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">The best part was the environment — everyone was so genuinely excited to share their research and explain it in a way that was easily digestible. I loved the variety of research shared!</p>
+        <div class="qb-source">Workshop Participant · LAUSD</div>
+      </div>
+
+      <div class="quote-block">
+        <span class="qb-mark">"</span>
+        <p class="qb-text">Reinforcing the idea that schools and families are partners in education outcomes. This workshop gave me the science to back that conversation with parents.</p>
+        <div class="qb-source">Teacher · December 2025 Workshop</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § TEACHER NETWORK ══════════════════════════════════ -->
+<section id="network">
+  <span class="section-label">§ TEACHER NETWORK</span>
+  <div class="container">
+    <div class="network-header reveal">
+      <div class="network-eyebrow">Our Community</div>
+      <h2>Classrooms Transformed Across Los Angeles</h2>
+      <p style="max-width:580px;margin:0 auto;font-size:1rem;">Every pin on this map is a school whose teacher has been trained in neuroscience by BRAINWAVE. Every teacher reaches ~40 students per year. This is what a movement looks like.</p>
+    </div>
+
+    <!-- MAP with real stats bar above -->
+    <div class="reveal reveal-delay-1" style="margin-bottom:40px;">
+      <div class="map-stats-bar">
+        <div class="msb-cell">
+          <div class="msb-num">182+</div>
+          <div class="msb-label">Teachers Engaged</div>
+        </div>
+        <div class="msb-cell">
+          <div class="msb-num">60+</div>
+          <div class="msb-label">Schools Represented</div>
+        </div>
+        <div class="msb-cell">
+          <div class="msb-num">100%</div>
+          <div class="msb-label">Public Schools</div>
+        </div>
+        <div class="msb-cell">
+          <div class="msb-num">K–12</div>
+          <div class="msb-label">All Grade Levels</div>
+        </div>
+      </div>
+      <div id="school-map"></div>
+    </div>
+
+    <!-- Teacher Card Grid -->
+    <div class="reveal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:4px;">Schools in Our Network</div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--gray-3);text-transform:uppercase;">Showing schools from all workshop cohorts · No personal information displayed</div>
+        </div>
+      </div>
+      <div class="network-filters">
+        <button class="filter-btn active" onclick="filterNetwork(this,'all')">All Cohorts</button>
+        <button class="filter-btn" onclick="filterNetwork(this,'Fall 2024')">Fall 2024</button>
+        <button class="filter-btn" onclick="filterNetwork(this,'June 2025')">June 2025</button>
+        <button class="filter-btn" onclick="filterNetwork(this,'Dec 2025')">Dec 2025</button>
+      </div>
+      <div class="teacher-cards-grid" id="teacher-cards-grid">
+        <!-- Populated by JS SCHOOL_CARD_DATA array -->
+      </div>
+      <div class="network-data-note" style="margin-top:20px;">
+        <strong>📋 Connected to your Google Forms</strong> — When you share your registration form exports, this grid and map update automatically with real cohort data. Grade levels, subjects, and school names populate from your forms. No personal teacher information is ever displayed publicly.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § WORKSHOPS ══════════════════════════════════ -->
+<section id="workshops">
+  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ WORKSHOPS</span>
+  <div class="container">
+    <div class="workshops-eyebrow reveal">Workshop Archive</div>
+    <h2 class="reveal reveal-delay-1">Where the Learning <em>Happens</em></h2>
+
+    <!-- FEATURED: December 2025 (Most Recent) -->
+    <div class="workshop-featured reveal reveal-delay-2">
+      <div class="workshop-featured-inner">
+        <div class="workshop-photo-grid">
+          <!-- ADD YOUR DEC 2025 PHOTOS HERE — replace .empty slots with <img> tags -->
+          <div class="workshop-photo-slot empty">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add Photo 1</span>
+          </div>
+          <div class="workshop-photo-slot empty">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add Photo 2</span>
+          </div>
+          <div class="workshop-photo-slot empty">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add Photo 3</span>
+          </div>
+          <div class="workshop-photo-slot empty">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add Photo 4</span>
+          </div>
+        </div>
+        <div class="workshop-info">
+          <div class="workshop-date-tag">
+            <span class="wdt-latest">Most Recent</span>
+            December 2025 · UCLA Campus
+          </div>
+          <h3>
+            <!-- UPDATE: Add Dec 2025 workshop title here -->
+            [Workshop Title — To Be Added]
+          </h3>
+          <p>Our most recent BRAINWAVE workshop brought together passionate LA educators for an immersive day of neuroscience exploration, hands-on activities, and classroom-ready insights from UCLA researchers.</p>
+          <div class="workshop-actions">
+            <!-- Video status: in production — replace with btn-video once ready -->
+            <span class="video-coming-soon">🎬 Video in production — coming soon</span>
+          </div>
+          <div class="workshop-stats-row">
+            <div class="ws-stat">
+              <div class="ws-stat-num">—</div>
+              <div class="ws-stat-label">Teachers Attended</div>
+            </div>
+            <div class="ws-stat">
+              <div class="ws-stat-num">—</div>
+              <div class="ws-stat-label">Avg. Satisfaction</div>
+            </div>
+            <div class="ws-stat">
+              <div class="ws-stat-num">—</div>
+              <div class="ws-stat-label">Would Recommend</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Past workshops: June 2025 + Fall 2024 -->
+    <div class="past-workshops-grid reveal">
+
+      <!-- June 2025 -->
+      <div class="past-workshop-card">
+        <div class="pwc-photos">
+          <!-- ADD YOUR JUNE 2025 PHOTOS HERE -->
+          <div class="pwc-photo empty"></div>
+          <div class="pwc-photo empty"></div>
+          <div class="pwc-photo empty"></div>
+          <div class="pwc-photo empty"></div>
+        </div>
+        <div class="pwc-body">
+          <div class="pwc-date">June 25, 2025 · UCLA</div>
+          <h3>Brains in Rest: The Neuroscience of Sleep and Its Role in Learning, Behavior, and Development</h3>
+          <p>Teachers explored the science of sleep — how rest shapes memory consolidation, attention, and emotional regulation — and left with classroom-ready lessons on brain health.</p>
+          <div class="pwc-footer">
+            <span class="pwc-attendees"><!-- Add attendee count --> Workshop Cohort 2025</span>
+            <button class="btn-video" onclick="openVideo('https://www.youtube.com/embed/53EPXrjLWSs','June 2025 Workshop Highlights')">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l6 4-6 4V4z"/></svg>
+              Watch Recap
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fall 2024 -->
+      <div class="past-workshop-card">
+        <div class="pwc-photos">
+          <!-- ADD YOUR FALL 2024 PHOTOS HERE -->
+          <div class="pwc-photo empty"></div>
+          <div class="pwc-photo empty"></div>
+          <div class="pwc-photo empty"></div>
+          <div class="pwc-photo empty"></div>
+        </div>
+        <div class="pwc-body">
+          <div class="pwc-date">Fall 2024 · UCLA</div>
+          <h3>Neuroscience of Learning and Memory</h3>
+          <p>An immersive day exploring how the brain builds memories, the science of forgetting, and evidence-based strategies teachers can use immediately to boost student retention.</p>
+          <div class="pwc-footer">
+            <span class="pwc-attendees">Workshop Cohort 2024</span>
+            <button class="btn-video" onclick="openVideo('https://www.youtube.com/embed/53EPXrjLWSs','Fall 2024 Workshop Highlights')">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l6 4-6 4V4z"/></svg>
+              Watch Recap
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming topics strip -->
+    <div class="upcoming-strip reveal">
+      <div class="upcoming-label">Coming Up — Future Workshop Topics</div>
+      <div class="upcoming-topics">
+        <span class="upcoming-topic">Wired to Learn: How the Brain Builds Memory and Understanding</span>
+        <span class="upcoming-topic">Focus Forward: Executive Function, Attention &amp; the Developing Brain</span>
+        <span class="upcoming-topic">Teaching the Teenage Brain: Adolescent Brain Development</span>
+        <span class="upcoming-topic">The Learning Brain and the Power of Play</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team Bio Modal -->
+<div class="team-modal-overlay" id="team-modal" onclick="closeTeamIfOutside(event)">
+  <div class="team-modal-box" style="position:relative;">
+    <button class="team-modal-close" onclick="closeTeamModal()" aria-label="Close">✕</button>
+    <div class="team-modal-inner">
+      <div class="team-modal-photo">
+        <img id="tm-photo" src="" alt="">
+        <div class="team-modal-photo-init" id="tm-initials"></div>
+      </div>
+      <div class="team-modal-body">
+        <div class="team-modal-role" id="tm-role"></div>
+        <div class="team-modal-name" id="tm-name"></div>
+        <div class="team-modal-research" id="tm-research"></div>
+        <div class="team-modal-bio" id="tm-bio"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Video Modal -->
+<div class="modal-overlay" id="video-modal" onclick="closeVideoIfOutside(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Workshop Video</span>
+      <button class="modal-close" onclick="closeVideo()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-video">
+      <iframe id="modal-iframe" src="" allowfullscreen title="Workshop video"></iframe>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════ § TEAM ══════════════════════════════════ -->
+<section id="team">
+  <span class="section-label">§ TEAM</span>
+  <div class="container">
+    <div class="team-header reveal">
+      <div class="team-eyebrow">The People Behind BRAINWAVE</div>
+      <h2>UCLA Scientists Who Teach</h2>
+      <p style="max-width:580px;margin-top:12px;">Our instructors are active postdoctoral researchers at UCLA — experts who bring their real lab discoveries into the classroom. This is what makes BRAINWAVE unique.</p>
+    </div>
+    <div class="team-grid" id="team-grid">
+      <!-- Populated by JS TEAM_DATA array -->
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § STORY ══════════════════════════════════ -->
+<section id="story">
+  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ STORY</span>
+  <div class="story-inner">
+    <div class="story-image">
+      <div class="story-image-placeholder">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.8">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <path d="m21 15-5-5L5 21"/>
+        </svg>
+        <span class="story-image-placeholder-text">Teacher + Students · Photography</span>
+      </div>
+      <div class="story-image-overlay"></div>
+    </div>
+    <div class="story-content reveal">
+      <div class="story-eyebrow">Our Founding Story</div>
+      <blockquote class="story-pullquote">
+        Neuroscience isn't just for researchers in labs. It belongs in every classroom, in every community.
+      </blockquote>
+      <div class="story-attribution"><strong>Dr. Vidya Saravanapandian</strong></div>
+      <div class="story-role">Founder &amp; Director, BRAINWAVE · IRACDA Postdoctoral Fellow, UCLA Golshani Lab</div>
+      <p style="color:rgba(255,255,255,0.55);font-size:0.88rem;margin:16px 0 28px;line-height:1.7;">Born and raised in India, Vidya earned her PhD in Neuroscience from UCLA. Recognizing that early exposure to brain science was transforming her own sense of possibility, she created BRAINWAVE to ensure every K–12 teacher in Los Angeles had access to the same knowledge — regardless of their school's ZIP code.</p>
+      <a href="#" class="btn btn-ghost" style="width:fit-content">
+        Read Our Story
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § PARTNERS ══════════════════════════════════ -->
+<section id="partners">
+  <span class="section-label">§ PARTNERS</span>
+  <div class="container">
+    <div class="partners-label reveal">Supported By</div>
+    <div class="partners-row reveal reveal-delay-1">
+      <div class="partner-logo">
+        <svg viewBox="0 0 120 44" width="120" height="44">
+          <text x="10" y="30" font-family="serif" font-size="22" font-weight="700" fill="#003B5C">UCLA</text>
+        </svg>
+      </div>
+      <div class="partner-logo">
+        <svg viewBox="0 0 120 44" width="120" height="44">
+          <text x="8" y="30" font-family="sans-serif" font-size="16" font-weight="600" fill="#333">NSF</text>
+          <text x="30" y="30" font-family="sans-serif" font-size="10" fill="#666"> National Science Foundation</text>
+        </svg>
+      </div>
+      <div class="partner-logo">
+        <svg viewBox="0 0 120 44" width="120" height="44">
+          <text x="8" y="30" font-family="sans-serif" font-size="15" font-weight="600" fill="#333">NIH</text>
+          <text x="32" y="30" font-family="sans-serif" font-size="9.5" fill="#666"> Natl Institutes of Health</text>
+        </svg>
+      </div>
+      <div class="partner-logo">
+        <span class="partner-logo-text">Dana Foundation</span>
+      </div>
+      <div class="partner-logo">
+        <span class="partner-logo-text">Broad Foundation</span>
+      </div>
+      <div class="partner-logo">
+        <svg viewBox="0 0 120 44" width="120" height="44">
+          <text x="8" y="30" font-family="sans-serif" font-size="12" font-weight="500" fill="#333">LAUSD Partner</text>
+        </svg>
+      </div>
+    </div>
+    <p class="partners-note reveal reveal-delay-2">BRAINWAVE is a collaborative initiative supported by research institutions, philanthropies, and school districts across California.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § CTA ══════════════════════════════════ -->
+<section id="cta">
+  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ CTA</span>
+  <div class="container">
+    <div class="cta-inner reveal">
+      <h2>Ready to Bring Brain Science to Your Classroom?</h2>
+      <p class="cta-sub">
+        Register your interest for our <strong>next BRAINWAVE workshop</strong>.<br>
+        Free for K–12 teachers · LAUSD salary point credit · No neuroscience background required.
+      </p>
+      <div class="cta-buttons">
+        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-white">
+          Teacher Interest Form
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeykCR3nwTt5Ik4YVsll50vuGjNZr9VJRUH8VMJfLPCJisCeg/viewform?usp=sf_link" target="_blank" rel="noopener" class="btn btn-ghost">UCLA Postdoc? Join as Instructor</a>
+      </div>
+      <p class="cta-note">Questions? Email vidyas@ucla.edu · A UCLA Brain Research Institute Initiative</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § FOOTER ══════════════════════════════════ -->
+<footer id="footer">
+  <span class="section-label" style="color:rgba(255,255,255,0.1)">§ FOOTER</span>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" aria-label="BRAINWAVE">
+          <svg class="nav-logo-mark" viewBox="0 0 34 34" fill="none">
+            <circle cx="17" cy="17" r="16.5" stroke="rgba(0,201,184,0.25)" stroke-width="1"/>
+            <circle cx="17" cy="8"  r="2.5" fill="#00c9b8" opacity="0.7"/>
+            <circle cx="27" cy="14" r="2"   fill="#00c9b8" opacity="0.5"/>
+            <circle cx="17" cy="19" r="3"   fill="#00c9b8" opacity="0.9"/>
+            <circle cx="8"  cy="14" r="2.5" fill="#00c9b8" opacity="0.6"/>
+            <line x1="17" y1="10.5" x2="17"  y2="16" stroke="#00c9b8" stroke-width="0.8" opacity="0.4"/>
+            <line x1="25" y1="16"   x2="20"  y2="18" stroke="#00c9b8" stroke-width="0.8" opacity="0.35"/>
+            <line x1="10" y1="16"   x2="14"  y2="18" stroke="#00c9b8" stroke-width="0.8" opacity="0.35"/>
+          </svg>
+          BRAINWAVE
+        </a>
+        <p class="footer-tagline">Where Neuroscience Meets the Classroom. A UCLA initiative training K–12 teachers since 2016.</p>
+        <div class="footer-social">
+          <a href="https://twitter.com/UCLA_BRI" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter / X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/uclabri/" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://www.facebook.com/Brain.Research.Institute.UCLA" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/channel/UC9mWmo5Kj0S0DErM17BXUoQ" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.5C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#050a1f"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">Our Mission</a></li>
+          <li><a href="#">Team &amp; Faculty</a></li>
+          <li><a href="#">Research Basis</a></li>
+          <li><a href="#">UCLA Partnership</a></li>
+          <li><a href="#">Press &amp; Media</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Programs</h4>
+        <ul>
+          <li><a href="#">Summer Workshop</a></li>
+          <li><a href="#">Activity Library</a></li>
+          <li><a href="#">Educator Network</a></li>
+          <li><a href="#">Apply Now</a></li>
+          <li><a href="#">For Schools</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Lesson Plans</a></li>
+          <li><a href="#">Research Papers</a></li>
+          <li><a href="#">Webinar Archive</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-newsletter">
+        <h4>Stay Connected</h4>
+        <p>Get neuroscience education updates, new resources, and workshop announcements in your inbox.</p>
+        <div class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email address">
+          <button class="newsletter-btn" type="submit">Go</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 BRAINWAVE. All rights reserved. A program of the UCLA Brain Research Institute (BRI) · 1506 Gonda Neuroscience &amp; Genetics Research Center · <a href="mailto:vidyas@ucla.edu" style="color:rgba(255,255,255,0.3);hover:color:white">vidyas@ucla.edu</a></div>
+      <div class="footer-ucl">UCLA BRI · Est. 2016</div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════════════════════════ -->
+<script>
+/* ── Nav scroll effect ─────────────────────────────────────────────── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ── Neural canvas animation ──────────────────────────────────────── */
+(function() {
+  const canvas = document.getElementById('neural-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, animId;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  function init() {
+    resize();
+    const count = Math.min(70, Math.floor(W * H / 14000));
+    nodes = Array.from({ length: count }, () => ({
+      x: rand(0, W), y: rand(0, H),
+      vx: rand(-0.18, 0.18), vy: rand(-0.18, 0.18),
+      r: rand(1.5, 3.5),
+      pulse: rand(0, Math.PI * 2),
+      pulseSpeed: rand(0.008, 0.018)
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const T = performance.now() / 1000;
+
+    // connections
+    ctx.lineWidth = 0.6;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 145) {
+          const alpha = (1 - dist / 145) * 0.28;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0,201,184,${alpha})`;
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // nodes
+    nodes.forEach(n => {
+      n.pulse += n.pulseSpeed;
+      const glow = 0.6 + 0.4 * Math.sin(n.pulse);
+      const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3.5);
+      grad.addColorStop(0, `rgba(0,201,184,${0.8 * glow})`);
+      grad.addColorStop(1, 'rgba(0,201,184,0)');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * glow, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,201,184,${0.9 * glow})`;
+      ctx.fill();
+
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < -20) n.x = W + 20;
+      if (n.x > W + 20) n.x = -20;
+      if (n.y < -20) n.y = H + 20;
+      if (n.y > H + 20) n.y = -20;
+    });
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  init(); draw();
+})();
+
+/* ── Count-up animation ───────────────────────────────────────────── */
+function formatNum(val, target) {
+  if (target >= 1000) return Math.round(val).toLocaleString();
+  return Math.round(val);
+}
+
+const counters = document.querySelectorAll('.count-up');
+const barFills = document.querySelectorAll('.stat-bar-fill');
+
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    countObserver.unobserve(entry.target);
+
+    const el = entry.target;
+    const target = +el.dataset.target;
+    const duration = target > 10000 ? 2200 : target > 1000 ? 1800 : 1400;
+    const start = performance.now();
+
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      // easeOutExpo
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      el.textContent = formatNum(target * ease, target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = formatNum(target, target);
+    }
+    requestAnimationFrame(step);
+  });
+}, { threshold: 0.4 });
+
+counters.forEach(c => countObserver.observe(c));
+
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    barObserver.unobserve(entry.target);
+    const fill = entry.target;
+    setTimeout(() => {
+      fill.style.width = fill.dataset.width + '%';
+    }, 300);
+  });
+}, { threshold: 0.4 });
+barFills.forEach(b => barObserver.observe(b));
+
+/* ── Scroll reveal ────────────────────────────────────────────────── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ── Testimonial drag scroll ──────────────────────────────────────── */
+(function() {
+  const wrap = document.getElementById('testimonial-track-wrap');
+  if (!wrap) return;
+  let isDown = false, startX, scrollLeft;
+  wrap.addEventListener('mousedown', e => {
+    isDown = true; wrap.style.cursor = 'grabbing';
+    startX = e.pageX - wrap.offsetLeft; scrollLeft = wrap.scrollLeft;
+  });
+  wrap.addEventListener('mouseleave', () => { isDown = false; wrap.style.cursor = 'grab'; });
+  wrap.addEventListener('mouseup',    () => { isDown = false; wrap.style.cursor = 'grab'; });
+  wrap.addEventListener('mousemove',  e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - wrap.offsetLeft;
+    wrap.scrollLeft = scrollLeft - (x - startX) * 1.2;
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   TEAM DATA
+══════════════════════════════════════════════════════════════ */
+const TEAM_DATA = [
+  {
+    name: "Vidya Saravanapandian, PhD",
+    role: "Founder & Director",
+    research: "Sleep · Neurodevelopmental Disorders",
+    bio: "IRACDA Postdoctoral Fellow at the Golshani Lab, UCLA. Investigates sleep physiology in neurodevelopmental disorders. Born and raised in India; earned her PhD in Neuroscience from UCLA.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/Vidya_photo-scaled.jpg",
+    initials: "VS", color: "#00c9b8"
+  },
+  {
+    name: "Ceazar E. Nave, PhD",
+    role: "Instructor",
+    research: "Sleep · Circadian Rhythms",
+    bio: "IRACDA Postdoctoral Fellow in the Donlea Lab. Studies how environmental conditions shape the neural circuits governing sleep and the biological clock.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/CeazarHeadShot-scaled.jpg",
+    initials: "CN", color: "#3b82f6"
+  },
+  {
+    name: "Merel Dagher, PhD",
+    role: "Instructor",
+    research: "Pain Circuits · Behavioral Neuroscience",
+    bio: "Postdoctoral IRACDA Fellow in the Cahill Lab. Research examines brain circuits involved in chronic pain and opioid seeking. Deep commitment to STEM equity and outreach.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/RichSchmittPhotography095.jpeg",
+    initials: "MD", color: "#8b5cf6"
+  },
+  {
+    name: "Takahiro Ohara, PhD",
+    role: "Instructor",
+    research: "Gut–Brain Axis · Microbiota",
+    bio: "Postdoctoral Scholar at UCLA studying the interaction between gut microbiota and the brain. Joined BRAINWAVE for the unique opportunity to work directly with teachers.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/IMG_6193-scaled.jpeg",
+    initials: "TO", color: "#10b981"
+  },
+  {
+    name: "Shivan Bonanno, PhD",
+    role: "Instructor",
+    research: "Serotonin Circuits · SSRIs",
+    bio: "Project Scientist in the Krantz Lab. Researches serotonin circuit connectivity and long-term adaptations to psychiatric drugs. Passionate about inspiring junior scientists.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/headshot_bgBlue1.png",
+    initials: "SB", color: "#f0a500"
+  },
+  {
+    name: "Kat Silaj, PhD",
+    role: "Instructor",
+    research: "Learning & Memory · Anxiety",
+    bio: "Assistant Professor of Psychology at Mount Saint Mary's University and UCLA Psychology graduate. Former high school teacher with expertise in inclusive learning strategies.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/09/unnamed-2.png",
+    initials: "KS", color: "#f43f5e"
+  },
+  {
+    name: "Olivia Justynski, PhD",
+    role: "Instructor",
+    research: "Cell Migration · Skin Development",
+    bio: "Postdoc in the Sagasti Lab and IRACDA Fellow. PhD from Yale in Molecular, Cellular & Developmental Biology. Passionate about science education and outreach.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2025/07/Headshot.jpg",
+    initials: "OJ", color: "#06b6d4"
+  },
+  {
+    name: "Joseph M. Quintero",
+    role: "Operations",
+    research: "Programs & Events",
+    bio: "Programs & Operations Manager, UCLA Brain Research Institute. Orchestrates workshops, symposia, and events. Ensures every BRAINWAVE workshop runs seamlessly.",
+    photo: "https://bri.ucla.edu/wp-content/uploads/2024/10/Quintero_J_Photo-scaled.jpg",
+    initials: "JQ", color: "#f0a500",
+    isOps: true
+  }
+];
+
+(function renderTeam() {
+  const grid = document.getElementById('team-grid');
+  if (!grid) return;
+  grid.innerHTML = TEAM_DATA.map((m, i) => `
+    <div class="team-card${m.isOps ? ' team-ops-card' : ''}" onclick="openTeamModal(${i})" title="Click to read full bio">
+      <div class="team-photo">
+        <img src="${m.photo}" alt="${m.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="team-photo-placeholder" style="display:none">${m.initials}</div>
+      </div>
+      <div class="team-body">
+        <div class="team-name">${m.name}</div>
+        <div class="team-role">${m.role}</div>
+        <div class="team-research">${m.research}</div>
+        <div class="team-bio">${m.bio}</div>
+        <div class="team-read-more">Read full bio <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+      </div>
+    </div>
+  `).join('');
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   REAL SCHOOL DATA — sourced from workshop registration surveys
+   (No personal teacher information displayed)
+══════════════════════════════════════════════════════════════ */
+const SCHOOL_DATA = [
+  { school:"Sunny Brae Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:34.222, lng:-118.423 },
+  { school:"Maywood Center for Enriched Studies", type:"Middle School", district:"LAUSD", cohort:"June 2025", lat:33.987, lng:-118.190 },
+  { school:"Virgil Middle School", type:"Middle School", district:"LAUSD", cohort:"June 2025", lat:34.076, lng:-118.290 },
+  { school:"Foshay Learning Center", type:"K-12", district:"LAUSD", cohort:"June 2025", lat:34.022, lng:-118.309 },
+  { school:"John C Fremont High School", type:"High School", district:"LAUSD", cohort:"June 2025", lat:34.004, lng:-118.246 },
+  { school:"Arroyo Seco Museum Science Magnet", type:"Magnet", district:"LAUSD", cohort:"June 2025", lat:34.105, lng:-118.204 },
+  { school:"John Burroughs Middle School", type:"Middle School", district:"LAUSD", cohort:"June 2025", lat:34.076, lng:-118.356 },
+  { school:"Eshelman Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:33.793, lng:-118.264 },
+  { school:"Limerick Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:34.233, lng:-118.442 },
+  { school:"Van Nuys High School", type:"High School", district:"LAUSD", cohort:"June 2025", lat:34.193, lng:-118.449 },
+  { school:"Dodson Middle School", type:"Middle School", district:"LAUSD", cohort:"June 2025", lat:33.748, lng:-118.290 },
+  { school:"61st Street Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:33.991, lng:-118.285 },
+  { school:"Oliver Wendell Holmes MS", type:"Middle School", district:"LAUSD", cohort:"June 2025", lat:34.009, lng:-118.356 },
+  { school:"John Adams Middle School", type:"Middle School", district:"LAUSD", cohort:"June 2025", lat:34.027, lng:-118.307 },
+  { school:"Dymally High School", type:"High School", district:"LAUSD", cohort:"June 2025", lat:33.953, lng:-118.260 },
+  { school:"Carson High School", type:"High School", district:"LAUSD", cohort:"June 2025", lat:33.842, lng:-118.258 },
+  { school:"Coldwater Canyon Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:34.147, lng:-118.387 },
+  { school:"Budlong Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:34.017, lng:-118.301 },
+  { school:"Plainview Academic Charter Academy", type:"Charter K-8", district:"Charter", cohort:"June 2025", lat:34.211, lng:-118.481 },
+  { school:"King/Drew Magnet HS of Medicine & Science", type:"Magnet", district:"LAUSD", cohort:"June 2025", lat:33.945, lng:-118.237 },
+  { school:"Oxnard Street Elementary", type:"Elementary", district:"LAUSD", cohort:"June 2025", lat:34.198, lng:-118.429 },
+  { school:"Robert Fulton College Prep", type:"High School", district:"LAUSD", cohort:"June 2025", lat:34.070, lng:-118.296 },
+  { school:"Sylmar Charter High School", type:"High School", district:"LAUSD", cohort:"June 2025", lat:34.312, lng:-118.443 },
+  { school:"Hamlin Charter Academy", type:"Elementary Charter", district:"Charter", cohort:"Dec 2025", lat:34.080, lng:-118.378 },
+  { school:"Castelar Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:34.064, lng:-118.227 },
+  { school:"Charles Drew Middle School", type:"Middle School", district:"LAUSD", cohort:"Dec 2025", lat:33.953, lng:-118.260 },
+  { school:"Walgrove Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:34.001, lng:-118.433 },
+  { school:"Marquez Charter Elementary", type:"Elementary Charter", district:"Charter", cohort:"Dec 2025", lat:34.055, lng:-118.530 },
+  { school:"Playa Vista Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:33.977, lng:-118.423 },
+  { school:"Westminster Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:34.002, lng:-118.457 },
+  { school:"Miles Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:33.972, lng:-118.223 },
+  { school:"59th Street Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:33.993, lng:-118.304 },
+  { school:"Horace Mann UCLA Community School", type:"K-12", district:"LAUSD", cohort:"Dec 2025", lat:33.983, lng:-118.280 },
+  { school:"Lawrence Middle School", type:"Middle School", district:"LAUSD", cohort:"Dec 2025", lat:34.118, lng:-118.394 },
+  { school:"Taft Charter High School", type:"High School", district:"LAUSD", cohort:"Dec 2025", lat:34.186, lng:-118.599 },
+  { school:"Hamilton High School", type:"High School", district:"LAUSD", cohort:"Dec 2025", lat:34.034, lng:-118.401 },
+  { school:"Paul Revere Middle School", type:"Middle School", district:"LAUSD", cohort:"Dec 2025", lat:34.052, lng:-118.470 },
+  { school:"Barton Hill Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:33.745, lng:-118.289 },
+  { school:"Hillcrest Drive Elementary", type:"Elementary", district:"LAUSD", cohort:"Dec 2025", lat:34.038, lng:-118.318 },
+  { school:"93rd Street Elementary", type:"Elementary", district:"LAUSD", cohort:"Fall 2024", lat:33.954, lng:-118.265 },
+  { school:"Hobart Boulevard Elementary", type:"Elementary", district:"LAUSD", cohort:"Fall 2024", lat:34.037, lng:-118.301 },
+  { school:"186th Street School", type:"Elementary", district:"LAUSD", cohort:"Fall 2024", lat:33.867, lng:-118.288 },
+  { school:"Mount Gleason Middle School", type:"Middle School", district:"LAUSD", cohort:"Fall 2024", lat:34.268, lng:-118.349 },
+  { school:"Ranchito Avenue Elementary", type:"Elementary", district:"LAUSD", cohort:"Fall 2024", lat:34.229, lng:-118.463 },
+  { school:"Panorama High School", type:"High School", district:"LAUSD", cohort:"Fall 2024", lat:34.231, lng:-118.458 },
+  { school:"Elysian Heights Arts Magnet", type:"Magnet", district:"LAUSD", cohort:"Fall 2024", lat:34.084, lng:-118.262 },
+  { school:"Hope Street Elementary", type:"Elementary", district:"LAUSD", cohort:"Fall 2024", lat:34.057, lng:-118.301 },
+  { school:"VAAS (Visual and Auditory Arts School)", type:"Magnet", district:"LAUSD", cohort:"Fall 2024", lat:34.050, lng:-118.295 }
+];
+
+const COHORT_COLORS = { 'Fall 2024':'#f0a500', 'June 2025':'#00c9b8', 'Dec 2025':'#8b5cf6' };
+const TYPE_ICONS = { 'High School':'🏫','Middle School':'🏛','Elementary':'🏠','Magnet':'⭐','Charter K-8':'📚','K-12':'🏫','Elementary Charter':'🏠' };
+
+let leafletMap = null, currentMapFilter = 'all', schoolMarkers = [];
+
+function initLeafletMap() {
+  if (leafletMap || typeof L === 'undefined') return;
+  leafletMap = L.map('school-map', { center:[34.02,-118.35], zoom:10, scrollWheelZoom:false });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution:'© OpenStreetMap, © CartoDB', subdomains:'abcd', maxZoom:18
+  }).addTo(leafletMap);
+  renderMapMarkers();
+}
+
+function renderMapMarkers() {
+  if (!leafletMap) return;
+  schoolMarkers.forEach(m => m.remove());
+  schoolMarkers = [];
+  const filtered = currentMapFilter === 'all' ? SCHOOL_DATA : SCHOOL_DATA.filter(s => s.cohort === currentMapFilter);
+  filtered.forEach(s => {
+    const col = COHORT_COLORS[s.cohort] || '#00c9b8';
+    const icon = L.divIcon({
+      className:'',
+      html:`<div style="width:13px;height:13px;border-radius:50%;background:${col};border:2px solid rgba(255,255,255,0.8);box-shadow:0 0 10px ${col}99;cursor:pointer;"></div>`,
+      iconSize:[13,13], iconAnchor:[6,6]
+    });
+    const m = L.marker([s.lat,s.lng],{icon}).addTo(leafletMap);
+    m.bindPopup(`<div class="school-popup"><h4>${TYPE_ICONS[s.type]||'🏫'} ${s.school}</h4><p>${s.type} · ${s.district}</p><span class="sp-tag" style="background:${col}22;color:${col}">${s.cohort}</span></div>`,{maxWidth:220});
+    schoolMarkers.push(m);
+  });
+}
+
+function filterNetwork(btn, cohort) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMapFilter = cohort;
+  renderMapMarkers();
+  renderSchoolCards(cohort);
+}
+
+function renderSchoolCards(cohort) {
+  const grid = document.getElementById('teacher-cards-grid');
+  if (!grid) return;
+  const filtered = cohort === 'all' ? SCHOOL_DATA : SCHOOL_DATA.filter(s => s.cohort === cohort);
+  const shown = filtered.slice(0, 12);
+  grid.innerHTML = shown.map(s => {
+    const col = COHORT_COLORS[s.cohort] || '#00c9b8';
+    return `<div class="teacher-card">
+      <div class="tc-header">
+        <div class="tc-avatar" style="background:${col}18;color:${col};font-size:1.1rem;">${TYPE_ICONS[s.type]||'🏫'}</div>
+        <div><div class="tc-name">${s.school}</div><div class="tc-school">${s.district}</div></div>
+      </div>
+      <div class="tc-tags">
+        <span class="tc-tag grade">${s.type}</span>
+        <span class="tc-tag district" style="background:${col}14;color:${col}">${s.cohort}</span>
+      </div>
+    </div>`;
+  }).join('') + (filtered.length > 12 ? `<div style="grid-column:1/-1;text-align:center;font-size:0.84rem;color:var(--text-soft);padding:12px;">+${filtered.length-12} more schools in this cohort</div>` : '');
+}
+
+const mapObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { mapObserver.unobserve(e.target); initLeafletMap(); renderSchoolCards('all'); }
+  });
+}, { threshold: 0.1 });
+const mapSection = document.getElementById('network');
+if (mapSection) mapObserver.observe(mapSection);
+
+/* ══════════════════════════════════════════════════════════════
+   TEAM MODAL
+══════════════════════════════════════════════════════════════ */
+function openTeamModal(idx) {
+  const m = TEAM_DATA[idx];
+  const overlay = document.getElementById('team-modal');
+  const img = document.getElementById('tm-photo');
+  img.src = m.photo; img.alt = m.name;
+  img.onerror = () => { img.style.display='none'; document.getElementById('tm-initials').style.opacity='1'; };
+  document.getElementById('tm-initials').textContent = m.initials;
+  document.getElementById('tm-role').textContent = m.role + (m.isOps ? ' · UCLA Brain Research Institute' : ' · UCLA BRAINWAVE');
+  document.getElementById('tm-name').textContent = m.name;
+  document.getElementById('tm-research').textContent = 'Research Focus: ' + m.research;
+  document.getElementById('tm-bio').textContent = m.bio;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeTeamModal() {
+  document.getElementById('team-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeTeamIfOutside(e) { if (e.target === document.getElementById('team-modal')) closeTeamModal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeVideo(); closeTeamModal(); } });
+
+/* ══════════════════════════════════════════════════════════════
+   VIDEO MODAL
+══════════════════════════════════════════════════════════════ */
+function openVideo(src, title) {
+  const modal = document.getElementById('video-modal');
+  document.getElementById('modal-iframe').src = src + '?autoplay=1';
+  document.getElementById('modal-title').textContent = title;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeVideo() {
+  const modal = document.getElementById('video-modal');
+  modal.classList.remove('open');
+  document.getElementById('modal-iframe').src = '';
+  document.body.style.overflow = '';
+}
+function closeVideoIfOutside(e) {
+  if (e.target === document.getElementById('video-modal')) closeVideo();
+}
+/* keydown handled above with closeVideo + closeTeamModal */
+
+/* ── Mobile nav toggle ────────────────────────────────────────────── */
+function toggleMenu(btn) {
+  const links = document.querySelector('.nav-links');
+  const isOpen = links.style.display === 'flex';
+  links.style.display = isOpen ? 'none' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = 'absolute';
+  links.style.top = '68px'; links.style.left = '0'; links.style.right = '0';
+  links.style.background = 'rgba(7,13,40,0.97)';
+  links.style.padding = '20px 32px 28px';
+  links.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+  if (isOpen) links.style.display = 'none';
+  btn.querySelectorAll('span').forEach((s, i) => {
+    if (!isOpen) {
+      if (i === 0) { s.style.transform = 'rotate(45deg) translate(5px,5px)'; }
+      if (i === 1) { s.style.opacity = '0'; }
+      if (i === 2) { s.style.transform = 'rotate(-45deg) translate(5px,-5px)'; }
+    } else {
+      s.style.transform = ''; s.style.opacity = '';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
