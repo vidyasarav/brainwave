@@ -321,7 +321,7 @@
   #impact {
     background: var(--navy);
     padding: 112px 0 96px;
-    overflow: hidden;
+    overflow: clip;
   }
   .impact-eyebrow {
     font-family: 'DM Mono', monospace;
@@ -395,13 +395,18 @@
     margin-bottom: 22px;
   }
   .testimonial-track-wrap {
-    overflow-x: auto; overflow-y: hidden;
+    overflow-x: auto; overflow-y: visible;
     scrollbar-width: none;
     padding-bottom: 8px;
+    padding-left: 0; padding-right: 0;
+    /* break out of container padding so cards aren't clipped */
+    margin-left: -24px; margin-right: -24px;
+    padding-left: 24px; padding-right: 24px;
     -webkit-overflow-scrolling: touch;
     cursor: grab;
   }
   .testimonial-track-wrap::-webkit-scrollbar { display: none; }
+  .testimonial-card { width: 360px; }
   .testimonial-track {
     display: flex; gap: 20px;
     width: max-content;
@@ -1485,7 +1490,7 @@
   </ul>
 
   <div class="nav-right">
-    <span class="nav-ucl">UCLA Initiative</span>
+    <span class="nav-ucl">UCLA</span>
     <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary nav-cta">Apply Now</a>
   </div>
   <button class="nav-burger" aria-label="Menu" onclick="toggleMenu(this)">
@@ -1932,25 +1937,31 @@
       <div id="school-map"></div>
     </div>
 
-    <!-- Teacher Card Grid -->
-    <div class="reveal">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
-        <div>
-          <div style="font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:4px;">Schools in Our Network</div>
-          <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--gray-3);text-transform:uppercase;">Showing schools from all workshop cohorts · No personal information displayed</div>
+    <!-- School type breakdown -->
+    <div class="reveal" style="margin-top:40px;">
+      <div style="font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:6px;">Schools in Our Network</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--gray-3);text-transform:uppercase;margin-bottom:28px;">60+ schools across Los Angeles · All grade levels · Primarily LAUSD</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+        <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">23</div>
+          <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Elementary</div>
+          <div style="font-size:0.78rem;color:var(--gray-3);">Grades K–5</div>
         </div>
-      </div>
-      <div class="network-filters">
-        <button class="filter-btn active" onclick="filterNetwork(this,'all')">All Cohorts</button>
-        <button class="filter-btn" onclick="filterNetwork(this,'Fall 2024')">Fall 2024</button>
-        <button class="filter-btn" onclick="filterNetwork(this,'June 2025')">June 2025</button>
-        <button class="filter-btn" onclick="filterNetwork(this,'Dec 2025')">Dec 2025</button>
-      </div>
-      <div class="teacher-cards-grid" id="teacher-cards-grid">
-        <!-- Populated by JS SCHOOL_CARD_DATA array -->
-      </div>
-      <div class="network-data-note" style="margin-top:20px;">
-        <strong>📋 Connected to your Google Forms</strong> — When you share your registration form exports, this grid and map update automatically with real cohort data. Grade levels, subjects, and school names populate from your forms. No personal teacher information is ever displayed publicly.
+        <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">10</div>
+          <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Middle School</div>
+          <div style="font-size:0.78rem;color:var(--gray-3);">Grades 6–8</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">9</div>
+          <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">High School</div>
+          <div style="font-size:0.78rem;color:var(--gray-3);">Grades 9–12</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">6</div>
+          <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Magnet &amp; K–12</div>
+          <div style="font-size:0.78rem;color:var(--gray-3);">Multi-grade programs</div>
+        </div>
       </div>
     </div>
   </div>
