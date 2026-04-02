@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRAINWAVE — Where Neuroscience Meets the Classroom</title>
+<script>
+  if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
+  window.addEventListener('DOMContentLoaded', function() { window.scrollTo(0, 0); });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -952,6 +956,15 @@
     font-family: 'DM Mono', monospace; font-size: 0.62rem;
     color: rgba(0,201,184,0.5); margin-left: 6px; letter-spacing: 0.05em;
   }
+  .hero-micro-impact {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.45);
+    margin-top: 28px;
+    text-transform: uppercase;
+    opacity: 0; animation: fadeUp 0.8s 1.0s forwards;
+  }
 
   /* ══════════════════════════════════════════════════════════════════════
      § LAUSD BADGE
@@ -1526,20 +1539,21 @@
             <div class="acronym-row"><span class="acronym-letter">E</span><span class="acronym-word">Educators</span></div>
           </div>
         </span><br>
-        <em>Teaching</em> the Brain.
+        What if every child <em>understood their brain?</em>
       </h1>
       <p class="hero-sub">
-        BRAINWAVE is a pioneering neuroscience education initiative that bridges cutting-edge brain research with dynamic classroom teaching. Led by UCLA postdoctoral fellows, we empower K–12 teachers across Los Angeles to revolutionize how every student — in every community — understands their own brain.
+        BRAINWAVE brings neuroscience into K–12 classrooms by empowering teachers with the knowledge, tools, and inspiration to shape how students understand their brains, learning, and mental health—especially in under-resourced communities where this knowledge is needed most.
       </p>
       <div class="hero-btns">
-        <a href="#cta" class="btn btn-primary">
-          Apply for a Workshop
+        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" aria-label="Join a Workshop (opens in new tab)">
+          Join a Workshop
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 8h10M9 4l4 4-4 4"/>
           </svg>
         </a>
-        <a href="#impact" class="btn btn-ghost">Explore Our Impact</a>
+        <a href="#cta" class="btn btn-ghost">Bring BRAINWAVE to Your School</a>
       </div>
+      <p class="hero-micro-impact">Reaching 182+ teachers across 60+ Los Angeles schools and counting.</p>
     </div>
   </div>
   <div class="hero-scroll" aria-hidden="true">
