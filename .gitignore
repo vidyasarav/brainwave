@@ -1,0 +1,15 @@
+# Large EEG data (164GB+)
+EEG/
+MATLAB/
+SleepEEG/
+EEG_Analysis_Results/
+EEG_Analysis_Results_Pilot/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+
+# Local Claude settings
+.claude/
