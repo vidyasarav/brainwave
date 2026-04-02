@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAINWAVE — UCLA Neuroscience Teacher Workshop Program</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box}body{font-family:'Inter',sans-serif;margin:0;scroll-behavior:smooth}
+.hero-bg{background:linear-gradient(135deg,#1e1b4b 0%,#4c1d95 40%,#7c3aed 100%)}
+.nav-link{transition:color .15s}.nav-link:hover{color:#7c3aed}
+.topic-card{transition:all .2s}.topic-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.sched-row:nth-child(even){background:#faf5ff}
+.cta{background:linear-gradient(135deg,#7c3aed,#2563eb);transition:all .15s}.cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.4)}
+.team-card{transition:all .2s}.team-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-2px)}
+.fade-s{animation:fs .4s ease-out}@keyframes fs{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.pillar-card{border-left:3px solid #7c3aed;transition:all .15s}.pillar-card:hover{background:#faf5ff}
+</style>
+</head>
+<body class="bg-white text-gray-900">
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect}=React;
+const SK='brainwave_admin_data';
+
+// Load from admin's localStorage if available, else use embedded defaults
+function loadData(){
+try{const s=localStorage.getItem(SK);if(s){const d=JSON.parse(s);delete d.benchmarking;delete d.actionItems;return d}}catch(e){}
+return null;
+}
+
+const FALLBACK={
+program:{name:"BRAINWAVE",fullName:"<span class=\"acronym-highlight\"><strong>B</strong>ringing <strong>R</strong>esearch <strong>A</strong>nd <strong>I</strong>nnovation in <strong>N</strong>euroscience to <strong>W</strong>orkshops for <strong>A</strong>dvancing <strong>V</strong>isionary <strong>E</strong>ducators</span>",
+mission:"At BRAINWAVE, we believe every teacher has the potential to be a catalyst for change, and every student can excel. Our mission is to revolutionize education by equipping teachers with the latest neuroscience insights and evidence-based teaching strategies. By emphasizing early exposure to brain science, we inspire teachers and students from all backgrounds, to explore STEM fields. Through fostering a community of forward-thinking educators, we're not just enhancing education — we are setting off a wave of change that shapes the future of learning and inspires the next generation of scientists.",
+description:"BRAINWAVE is a pioneering neuroscience education initiative that bridges cutting-edge brain research with dynamic classroom teaching. Led by passionate postdoctoral fellows, BRAINWAVE empowers elementary, middle, and high school teachers across Los Angeles, working with students from all backgrounds and communities.",
+pillars:[
+{title:"State-of-the-Art Neuroscience Training",desc:"Dive deep into the intricacies of the brain, gaining insights into the latest scientific breakthroughs."},
+{title:"Innovative Pedagogy Techniques",desc:"Master evidence-based teaching methods that transform complex neuroscience topics into engaging, accessible lessons."},
+{title:"Inspiration and Implementation",desc:"Implement practical, research-driven strategies that captivate students' interest and encourage pursuit of STEM fields."},
+{title:"Comprehensive Resources",desc:"Access a robust collection of materials designed to effectively communicate neuroscience knowledge."},
+{title:"LAUSD-Approved Professional Development",desc:"Participate in officially approved LAUSD JSPCC workshops that offer salary point credit and high-impact training."}
+],
+aboutExtra:"Through immersive workshops, hands-on activities, up-to-date brain research insights, and exclusive tours of UCLA neuroscience labs, BRAINWAVE equips teachers to revolutionize their classrooms. At the same time, BRAINWAVE provides a unique opportunity for UCLA postdoctoral fellows to share their neuroscience expertise, refine their teaching skills, and engage in meaningful science communication with the broader community.",
+institution:"UCLA Brain Research Institute (BRI)",email:"vidyas@ucla.edu",website:"https://bri.ucla.edu/brainwave/"},
+team:[
+{name:"Vidya Saravanapandian, PhD",role:"Founder and Director",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/Vidya_photo-scaled.jpg",bio:"Vidya was born and raised in India. She earned a Ph.D. in Neuroscience from UCLA. She is an IRACDA Postdoctoral Research Fellow at the Golshani laboratory at UCLA, investigating changes in sleep physiology in neurodevelopmental disorders. As a neuroscience education advocate, she created BRAINWAVE to empower teachers and impact students from underserved communities."},
+{name:"Ceazar E. Nave, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/CeazarHeadShot-scaled.jpg",bio:"IRACDA Postdoctoral Research Fellow studying how environmental conditions shape brain structures, particularly neural circuits governing sleep and the biological clock."},
+{name:"Merel Dagher, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/RichSchmittPhotography095.jpeg",bio:"Postdoctoral IRACDA Fellow researching brain circuits involved in chronic pain and opioid seeking. Born in Syria, deeply committed to STEM outreach."},
+{name:"Takahiro Ohara, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/IMG_6193-scaled.jpeg",bio:"Postdoctoral Scholar studying the microbiota-gut-brain axis. He enjoys teaching and working directly with teachers."},
+{name:"Shivan Bonanno, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/headshot_bgBlue1.png",bio:"Project Scientist researching serotonin circuits and their adaptations to psychiatric drugs like SSRIs."},
+{name:"Kat Silaj, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/09/unnamed-2.png",bio:"Assistant Professor at Mount Saint Mary's University. Former high school teacher passionate about inclusive classrooms and learning science."},
+{name:"Olivia Justynski, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2025/07/Headshot.jpg",bio:"Postdoc and IRACDA fellow studying skin development in zebrafish. Passionate about science education and outreach."},
+{name:"Joseph M. Quintero",role:"Operations Guru",photo:"https://bri.ucla.edu/wp-content/uploads/2024/10/Quintero_J_Photo-scaled.jpg",bio:"Programs and Operations Manager of the Brain Research Institute. Orchestrates workshops, poster sessions, and multi-day symposia."}
+],
+testimonials:[
+"This was my first neuroscience education workshop, and I learned so much. Can't wait to bring these activities to my classroom!",
+"The best part was the environment. Everyone was so nice and genuinely excited to share their research and explain it in an easily digestible way!",
+"Thank you so much, Vidya! It was probably the BEST professional development we have ever attended thus far!",
+"This experience was amazing. I had a blast learning from scientists and collaborating with educators. I'd love to participate again.",
+"I anticipate this workshop will impact my students' learning by helping me become a more aware teacher."
+],
+workshops:[
+{id:"summer-2025",title:"Brains in Rest: The Neuroscience of Sleep and Its Role in Learning, Behavior, and Development",status:"past",dateRange:"June 25, 2025",location:"UCLA",description:"Exploring how sleep affects learning, memory consolidation, brain development, and student behavior."},
+{id:"spring-2026",title:"Spring 2026 Workshop — Topics TBD",status:"upcoming",dateRange:"Spring 2026 (Tentative)",location:"UCLA Brain Research Institute",description:"An immersive full-day workshop bringing together K-12 educators for hands-on neuroscience exploration, lab tours, and classroom-ready teaching strategies.",
+schedule:[
+{time:"8:00 – 8:30 AM",title:"Registration & Welcome Coffee",description:"Check-in, name badges, welcome materials"},
+{time:"8:30 – 9:00 AM",title:"Opening & Program Overview",description:"Welcome by Dr. Vidya Saravanapandian."},
+{time:"9:00 – 10:00 AM",title:"Keynote: The Neuroscience of Learning",description:"How the brain encodes, stores, and retrieves information."},
+{time:"10:00 – 10:15 AM",title:"Break & Networking",description:""},
+{time:"10:15 – 11:15 AM",title:"Hands-On: Neuroanatomy Lab",description:"Guided exploration of brain models, sheep brain dissection, and neuron structure activities."},
+{time:"11:15 AM – 12:00 PM",title:"Session: Sleep, Brain Development & Student Performance",description:"Latest research on sleep and adolescent brain development."},
+{time:"12:00 – 1:00 PM",title:"Lunch & Lab Tour",description:"Catered lunch followed by guided tour of UCLA neuroscience research labs."},
+{time:"1:00 – 2:00 PM",title:"Session: Mental Health & the Adolescent Brain",description:"Understanding anxiety, stress, and emotional regulation."},
+{time:"2:00 – 2:45 PM",title:"Hands-On: EEG Demonstration",description:"Live EEG recording — teachers see brain waves in real time."},
+{time:"2:45 – 3:00 PM",title:"Break",description:""},
+{time:"3:00 – 3:45 PM",title:"Workshop: Building Your Neuroscience Lesson Plan",description:"Teachers develop classroom-ready neuroscience lessons."},
+{time:"3:45 – 4:15 PM",title:"Group Presentations & Peer Feedback",description:"Collaborative feedback and refinement."},
+{time:"4:15 – 4:30 PM",title:"Closing Remarks & Next Steps",description:"Post-workshop survey, LAUSD credit info, Google Classroom access."}
+]},
+{id:"fall-2024",title:"Neuroscience of Learning and Memory",status:"past",dateRange:"October 2024",location:"UCLA Brain Research Institute",description:"Inaugural immersive workshop bringing together passionate educators for neuroscience exploration, hands-on activities, and classroom-ready insights."},
+{id:"baw-2024",title:"Brain Awareness Week 2024",status:"past",dateRange:"March 2024",location:"UCLA & Partner Schools",description:"Annual large-scale community event engaging students in hands-on neuroscience learning."}
+],
+futureWorkshopTopics:["Wired to Learn: How the Brain Builds Memory and Understanding","Focus Forward: Executive Function, Attention, and the Developing Brain","Teaching the Teenage Brain: Brain Development in Adolescence","The Learning Brain and the Power of Play"],
+googleClassroom:{url:"https://classroom.google.com",description:"Access workshop materials, lesson templates, neuroscience resources, and connect with fellow BRAINWAVE educators.",
+features:["Workshop presentation slides & recordings","Neuroscience lesson plan templates","Hands-on activity guides & materials","Discussion forums with peer educators","Post-workshop assignments for LAUSD credit","Resource library of research articles"]},
+topics:[
+{category:"Neuroscience Foundations",items:["Neuroanatomy & Brain Structure","How Neurons Communicate","Neuroplasticity — The Brain That Changes Itself","Brain Development Across the Lifespan","Sensory Systems & Perception"]},
+{category:"Learning & Memory",items:["How Memories Are Formed & Retrieved","Types of Memory","Spaced Repetition & Study Strategies","The Role of Attention in Learning","Metacognition & Self-Regulated Learning"]},
+{category:"Sleep & Brain Health",items:["Sleep Architecture & Brain Waves","Sleep and Memory Consolidation","Adolescent Sleep Patterns","Effects of Sleep Deprivation","Sleep Hygiene for Students"]},
+{category:"Mental Health & Emotional Learning",items:["Stress, Anxiety & the Brain","Trauma-Informed Teaching","Emotional Regulation & Prefrontal Cortex","Growth Mindset — Neuroscience Evidence","Social-Emotional Learning & Neuroscience"]},
+{category:"Technology & Future Directions",items:["AI & Neuroscience in Education","Brain-Computer Interfaces","EEG & Neuroimaging for Educators","Neuromyths — Debunking Misconceptions","Ethical Considerations"]},
+{category:"Hands-On Activities",items:["Sheep Brain Dissection","Pipe Cleaner Neuron Building","EEG Live Demonstration","Reaction Time Experiments","Sensory Illusions & Perception Labs"]}
+],
+forms:{teacherParticipation:"#",instructorInterest:"#"}
+};
+
+function App(){
+const[D]=useState(()=>loadData()||FALLBACK);
+const up=D.workshops.filter(w=>w.status==='upcoming');
+const past=D.workshops.filter(w=>w.status==='past');
+const spring=D.workshops.find(w=>w.id==='spring-2026');
+const sc=(id)=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+const initials=(name)=>name.split(' ').filter((_,i,a)=>i===0||i===a.length-1).map(w=>w[0]).join('').toUpperCase();
+
+return(<div>
+{/* Nav */}
+<nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+<div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-2.5">
+<div className="flex items-center gap-2.5 cursor-pointer" onClick={()=>sc('hero')}>
+<div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center">
+<svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 002 2h4a2 2 0 002-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7z"/></svg>
+</div>
+<span className="font-bold text-base tracking-tight">BRAINWAVE</span>
+</div>
+<div className="flex gap-5 text-sm font-medium text-gray-600">
+{[['about','About'],['team-s','Team'],['workshops-s','Workshops'],['schedule-s','Schedule'],['topics-s','Topics'],['classroom-s','Classroom'],['testimonials-s','Testimonials'],['join','Join']].map(([id,l])=>(
+<button key={id} onClick={()=>sc(id)} className="nav-link">{l}</button>
+))}
+</div>
+</div>
+</nav>
+
+{/* Hero */}
+<section id="hero" className="hero-bg text-white pt-28 pb-20 px-6">
+<div className="max-w-4xl mx-auto text-center">
+<div className="text-xs tracking-[.2em] uppercase text-purple-200 mb-3">{D.program.institution}</div>
+<h1 className="text-5xl font-black mb-3 leading-tight">{D.program.name}</h1>
+<p className="text-lg text-purple-100 mb-2">{D.program.fullName}</p>
+<p className="text-base text-purple-200 max-w-2xl mx-auto mt-4 leading-relaxed">{D.program.description}</p>
+<div className="mt-8 flex gap-3 justify-center flex-wrap">
+<button onClick={()=>sc('workshops-s')} className="cta px-6 py-3 rounded-lg text-white font-semibold">Upcoming Workshops</button>
+<button onClick={()=>sc('classroom-s')} className="px-6 py-3 rounded-lg bg-white/10 border border-white/30 text-white font-semibold hover:bg-white/20 transition">Google Classroom</button>
+<button onClick={()=>sc('join')} className="px-6 py-3 rounded-lg bg-white/10 border border-white/30 text-white font-semibold hover:bg-white/20 transition">Join BRAINWAVE</button>
+</div>
+</div>
+</section>
+
+{/* About */}
+<section id="about" className="py-16 px-6 bg-gray-50">
+<div className="max-w-5xl mx-auto">
+<h2 className="text-3xl font-bold mb-6 text-center">About BRAINWAVE</h2>
+<div className="bg-white rounded-xl p-8 border border-gray-100 mb-6">
+<h3 className="font-semibold text-lg mb-3 text-purple-700">Mission Statement</h3>
+<p className="text-gray-600 leading-relaxed">{D.program.mission}</p>
+</div>
+<p className="text-gray-600 leading-relaxed mb-8">{D.program.aboutExtra}</p>
+<div className="space-y-3">
+{D.program.pillars.map((p,i)=>(
+<div key={i} className="pillar-card bg-white rounded-r-xl p-5 border border-gray-100">
+<h4 className="font-semibold text-gray-900 mb-1">{p.title}</h4>
+<p className="text-sm text-gray-600">{p.desc}</p>
+</div>
+))}
+</div>
+</div>
+</section>
+
+{/* Team */}
+<section id="team-s" className="py-16 px-6">
+<div className="max-w-5xl mx-auto">
+<h2 className="text-3xl font-bold mb-2 text-center">Meet the Team</h2>
+<p className="text-gray-500 text-center mb-8">Passionate UCLA scientists dedicated to neuroscience education</p>
+<div className="grid grid-cols-2 gap-5">
+{D.team.map((m,i)=>(
+<div key={i} className="team-card bg-white rounded-xl border border-gray-200 p-5">
+<div className="flex items-center gap-3 mb-3">
+<div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold text-sm">{initials(m.name)}</div>
+<div>
+<div className="font-bold text-sm">{m.name}</div>
+<div className="text-xs text-purple-600 font-medium">{m.role}, BRAINWAVE</div>
+</div>
+</div>
+<p className="text-xs text-gray-600 leading-relaxed">{m.bio}</p>
+</div>
+))}
+</div>
+</div>
+</section>
+
+{/* Workshops */}
+<section id="workshops-s" className="py-16 px-6 bg-gray-50">
+<div className="max-w-5xl mx-auto">
+<h2 className="text-3xl font-bold mb-6 text-center">Workshops</h2>
+{up.length>0&&<div className="mb-8">
+<h3 className="text-xs tracking-widest uppercase text-purple-600 font-semibold mb-3">Upcoming</h3>
+{up.map(w=>(
+<div key={w.id} className="bg-purple-50 border-2 border-purple-200 rounded-xl p-7 mb-4">
+<div className="flex items-center gap-2 mb-2">
+<span className="bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">UPCOMING</span>
+<span className="text-sm text-gray-500">{w.dateRange}</span>
+</div>
+<h4 className="text-xl font-bold mb-2">{w.title}</h4>
+<p className="text-gray-600 text-sm mb-1">{w.description}</p>
+<p className="text-xs text-gray-500">📍 {w.location}</p>
+</div>
+))}
+</div>}
+{D.futureWorkshopTopics&&D.futureWorkshopTopics.length>0&&<div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+<h3 className="font-semibold mb-3">Future Workshop Topics in the Pipeline</h3>
+<div className="grid grid-cols-2 gap-2">
+{D.futureWorkshopTopics.map((t,i)=>(
+<div key={i} className="flex items-center gap-2 text-sm text-gray-700"><span className="text-purple-400">&#9679;</span>{t}</div>
+))}
+</div>
+</div>}
+{past.length>0&&<div>
+<h3 className="text-xs tracking-widest uppercase text-gray-500 font-semibold mb-3">Past Workshops</h3>
+<div className="grid grid-cols-2 gap-4">
+{past.map(w=>(
+<div key={w.id} className="bg-white border border-gray-200 rounded-xl p-5">
+<span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full">PAST</span>
+<h4 className="text-base font-bold mt-2 mb-1">{w.title}</h4>
+<p className="text-xs text-gray-500 mb-1">{w.dateRange} · {w.location}</p>
+<p className="text-xs text-gray-600">{w.description}</p>
+</div>
+))}
+</div>
+</div>}
+</div>
+</section>
+
+{/* Schedule */}
+{spring&&spring.schedule&&spring.schedule.length>0&&(
+<section id="schedule-s" className="py-16 px-6">
+<div className="max-w-5xl mx-auto">
+<h2 className="text-3xl font-bold mb-2 text-center">Spring 2026 — Tentative Schedule</h2>
+<p className="text-gray-500 text-center mb-6 text-sm">Full-day immersive workshop at UCLA Brain Research Institute</p>
+<div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+{spring.schedule.map((s,i)=>(
+<div key={i} className={`sched-row flex items-start p-4 border-b border-gray-100 last:border-0`}>
+<div className="w-40 flex-shrink-0 font-semibold text-purple-700 text-sm">{s.time}</div>
+<div><div className="font-semibold text-sm">{s.title}</div>
+{s.description&&<div className="text-xs text-gray-500 mt-0.5">{s.description}</div>}</div>
+</div>
+))}
+</div>
+</div>
+</section>
+)}
+
+{/* Topics */}
+<section id="topics-s" className="py-16 px-6 bg-gray-50">
+<div className="max-w-5xl mx-auto">
+<h2 className="text-3xl font-bold mb-2 text-center">Topics for Teachers</h2>
+<p className="text-gray-500 text-center mb-8 text-sm">Neuroscience topics curated for K-12 educator workshops</p>
+<div className="grid grid-cols-3 gap-5">
+{D.topics.map((c,ci)=>(
+<div key={ci} className="topic-card bg-white rounded-xl border border-gray-200 p-5">
+<h3 className="font-bold text-purple-700 mb-3 text-sm">{c.category}</h3>
+<ul className="space-y-1.5">
+{c.items.map((it,ii)=>(
+<li key={ii} className="flex items-start gap-2 text-xs text-gray-600"><span className="text-purple-400 mt-0.5">&#8226;</span>{it}</li>
+))}
+</ul>
+</div>
+))}
+</div>
+</div>
+</section>
+
+{/* Google Classroom */}
+<section id="classroom-s" className="py-16 px-6">
+<div className="max-w-3xl mx-auto text-center">
+<div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center mx-auto mb-4">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="#16a34a"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+</div>
+<h2 className="text-3xl font-bold mb-2">Google Classroom</h2>
+<p className="text-gray-600 mb-5 text-sm">{D.googleClassroom.description}</p>
+<div className="grid grid-cols-2 gap-2 text-left mb-6">
+{D.googleClassroom.features.map((f,i)=>(
+<div key={i} className="flex items-center gap-2 bg-white rounded-lg p-3 border border-gray-100">
+<svg width="14" height="14" fill="#16a34a" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+<span className="text-xs text-gray-700">{f}</span>
+</div>
+))}
+</div>
+<a href={D.googleClassroom.url} target="_blank" rel="noopener noreferrer" className="cta inline-flex items-center gap-2 px-7 py-3 rounded-lg text-white font-semibold">Open Google Classroom →</a>
+</div>
+</section>
+
+{/* Testimonials */}
+<section id="testimonials-s" className="py-16 px-6 bg-gray-50">
+<div className="max-w-5xl mx-auto">
+<h2 className="text-3xl font-bold mb-6 text-center">Teacher Testimonials</h2>
+<div className="grid grid-cols-2 gap-4">
+{D.testimonials.map((t,i)=>(
+<div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
+<div className="text-3xl text-purple-200 mb-2">"</div>
+<p className="text-sm text-gray-700 italic leading-relaxed">{t}</p>
+</div>
+))}
+</div>
+</div>
+</section>
+
+{/* Join / Forms */}
+<section id="join" className="py-16 px-6">
+<div className="max-w-4xl mx-auto">
+<h2 className="text-3xl font-bold mb-6 text-center">Join BRAINWAVE</h2>
+<div className="grid grid-cols-2 gap-6">
+<div className="bg-purple-50 rounded-xl border border-purple-200 p-6">
+<h3 className="font-bold text-lg mb-2">For Teachers</h3>
+<p className="text-sm text-gray-600 mb-4">Are you a K-12 teacher passionate about enhancing your classroom with neuroscience? Join our transformative workshops designed to bridge cutting-edge brain research with dynamic classroom practices. By joining, you'll gain access to educational resources, teaching techniques, and a supportive community.</p>
+<a href={D.forms.teacherParticipation} target="_blank" rel="noopener noreferrer" className="cta inline-block px-5 py-2.5 rounded-lg text-white font-semibold text-sm">Teacher Participation Form →</a>
+</div>
+<div className="bg-blue-50 rounded-xl border border-blue-200 p-6">
+<h3 className="font-bold text-lg mb-2">For UCLA Postdocs</h3>
+<p className="text-sm text-gray-600 mb-4">Are you a UCLA Postdoctoral Research Scholar passionate about teaching and eager to share your neuroscience expertise with educators? We're always looking for enthusiastic instructors to join our team and contribute to our mission of revolutionizing education through neuroscience.</p>
+<a href={D.forms.instructorInterest} target="_blank" rel="noopener noreferrer" className="inline-block px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition">Instructor Interest Form →</a>
+</div>
+</div>
+</div>
+</section>
+
+{/* Footer */}
+<footer className="bg-gray-900 text-white py-10 px-6">
+<div className="max-w-5xl mx-auto text-center">
+<div className="font-bold text-xl mb-1">{D.program.name}</div>
+<p className="text-gray-400 text-sm mb-3">{D.program.fullName}</p>
+<p className="text-gray-500 text-xs mb-2">{D.program.institution}</p>
+<p className="text-gray-500 text-xs">Contact: <a href={`mailto:${D.program.email}`} className="text-purple-400 hover:text-purple-300">{D.program.email}</a></p>
+<p className="text-gray-600 text-[10px] mt-4">&copy; 2026 BRAINWAVE. All rights reserved.</p>
+</div>
+</footer>
+</div>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAINWAVE Admin Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box}body{font-family:'Inter',sans-serif;margin:0;background:#f8fafc}
+.ei{width:100%;border:1px solid #d1d5db;border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.875rem;transition:border .15s}
+.ei:focus{border-color:#7c3aed;outline:none;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.eta{width:100%;min-height:70px;border:1px solid #d1d5db;border-radius:8px;padding:10px;font-family:inherit;font-size:.875rem;resize:vertical}
+.eta:focus{border-color:#7c3aed;outline:none;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.es{border:1px solid #d1d5db;border-radius:8px;padding:6px 10px;font-size:.8rem;background:white}
+.card{background:white;border-radius:12px;border:1px solid #e5e7eb;padding:20px;margin-bottom:12px;transition:box-shadow .15s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.sb{display:inline-flex;align-items:center;padding:2px 10px;border-radius:9999px;font-size:.7rem;font-weight:600;letter-spacing:.02em}
+.ph{background:#fef2f2;color:#dc2626}.pm{background:#fffbeb;color:#d97706}.pl{background:#f0fdf4;color:#16a34a}
+.sl{transition:all .12s;border-left:3px solid transparent}.sl:hover{background:rgba(255,255,255,.08)}.sl.ac{background:rgba(255,255,255,.12);border-left-color:#a78bfa}
+.pubtn{background:linear-gradient(135deg,#7c3aed,#2563eb);transition:all .15s}.pubtn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(124,58,237,.3)}
+.fade{animation:fi .25s ease-out}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.tl-line{position:absolute;left:18px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#c4b5fd,#7c3aed)}
+.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid #7c3aed;background:white;position:absolute;left:13px;z-index:1}
+.tl-dot.done{background:#7c3aed}.tl-dot.overdue{border-color:#dc2626;background:#fef2f2}
+.save-toast{position:fixed;bottom:24px;right:24px;background:#059669;color:white;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;z-index:999;animation:toast .3s ease-out}
+@keyframes toast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback,useRef}=React;
+
+const STORAGE_KEY='brainwave_admin_data';
+
+const DEFAULT_DATA={
+program:{
+name:"BRAINWAVE",
+fullName:"<span class=\"acronym-highlight\"><strong>B</strong>ringing <strong>R</strong>esearch <strong>A</strong>nd <strong>I</strong>nnovation in <strong>N</strong>euroscience to <strong>W</strong>orkshops for <strong>A</strong>dvancing <strong>V</strong>isionary <strong>E</strong>ducators</span>",
+mission:"At BRAINWAVE, we believe every teacher has the potential to be a catalyst for change, and every student can excel. Our mission is to revolutionize education by equipping teachers with the latest neuroscience insights and evidence-based teaching strategies. By emphasizing early exposure to brain science, we inspire teachers and students from all backgrounds, to explore STEM fields. Through fostering a community of forward-thinking educators, we're not just enhancing education — we are setting off a wave of change that shapes the future of learning and inspires the next generation of scientists.",
+description:"BRAINWAVE is a pioneering neuroscience education initiative that bridges cutting-edge brain research with dynamic classroom teaching. Led by passionate postdoctoral fellows, BRAINWAVE empowers elementary, middle, and high school teachers across Los Angeles, working with students from all backgrounds and communities.",
+pillars:[
+{title:"State-of-the-Art Neuroscience Training",desc:"Dive deep into the intricacies of the brain, gaining insights into the latest scientific breakthroughs."},
+{title:"Innovative Pedagogy Techniques",desc:"Master evidence-based teaching methods that transform complex neuroscience topics into engaging, accessible lessons."},
+{title:"Inspiration and Implementation",desc:"Implement practical, research-driven strategies that captivate students' interest and encourage pursuit of STEM fields."},
+{title:"Comprehensive Resources",desc:"Access a robust collection of materials designed to effectively communicate neuroscience knowledge."},
+{title:"LAUSD-Approved Professional Development",desc:"Participate in officially approved LAUSD JSPCC workshops that offer salary point credit and high-impact training."}
+],
+aboutExtra:"Through immersive workshops, hands-on activities, up-to-date brain research insights, and exclusive tours of UCLA neuroscience labs, BRAINWAVE equips teachers to revolutionize their classrooms. At the same time, BRAINWAVE provides a unique opportunity for UCLA postdoctoral fellows to share their neuroscience expertise, refine their teaching skills, and engage in meaningful science communication with the broader community.",
+institution:"UCLA Brain Research Institute (BRI)",
+email:"vidyas@ucla.edu",
+website:"https://bri.ucla.edu/brainwave/"
+},
+team:[
+{name:"Vidya Saravanapandian, PhD",role:"Founder and Director",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/Vidya_photo-scaled.jpg",bio:"Vidya was born and raised in India. She earned a Ph.D. in Neuroscience from UCLA and a Master of Engineering (M.E.) in Biotechnology from Birla Institute of Technology and Science, Pilani, India. She is an IRACDA Postdoctoral Research Fellow at the Golshani laboratory at UCLA, investigating changes in sleep physiology in neurodevelopmental disorders (NDDs) and their impact on cognitive and developmental outcomes. As a neuroscience education advocate, Vidya has been working with LAUSD schools to bring neuroscience education to K-12 students in low-income communities. Recognizing the importance of early exposure and awareness of brain health, she created BRAINWAVE to empower teachers and impact a greater number of students."},
+{name:"Ceazar E. Nave, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/CeazarHeadShot-scaled.jpg",bio:"IRACDA Postdoctoral Research Fellow in the Department of Neurobiology under Dr. Jeffrey Donlea. His research studies how various environmental conditions can shape brain structures and behaviors, particularly how erratic and harsh environmental conditions shape the neural circuits that govern sleep and the biological clock."},
+{name:"Merel Dagher, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/RichSchmittPhotography095.jpeg",bio:"Postdoctoral IRACDA Fellow at UCLA researching in areas of behavioral neuroscience. Born in Syria, Merel immigrated to the United States at age 4. Her current research examines brain circuits involved in chronic pain and opioid seeking in the laboratory of Dr. Catherine Cahill."},
+{name:"Takahiro Ohara, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/IMG_6193-scaled.jpeg",bio:"Postdoctoral Scholar at UCLA studying the interaction between the gut microbiota and the brain (the microbiota-gut-brain axis). He joined BRAINWAVE because he enjoys teaching and working directly with teachers."},
+{name:"Shivan Bonanno, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/08/headshot_bgBlue1.png",bio:"Project Scientist in the Krantz lab at UCLA, researching the connectivity of serotonin circuits and their long-term adaptations to psychiatric drugs like SSRIs. Passionate about inspiring junior scientists to treat the scientific process as a personal and rewarding journey."},
+{name:"Kat Silaj, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2024/09/unnamed-2.png",bio:"Assistant Professor of Psychology at Mount Saint Mary's University and recent graduate of UCLA's Psychology program. With experience as a former high school teacher, Kat brings a deep passion for making classrooms more inclusive by applying the latest research on how people learn and remember."},
+{name:"Olivia Justynski, PhD",role:"Instructor",photo:"https://bri.ucla.edu/wp-content/uploads/2025/07/Headshot.jpg",bio:"Postdoc in the Sagasti lab at UCLA and an IRACDA fellow. Originally from Rhode Island, she earned her bachelor's from Mount Holyoke College and PhD from Yale University. Her research investigates how migratory cells contribute to skin development in a zebrafish model system."},
+{name:"Joseph M. Quintero",role:"Operations Guru",photo:"https://bri.ucla.edu/wp-content/uploads/2024/10/Quintero_J_Photo-scaled.jpg",bio:"Programs and Operations Manager of the Brain Research Institute. He collaborates closely with the Director and Chief Administrative Officer to supervise established programs and execute new initiatives. Joe has orchestrated a series of highly successful events, including workshops, poster sessions, and multi-day symposia."}
+],
+testimonials:[
+"This was my first neuroscience education workshop, and I learned so much. Can't wait to bring these activities to my classroom. Very grateful for the invitation!",
+"The best part about being in this workshop was the environment. Everyone was so nice and genuinely excited to share their research and explain it in a way that was easily digestible. I loved the variety of research that was shared!",
+"Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far!",
+"This experience was amazing. I had a blast learning from scientists and collaborating with educators I wouldn't have otherwise had the chance to work with. I'd love to participate again.",
+"I anticipate that this workshop will impact my students' learning by helping me become a more aware teacher. A big takeaway for me was the idea of the weekend brain — I'll be rethinking my exam schedule to better support students."
+],
+workshops:[
+{id:"summer-2025",title:"Brains in Rest: The Neuroscience of Sleep and Its Role in Learning, Behavior, and Development",status:"past",dateRange:"June 25, 2025",location:"UCLA",description:"Exploring how sleep affects learning, memory consolidation, brain development, and student behavior. Teachers will gain evidence-based strategies for promoting healthy sleep habits."},
+{id:"spring-2026",title:"Spring 2026 Workshop — Topics TBD",status:"upcoming",dateRange:"Spring 2026 (Tentative)",location:"UCLA Brain Research Institute",description:"An immersive full-day workshop bringing together K-12 educators for hands-on neuroscience exploration, lab tours, and classroom-ready teaching strategies.",
+schedule:[
+{time:"8:00 – 8:30 AM",title:"Registration & Welcome Coffee",description:"Check-in, name badges, welcome materials"},
+{time:"8:30 – 9:00 AM",title:"Opening & Program Overview",description:"Welcome by Dr. Vidya Saravanapandian. Overview of the day, BRAINWAVE mission, and workshop goals."},
+{time:"9:00 – 10:00 AM",title:"Keynote: The Neuroscience of Learning",description:"How the brain encodes, stores, and retrieves information. Implications for classroom instruction."},
+{time:"10:00 – 10:15 AM",title:"Break & Networking",description:"Refreshments and informal networking"},
+{time:"10:15 – 11:15 AM",title:"Hands-On: Neuroanatomy Lab",description:"Guided exploration of brain models, sheep brain dissection, and neuron structure activities."},
+{time:"11:15 AM – 12:00 PM",title:"Session: Sleep, Brain Development & Student Performance",description:"Latest research on sleep's role in memory consolidation, adolescent brain development, and academic performance."},
+{time:"12:00 – 1:00 PM",title:"Lunch & Lab Tour",description:"Catered lunch followed by guided tour of UCLA neuroscience research labs."},
+{time:"1:00 – 2:00 PM",title:"Session: Mental Health & the Adolescent Brain",description:"Understanding anxiety, stress, and emotional regulation through a neuroscience lens."},
+{time:"2:00 – 2:45 PM",title:"Hands-On: EEG Demonstration",description:"Live EEG recording demonstration. Teachers experience seeing brain waves in real time."},
+{time:"2:45 – 3:00 PM",title:"Break",description:""},
+{time:"3:00 – 3:45 PM",title:"Workshop: Building Your Neuroscience Lesson Plan",description:"Teachers work in grade-level groups to develop classroom-ready neuroscience lessons."},
+{time:"3:45 – 4:15 PM",title:"Group Presentations & Peer Feedback",description:"Selected groups share their lesson plans. Collaborative feedback and refinement."},
+{time:"4:15 – 4:30 PM",title:"Closing Remarks & Next Steps",description:"Post-workshop survey, LAUSD salary point credit information, Google Classroom access, and community next steps."}
+]},
+{id:"fall-2024",title:"Neuroscience of Learning and Memory",status:"past",dateRange:"October 2024",location:"UCLA Brain Research Institute",description:"Inaugural immersive workshop bringing together passionate educators for neuroscience exploration, hands-on activities, and classroom-ready insights. From understanding the science of learning and memory to engaging in interactive sessions led by UCLA experts, teachers left inspired."},
+{id:"baw-2024",title:"Brain Awareness Week 2024",status:"past",dateRange:"March 2024",location:"UCLA & Partner Schools",description:"Annual large-scale community event engaging students in hands-on neuroscience learning activities."}
+],
+futureWorkshopTopics:[
+"Wired to Learn: How the Brain Builds Memory and Understanding",
+"Focus Forward: Executive Function, Attention, and the Developing Brain",
+"Teaching the Teenage Brain: Brain Development in Adolescence",
+"The Learning Brain and the Power of Play"
+],
+googleClassroom:{
+url:"https://classroom.google.com",
+description:"Access workshop materials, lesson templates, neuroscience resources, and connect with fellow BRAINWAVE educators.",
+features:["Workshop presentation slides & recordings","Neuroscience lesson plan templates","Hands-on activity guides & materials","Discussion forums with peer educators","Post-workshop assignments for LAUSD credit","Resource library of research articles"]
+},
+topics:[
+{category:"Neuroscience Foundations",items:["Neuroanatomy & Brain Structure","How Neurons Communicate (Synaptic Transmission)","Neuroplasticity — The Brain That Changes Itself","Brain Development Across the Lifespan","Sensory Systems & Perception"]},
+{category:"Learning & Memory",items:["How Memories Are Formed & Retrieved","Types of Memory (Working, Short-term, Long-term)","Spaced Repetition & Evidence-Based Study Strategies","The Role of Attention in Learning","Metacognition & Self-Regulated Learning"]},
+{category:"Sleep & Brain Health",items:["Sleep Architecture & Brain Waves","Sleep's Role in Memory Consolidation","Adolescent Sleep Patterns & School Start Times","Effects of Sleep Deprivation on Cognition","Sleep Hygiene for Students"]},
+{category:"Mental Health & Emotional Learning",items:["Stress, Anxiety & the Brain","Trauma-Informed Teaching Strategies","Emotional Regulation & the Prefrontal Cortex","Growth Mindset — Neuroscience Evidence","Social-Emotional Learning (SEL) & Neuroscience"]},
+{category:"Technology & Future Directions",items:["AI & Neuroscience in Education","Brain-Computer Interfaces","EEG & Neuroimaging for Educators","Neuromyths — Debunking Common Misconceptions","Ethical Considerations in Neuroscience Education"]},
+{category:"Hands-On Activities",items:["Sheep Brain Dissection","Pipe Cleaner Neuron Building","EEG Live Demonstration","Reaction Time Experiments","Sensory Illusions & Perception Labs"]}
+],
+forms:{
+teacherParticipation:"https://forms.gle/YRxeEUySRqwBHTsy5",
+instructorInterest:"https://docs.google.com/forms/d/e/1FAIpQLSeykCR3nwTt5Ik4YVsll50vuGjNZr9VJRUH8VMJfLPCJisCeg/viewform?usp=sf_link"
+},
+actionItems:{
+"spring-2026":[
+{id:1,task:"Confirm Spring 2026 workshop date with UCLA BRI",status:"pending",priority:"high",category:"Logistics",assignee:"Vidya Saravanapandian",deadline:"2026-02-15"},
+{id:2,task:"Recruit UCLA postdoctoral fellows as workshop instructors",status:"pending",priority:"high",category:"Staffing",assignee:"Vidya Saravanapandian",deadline:"2026-02-28"},
+{id:3,task:"Set up Google Classroom for Spring 2026 cohort",status:"pending",priority:"high",category:"Technology",assignee:"Joe Quintero",deadline:"2026-03-15"},
+{id:4,task:"Design and distribute teacher registration form",status:"pending",priority:"high",category:"Registration",assignee:"Joe Quintero",deadline:"2026-03-01"},
+{id:5,task:"Secure funding for catering and materials",status:"pending",priority:"high",category:"Budget",assignee:"Vidya Saravanapandian",deadline:"2026-03-01"},
+{id:6,task:"Book UCLA BRI conference room and lab tour",status:"pending",priority:"medium",category:"Logistics",assignee:"Joe Quintero",deadline:"2026-03-15"},
+{id:7,task:"Prepare pre-workshop survey (baseline assessment)",status:"pending",priority:"medium",category:"Evaluation",assignee:"Kat Silaj",deadline:"2026-04-01"},
+{id:8,task:"Develop updated neuroscience lesson plan templates",status:"pending",priority:"medium",category:"Curriculum",assignee:"Merel Dagher",deadline:"2026-04-01"},
+{id:9,task:"Order sheep brain specimens and dissection supplies",status:"pending",priority:"medium",category:"Materials",assignee:"Joe Quintero",deadline:"2026-04-15"},
+{id:10,task:"Coordinate EEG equipment for live demonstration",status:"pending",priority:"medium",category:"Materials",assignee:"Ceazar Nave",deadline:"2026-04-15"},
+{id:11,task:"Create promotional flyer and distribute to LAUSD schools",status:"pending",priority:"medium",category:"Outreach",assignee:"Joe Quintero",deadline:"2026-03-15"},
+{id:12,task:"Confirm LAUSD salary point credit eligibility",status:"pending",priority:"high",category:"Accreditation",assignee:"Vidya Saravanapandian",deadline:"2026-02-28"},
+{id:13,task:"Prepare post-workshop evaluation survey",status:"pending",priority:"low",category:"Evaluation",assignee:"Kat Silaj",deadline:"2026-04-15"},
+{id:14,task:"Compile resource packet for teacher take-home materials",status:"pending",priority:"medium",category:"Materials",assignee:"Olivia Justynski",deadline:"2026-04-15"},
+{id:15,task:"Invite keynote speaker for session",status:"pending",priority:"high",category:"Speakers",assignee:"Vidya Saravanapandian",deadline:"2026-03-01"},
+{id:16,task:"Set up workshop photography/video documentation",status:"pending",priority:"low",category:"Documentation",assignee:"Joe Quintero",deadline:"2026-04-30"},
+{id:17,task:"Prepare name badges and welcome packets",status:"pending",priority:"low",category:"Logistics",assignee:"Joe Quintero",deadline:"2026-04-30"},
+{id:18,task:"Follow up with past participants for testimonials",status:"pending",priority:"low",category:"Outreach",assignee:"Vidya Saravanapandian",deadline:"2026-03-15"},
+{id:19,task:"Research grant opportunities (NSF, Dana Foundation, SfN)",status:"pending",priority:"medium",category:"Funding",assignee:"Vidya Saravanapandian",deadline:"2026-03-15"},
+{id:20,task:"Build and launch BRAINWAVE website",status:"in-progress",priority:"high",category:"Technology",assignee:"Vidya Saravanapandian",deadline:"2026-02-28"}
+],
+"summer-2025":[
+{id:101,task:"Finalize Sleep workshop curriculum and slides",status:"pending",priority:"high",category:"Curriculum",assignee:"Vidya Saravanapandian",deadline:"2025-06-01"},
+{id:102,task:"Send registration confirmations to teachers",status:"pending",priority:"high",category:"Registration",assignee:"Joe Quintero",deadline:"2025-06-15"},
+{id:103,task:"Prepare sleep research materials and handouts",status:"pending",priority:"medium",category:"Materials",assignee:"Ceazar Nave",deadline:"2025-06-15"}
+]
+},
+benchmarking:[
+{program:"Columbia Zuckerman Institute — Teacher Institute for Neuroscience and Society",university:"Columbia University",strengths:["4-evening series + full-day summit format","$400 stipend incentivizes participation","CTLE credit hours for teachers","Focus on neuroscience-society intersection"],improvementIdea:"Consider a multi-session format (e.g., 3-4 evening sessions leading to a full-day workshop) to deepen engagement and allow iterative lesson development."},
+{program:"BrainU — Neuroscience Teacher Institute",university:"University of Minnesota",strengths:["2-week intensive summer program","Less than 20% lecture time — highly experiential","Research-backed outcomes showing increased teacher confidence","Student cognitive engagement improvements documented"],improvementIdea:"Adopt the 80/20 model — minimize lectures, maximize hands-on activities. Add longitudinal follow-up to measure classroom implementation."},
+{program:"Max Planck Florida — Educator Workshops",university:"Max Planck Florida Institute",strengths:["Growth Mindset workshop with neuroscience backing","Model organism and optogenetics hands-on modules","Subject-expert-led sessions"],improvementIdea:"Add a Growth Mindset & Neuroscience module. Include cutting-edge techniques like optogenetics demonstrations."},
+{program:"Towson University — Center for STEM Excellence",university:"Towson University",strengths:["NSF/NSA-funded","Year-long program with summer camp + follow-up","Teachers develop and implement lessons during school year"],improvementIdea:"Implement year-round follow-up: after the workshop, reconvene for a virtual check-in mid-school-year."},
+{program:"Tulane University — Summer Teacher PD",university:"Tulane University",strengths:["$300 stipend per teacher","Hands-on robotics and coding integration","Standards-aligned curriculum"],improvementIdea:"Consider offering teacher stipends to increase participation. Integrate technology components alongside neuroscience."},
+{program:"WPI — Research Experiences for Teachers (RET)",university:"Worcester Polytechnic Institute",strengths:["6-week paid research experience","Teachers work directly with faculty","Deep immersion in research methodology"],improvementIdea:"Create a mini-RET summer component where select teachers spend 1-2 days in a UCLA neuroscience lab."}
+]
+};
+
+const I={
+home:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>`,
+cal:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+book:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`,
+clip:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>`,
+link:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>`,
+chart:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>`,
+users:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
+tl:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+team:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`,
+quote:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>`,
+save:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>`,
+pub:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>`,
+plus:`<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>`,
+trash:`<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`,
+check:`<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`,
+brain:`<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 002 2h4a2 2 0 002-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7z"/><path d="M9 21h6"/></svg>`,
+forms:`<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`,
+};
+const Ic=({name})=><span dangerouslySetInnerHTML={{__html:I[name]||''}}/>
+
+const NAV=[
+{id:'dash',label:'Dashboard',icon:'home'},
+{id:'program',label:'Program Info',icon:'users'},
+{id:'team',label:'Team',icon:'team'},
+{id:'workshops',label:'Workshops',icon:'cal'},
+{id:'schedule',label:'Spring 2026 Schedule',icon:'cal'},
+{id:'topics',label:'Topics for Teachers',icon:'book'},
+{id:'classroom',label:'Google Classroom',icon:'link'},
+{id:'actions',label:'Action Items',icon:'clip'},
+{id:'timeline',label:'Timeline',icon:'tl'},
+{id:'testimonials',label:'Testimonials',icon:'quote'},
+{id:'forms',label:'Forms & Links',icon:'forms'},
+{id:'bench',label:'Research & Benchmarking',icon:'chart'},
+];
+
+function loadData(){try{const s=localStorage.getItem(STORAGE_KEY);if(s){return JSON.parse(s)}}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_DATA))}
+function saveData(d){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(d))}catch(e){}}
+
+function App(){
+const[data,setDataRaw]=useState(()=>loadData());
+const[page,setPage]=useState('dash');
+const[toast,setToast]=useState('');
+const[selWs,setSelWs]=useState('spring-2026');
+
+const setData=(fn)=>{
+setDataRaw(prev=>{
+const next=typeof fn==='function'?fn(prev):fn;
+saveData(next);
+return next;
+});
+};
+
+const showToast=(msg)=>{setToast(msg);setTimeout(()=>setToast(''),2500)};
+
+const update=(path,value)=>{
+setData(prev=>{
+const next=JSON.parse(JSON.stringify(prev));
+const keys=path.split('.');
+let obj=next;
+for(let i=0;i<keys.length-1;i++){const k=isNaN(keys[i])?keys[i]:parseInt(keys[i]);obj=obj[k]}
+const last=isNaN(keys[keys.length-1])?keys[keys.length-1]:parseInt(keys[keys.length-1]);
+obj[last]=value;
+return next;
+});
+};
+
+const handleSave=()=>{saveData(data);showToast('All changes saved!')};
+
+const handlePublish=()=>{
+const pubData=JSON.parse(JSON.stringify(data));
+delete pubData.benchmarking;
+delete pubData.actionItems;
+const blob=new Blob([JSON.stringify(pubData,null,2)],{type:'application/json'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');a.href=url;a.download='brainwave-public-data.json';a.click();
+URL.revokeObjectURL(url);
+showToast('Public site data exported (no benchmarking or action items)');
+};
+
+const handleReset=()=>{if(confirm('Reset all data to defaults? This cannot be undone.')){setDataRaw(JSON.parse(JSON.stringify(DEFAULT_DATA)));saveData(DEFAULT_DATA);showToast('Data reset to defaults')}};
+
+const teamNames=data.team.map(t=>t.name.split(',')[0]);
+
+return(
+<div className="flex h-screen">
+{toast&&<div className="save-toast">{toast}</div>}
+{/* Sidebar */}
+<div className="w-60 bg-gray-900 text-white flex flex-col flex-shrink-0">
+<div className="p-4 border-b border-gray-700">
+<div className="flex items-center gap-2.5">
+<div className="w-9 h-9 rounded-lg bg-purple-600 flex items-center justify-center"><Ic name="brain"/></div>
+<div><div className="font-bold text-base tracking-tight">BRAINWAVE</div><div className="text-[10px] text-gray-400">Admin Dashboard</div></div>
+</div>
+</div>
+<nav className="flex-1 py-3 overflow-y-auto text-[13px]">
+{NAV.map(n=>(
+<button key={n.id} onClick={()=>setPage(n.id)} className={`sl w-full flex items-center gap-2.5 px-4 py-2 text-left ${page===n.id?'ac text-white':'text-gray-400 hover:text-gray-200'}`}>
+<Ic name={n.icon}/><span>{n.label}</span>
+{n.id==='bench'&&<span className="ml-auto text-[9px] bg-amber-600 text-white px-1.5 py-0.5 rounded">INTERNAL</span>}
+</button>
+))}
+</nav>
+<div className="p-3 border-t border-gray-700 space-y-2">
+<button onClick={handleSave} className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs"><Ic name="save"/>Save All Changes</button>
+<button onClick={handlePublish} className="pubtn w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-white font-medium text-xs"><Ic name="pub"/>Publish Public Site</button>
+<button onClick={handleReset} className="w-full text-[10px] text-gray-500 hover:text-gray-300 py-1">Reset to Defaults</button>
+</div>
+</div>
+
+{/* Main */}
+<div className="flex-1 overflow-y-auto">
+<div className="max-w-6xl mx-auto p-6 fade" key={page}>
+{page==='dash'&&<Dash data={data} setPage={setPage}/>}
+{page==='program'&&<Program data={data} update={update}/>}
+{page==='team'&&<Team data={data} setData={setData}/>}
+{page==='workshops'&&<Workshops data={data} update={update} setData={setData}/>}
+{page==='schedule'&&<Schedule data={data} update={update}/>}
+{page==='topics'&&<Topics data={data} update={update} setData={setData}/>}
+{page==='classroom'&&<Classroom data={data} update={update}/>}
+{page==='actions'&&<Actions data={data} setData={setData} selWs={selWs} setSelWs={setSelWs} teamNames={teamNames}/>}
+{page==='timeline'&&<Timeline data={data} selWs={selWs} setSelWs={setSelWs}/>}
+{page==='testimonials'&&<Testimonials data={data} setData={setData}/>}
+{page==='forms'&&<Forms data={data} update={update}/>}
+{page==='bench'&&<Bench data={data} update={update}/>}
+</div>
+</div>
+</div>
+);
+}
+
+// ── Dashboard ──
+function Dash({data,setPage}){
+const upcoming=data.workshops.filter(w=>w.status==='upcoming');
+const allActions=Object.values(data.actionItems).flat();
+const pending=allActions.filter(a=>a.status==='pending').length;
+const high=allActions.filter(a=>a.priority==='high'&&a.status==='pending').length;
+const overdue=allActions.filter(a=>{if(a.status!=='pending'||!a.deadline)return false;return new Date(a.deadline)<new Date()}).length;
+return(<div>
+<h1 className="text-2xl font-bold text-gray-900 mb-1">BRAINWAVE Dashboard</h1>
+<p className="text-gray-500 text-sm mb-6">Manage your neuroscience teacher workshop program</p>
+<div className="grid grid-cols-5 gap-3 mb-6">
+{[{l:'Upcoming',v:upcoming.length,c:'bg-purple-50 text-purple-700 border-purple-200'},
+{l:'Past',v:data.workshops.filter(w=>w.status==='past').length,c:'bg-blue-50 text-blue-700 border-blue-200'},
+{l:'Team Members',v:data.team.length,c:'bg-teal-50 text-teal-700 border-teal-200'},
+{l:'Pending Tasks',v:pending,c:'bg-amber-50 text-amber-700 border-amber-200'},
+{l:'Overdue',v:overdue,c:'bg-red-50 text-red-700 border-red-200'}
+].map((s,i)=><div key={i} className={`rounded-xl border p-4 ${s.c}`}><div className="text-2xl font-bold">{s.v}</div><div className="text-xs mt-1 opacity-80">{s.l}</div></div>)}
+</div>
+<div className="grid grid-cols-2 gap-5">
+<div className="card"><h3 className="font-semibold mb-3">Quick Navigation</h3>
+{NAV.slice(1).map(n=><button key={n.id} onClick={()=>setPage(n.id)} className="flex items-center gap-2.5 w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-700 text-sm"><span className="text-purple-600"><Ic name={n.icon}/></span>{n.label}</button>)}
+</div>
+<div className="card"><h3 className="font-semibold mb-3">High Priority Tasks</h3>
+{allActions.filter(a=>a.priority==='high'&&a.status==='pending').slice(0,7).map(a=>(
+<div key={a.id} className="flex items-start gap-2 py-1.5 border-b border-gray-50 last:border-0">
+<span className="sb ph mt-0.5">{a.category}</span>
+<div className="flex-1 text-xs text-gray-700">{a.task}</div>
+<div className="text-[10px] text-gray-400">{a.assignee?.split(' ')[0]}</div>
+</div>
+))}
+</div>
+</div>
+</div>);
+}
+
+// ── Program ──
+function Program({data,update}){
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Program Information</h1>
+<p className="text-gray-500 text-sm mb-6">Edit BRAINWAVE mission, description, and organizational details. All changes auto-persist.</p>
+<div className="card"><h3 className="font-semibold mb-2">Program Name & Full Name</h3>
+<input className="ei mb-2" value={data.program.name} onChange={e=>update('program.name',e.target.value)}/>
+<input className="ei" value={data.program.fullName} onChange={e=>update('program.fullName',e.target.value)}/>
+</div>
+<div className="card"><h3 className="font-semibold mb-2">Mission Statement</h3>
+<textarea className="eta" value={data.program.mission} onChange={e=>update('program.mission',e.target.value)} style={{minHeight:120}}/>
+</div>
+<div className="card"><h3 className="font-semibold mb-2">Program Description</h3>
+<textarea className="eta" value={data.program.description} onChange={e=>update('program.description',e.target.value)} style={{minHeight:100}}/>
+</div>
+<div className="card"><h3 className="font-semibold mb-2">About (Extended)</h3>
+<textarea className="eta" value={data.program.aboutExtra} onChange={e=>update('program.aboutExtra',e.target.value)} style={{minHeight:100}}/>
+</div>
+<div className="card"><h3 className="font-semibold mb-3">Program Pillars</h3>
+{data.program.pillars.map((p,i)=>(
+<div key={i} className="mb-3 p-3 bg-gray-50 rounded-lg">
+<input className="ei mb-1 font-medium" value={p.title} onChange={e=>{const n=[...data.program.pillars];n[i]={...n[i],title:e.target.value};update('program.pillars',n)}}/>
+<textarea className="eta text-xs" value={p.desc} onChange={e=>{const n=[...data.program.pillars];n[i]={...n[i],desc:e.target.value};update('program.pillars',n)}} style={{minHeight:50}}/>
+</div>
+))}
+</div>
+<div className="card"><h3 className="font-semibold mb-2">Contact</h3>
+<div className="grid grid-cols-2 gap-3">
+<div><label className="text-xs text-gray-500">Email</label><input className="ei" value={data.program.email} onChange={e=>update('program.email',e.target.value)}/></div>
+<div><label className="text-xs text-gray-500">Website</label><input className="ei" value={data.program.website} onChange={e=>update('program.website',e.target.value)}/></div>
+</div>
+</div>
+</div>);
+}
+
+// ── Team ──
+function Team({data,setData}){
+const add=()=>setData(p=>({...p,team:[...p.team,{name:'New Member',role:'Instructor',bio:''}]}));
+const rm=(i)=>setData(p=>({...p,team:p.team.filter((_,j)=>j!==i)}));
+const upd=(i,k,v)=>setData(p=>{const t=[...p.team];t[i]={...t[i],[k]:v};return{...p,team:t}});
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Team</h1>
+<p className="text-gray-500 text-sm mb-6">Manage the BRAINWAVE instructors and staff.</p>
+{data.team.map((m,i)=>(
+<div key={i} className="card group">
+<div className="flex justify-between items-start">
+<div className="flex-1 grid grid-cols-2 gap-3 mb-2">
+<div><label className="text-xs text-gray-500">Name</label><input className="ei" value={m.name} onChange={e=>upd(i,'name',e.target.value)}/></div>
+<div><label className="text-xs text-gray-500">Role</label><input className="ei" value={m.role} onChange={e=>upd(i,'role',e.target.value)}/></div>
+</div>
+<button onClick={()=>rm(i)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 ml-3 mt-4"><Ic name="trash"/></button>
+</div>
+<label className="text-xs text-gray-500">Bio</label>
+<textarea className="eta text-xs" value={m.bio} onChange={e=>upd(i,'bio',e.target.value)}/>
+</div>
+))}
+<button onClick={add} className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 text-sm font-medium mt-2"><Ic name="plus"/>Add Team Member</button>
+</div>);
+}
+
+// ── Workshops ──
+function Workshops({data,update,setData}){
+const add=()=>setData(p=>({...p,workshops:[...p.workshops,{id:'new-'+Date.now(),title:'New Workshop',status:'upcoming',dateRange:'TBD',location:'UCLA',description:'',schedule:[]}]}));
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Workshops</h1>
+<p className="text-gray-500 text-sm mb-6">Manage past and upcoming workshops. Each workshop is clearly labeled.</p>
+{data.workshops.map((w,wi)=>(
+<div key={w.id} className={`card ${w.status==='upcoming'?'border-purple-300 bg-purple-50/30':''}`}>
+<div className="flex items-center gap-2 mb-2">
+<select className="es" value={w.status} onChange={e=>update(`workshops.${wi}.status`,e.target.value)}>
+<option value="upcoming">UPCOMING</option><option value="past">PAST</option>
+</select>
+<span className="text-xs text-gray-400">ID: {w.id}</span>
+</div>
+<input className="ei mb-2 font-semibold text-lg" value={w.title} onChange={e=>update(`workshops.${wi}.title`,e.target.value)}/>
+<div className="grid grid-cols-2 gap-3 mb-2">
+<div><label className="text-xs text-gray-500">Date</label><input className="ei" value={w.dateRange} onChange={e=>update(`workshops.${wi}.dateRange`,e.target.value)}/></div>
+<div><label className="text-xs text-gray-500">Location</label><input className="ei" value={w.location} onChange={e=>update(`workshops.${wi}.location`,e.target.value)}/></div>
+</div>
+<label className="text-xs text-gray-500">Description</label>
+<textarea className="eta" value={w.description} onChange={e=>update(`workshops.${wi}.description`,e.target.value)}/>
+</div>
+))}
+<div className="card"><h3 className="font-semibold mb-2">Future Workshop Topics (Pipeline)</h3>
+{data.futureWorkshopTopics.map((t,i)=>(
+<input key={i} className="ei mb-2" value={t} onChange={e=>setData(p=>{const n=[...p.futureWorkshopTopics];n[i]=e.target.value;return{...p,futureWorkshopTopics:n}})}/>
+))}
+<button onClick={()=>setData(p=>({...p,futureWorkshopTopics:[...p.futureWorkshopTopics,'']}))} className="flex items-center gap-1 text-purple-600 text-xs font-medium"><Ic name="plus"/>Add Topic</button>
+</div>
+<button onClick={add} className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 text-sm font-medium mt-2"><Ic name="plus"/>Add Workshop</button>
+</div>);
+}
+
+// ── Schedule ──
+function Schedule({data,update}){
+const wi=data.workshops.findIndex(w=>w.id==='spring-2026');
+const ws=data.workshops[wi];
+if(!ws)return<p>No Spring 2026 workshop found.</p>;
+const sch=ws.schedule||[];
+const add=()=>{const n=[...sch,{time:'TBD',title:'New Session',description:''}];update(`workshops.${wi}.schedule`,n)};
+const rm=(i)=>{const n=[...sch];n.splice(i,1);update(`workshops.${wi}.schedule`,n)};
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Spring 2026 — Tentative Schedule</h1>
+<p className="text-gray-500 text-sm mb-6">Add, edit, or remove sessions. Changes persist automatically.</p>
+<div className="space-y-2">
+{sch.map((s,si)=>(
+<div key={si} className="card flex gap-3 items-start group py-3">
+<div className="w-36 flex-shrink-0"><input className="ei text-xs text-purple-700 font-semibold" value={s.time} onChange={e=>{const n=[...sch];n[si]={...n[si],time:e.target.value};update(`workshops.${wi}.schedule`,n)}}/></div>
+<div className="flex-1">
+<input className="ei mb-1 font-medium" value={s.title} onChange={e=>{const n=[...sch];n[si]={...n[si],title:e.target.value};update(`workshops.${wi}.schedule`,n)}}/>
+<input className="ei text-xs text-gray-500" value={s.description} onChange={e=>{const n=[...sch];n[si]={...n[si],description:e.target.value};update(`workshops.${wi}.schedule`,n)}}/>
+</div>
+<button onClick={()=>rm(si)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 mt-2"><Ic name="trash"/></button>
+</div>
+))}
+</div>
+<button onClick={add} className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 text-sm font-medium mt-3"><Ic name="plus"/>Add Session</button>
+</div>);
+}
+
+// ── Topics ──
+function Topics({data,update,setData}){
+const addCat=()=>setData(p=>({...p,topics:[...p.topics,{category:'New Category',items:['Topic 1']}]}));
+const addItem=(ci)=>setData(p=>{const t=JSON.parse(JSON.stringify(p.topics));t[ci].items.push('New Topic');return{...p,topics:t}});
+const rmItem=(ci,ii)=>setData(p=>{const t=JSON.parse(JSON.stringify(p.topics));t[ci].items.splice(ii,1);return{...p,topics:t}});
+const updItem=(ci,ii,v)=>setData(p=>{const t=JSON.parse(JSON.stringify(p.topics));t[ci].items[ii]=v;return{...p,topics:t}});
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Topics for Teachers</h1>
+<p className="text-gray-500 text-sm mb-6">Curated neuroscience topics for K-12 workshops.</p>
+<div className="grid grid-cols-2 gap-4">
+{data.topics.map((c,ci)=>(
+<div key={ci} className="card">
+<input className="ei font-semibold text-purple-700 mb-3" value={c.category} onChange={e=>update(`topics.${ci}.category`,e.target.value)}/>
+{c.items.map((it,ii)=>(
+<div key={ii} className="flex items-center gap-1.5 mb-1.5 group">
+<span className="text-purple-400 text-xs">&#9679;</span>
+<input className="ei flex-1 text-xs" value={it} onChange={e=>updItem(ci,ii,e.target.value)}/>
+<button onClick={()=>rmItem(ci,ii)} className="opacity-0 group-hover:opacity-100 text-red-400"><Ic name="trash"/></button>
+</div>
+))}
+<button onClick={()=>addItem(ci)} className="flex items-center gap-1 text-purple-600 text-[11px] font-medium mt-1"><Ic name="plus"/>Add</button>
+</div>
+))}
+</div>
+<button onClick={addCat} className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 text-sm font-medium mt-3"><Ic name="plus"/>Add Category</button>
+</div>);
+}
+
+// ── Google Classroom ──
+function Classroom({data,update}){
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Google Classroom</h1>
+<p className="text-gray-500 text-sm mb-6">Configure the Google Classroom link for teacher access.</p>
+<div className="card">
+<div className="flex items-center gap-3 mb-4">
+<div className="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="#16a34a"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+</div>
+<div><h2 className="text-lg font-bold">BRAINWAVE Google Classroom</h2><p className="text-xs text-gray-500">Teacher portal for workshop materials</p></div>
+</div>
+<label className="text-xs text-gray-500">Classroom URL</label>
+<input className="ei mb-3" value={data.googleClassroom.url} onChange={e=>update('googleClassroom.url',e.target.value)}/>
+<label className="text-xs text-gray-500">Description</label>
+<textarea className="eta mb-3" value={data.googleClassroom.description} onChange={e=>update('googleClassroom.description',e.target.value)}/>
+<label className="text-xs text-gray-500 mb-1 block">Features</label>
+{data.googleClassroom.features.map((f,i)=>(
+<div key={i} className="flex items-center gap-2 mb-1.5">
+<span className="text-green-500"><Ic name="check"/></span>
+<input className="ei flex-1 text-sm" value={f} onChange={e=>{const n=[...data.googleClassroom.features];n[i]=e.target.value;update('googleClassroom.features',n)}}/>
+</div>
+))}
+</div>
+</div>);
+}
+
+// ── Action Items ──
+function Actions({data,setData,selWs,setSelWs,teamNames}){
+const wsOptions=data.workshops.map(w=>({id:w.id,title:w.title}));
+const items=(data.actionItems[selWs]||[]);
+const[filter,setFilter]=useState('all');
+const filtered=filter==='all'?items:items.filter(a=>a.priority===filter||a.status===filter);
+
+const toggle=(idx)=>{
+setData(p=>{const n=JSON.parse(JSON.stringify(p));const arr=n.actionItems[selWs];arr[idx].status=arr[idx].status==='pending'?'done':'pending';return n});
+};
+const add=()=>{
+setData(p=>{const n=JSON.parse(JSON.stringify(p));if(!n.actionItems[selWs])n.actionItems[selWs]=[];n.actionItems[selWs].push({id:Date.now(),task:'New action item',status:'pending',priority:'medium',category:'General',assignee:'',deadline:''});return n});
+};
+const rm=(idx)=>{
+setData(p=>{const n=JSON.parse(JSON.stringify(p));n.actionItems[selWs].splice(idx,1);return n});
+};
+const upd=(idx,key,val)=>{
+setData(p=>{const n=JSON.parse(JSON.stringify(p));n.actionItems[selWs][idx][key]=val;return n});
+};
+const categories=[...new Set(items.map(a=>a.category)),'General','Logistics','Staffing','Technology','Budget','Registration','Evaluation','Curriculum','Materials','Outreach','Accreditation','Speakers','Documentation','Funding'];
+const uniqueCats=[...new Set(categories)];
+
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Action Items</h1>
+<p className="text-gray-500 text-sm mb-4">Tasks are tied to specific workshops. Assign people and set deadlines.</p>
+<div className="flex items-center gap-3 mb-4">
+<label className="text-sm font-medium text-gray-700">Workshop:</label>
+<select className="es text-sm" value={selWs} onChange={e=>setSelWs(e.target.value)}>
+{wsOptions.map(w=><option key={w.id} value={w.id}>{w.title}</option>)}
+</select>
+</div>
+<div className="flex gap-1.5 mb-4 flex-wrap">
+{['all','pending','done','high','medium','low'].map(f=>(
+<button key={f} onClick={()=>setFilter(f)} className={`px-3 py-1 rounded-full text-xs font-medium border ${filter===f?'bg-purple-600 text-white border-purple-600':'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}>{f.charAt(0).toUpperCase()+f.slice(1)}</button>
+))}
+</div>
+<div className="space-y-2">
+{filtered.map((a,i)=>{
+const realIdx=items.indexOf(a);
+const isOverdue=a.status==='pending'&&a.deadline&&new Date(a.deadline)<new Date();
+return(
+<div key={a.id} className={`card flex items-start gap-3 py-3 group ${a.status==='done'?'opacity-50':''} ${isOverdue?'border-red-300 bg-red-50/30':''}`}>
+<button onClick={()=>toggle(realIdx)} className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-1 ${a.status==='done'?'bg-green-500 border-green-500 text-white':'border-gray-300 hover:border-purple-400'}`}>
+{a.status==='done'&&<Ic name="check"/>}
+</button>
+<div className="flex-1 space-y-1.5">
+<input className={`ei text-sm ${a.status==='done'?'line-through text-gray-400':''}`} value={a.task} onChange={e=>upd(realIdx,'task',e.target.value)}/>
+<div className="flex gap-2 flex-wrap">
+<select className="es text-[11px]" value={a.priority} onChange={e=>upd(realIdx,'priority',e.target.value)}>
+<option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
+</select>
+<select className="es text-[11px]" value={a.category} onChange={e=>upd(realIdx,'category',e.target.value)}>
+{uniqueCats.map(c=><option key={c} value={c}>{c}</option>)}
+</select>
+<div className="flex items-center gap-1">
+<span className="text-[10px] text-gray-400">Assignee:</span>
+<select className="es text-[11px]" value={a.assignee||''} onChange={e=>upd(realIdx,'assignee',e.target.value)}>
+<option value="">Unassigned</option>
+{teamNames.map(n=><option key={n} value={n}>{n}</option>)}
+</select>
+</div>
+<div className="flex items-center gap-1">
+<span className="text-[10px] text-gray-400">Deadline:</span>
+<input type="date" className="es text-[11px]" value={a.deadline||''} onChange={e=>upd(realIdx,'deadline',e.target.value)}/>
+{isOverdue&&<span className="text-[10px] text-red-600 font-bold">OVERDUE</span>}
+</div>
+</div>
+</div>
+<button onClick={()=>rm(realIdx)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 mt-1"><Ic name="trash"/></button>
+</div>
+)})}
+</div>
+<button onClick={add} className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 text-sm font-medium mt-3"><Ic name="plus"/>Add Action Item</button>
+</div>);
+}
+
+// ── Timeline ──
+function Timeline({data,selWs,setSelWs}){
+const wsOptions=data.workshops.map(w=>({id:w.id,title:w.title}));
+const items=(data.actionItems[selWs]||[]).filter(a=>a.deadline).sort((a,b)=>new Date(a.deadline)-new Date(b.deadline));
+const today=new Date();
+const months={};
+items.forEach(a=>{const d=new Date(a.deadline);const k=d.toLocaleString('default',{month:'long',year:'numeric'});if(!months[k])months[k]=[];months[k].push(a)});
+
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Pre-Workshop Timeline</h1>
+<p className="text-gray-500 text-sm mb-4">Visual timeline of tasks leading up to the workshop.</p>
+<div className="flex items-center gap-3 mb-6">
+<label className="text-sm font-medium text-gray-700">Workshop:</label>
+<select className="es text-sm" value={selWs} onChange={e=>setSelWs(e.target.value)}>
+{wsOptions.map(w=><option key={w.id} value={w.id}>{w.title}</option>)}
+</select>
+</div>
+<div className="flex gap-3 mb-6">
+<div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-purple-600"></div><span className="text-xs text-gray-500">Done</span></div>
+<div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-2 border-purple-600"></div><span className="text-xs text-gray-500">Pending</span></div>
+<div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full border-2 border-red-500 bg-red-50"></div><span className="text-xs text-gray-500">Overdue</span></div>
+</div>
+{Object.entries(months).map(([month,tasks])=>(
+<div key={month} className="mb-8">
+<div className="text-sm font-bold text-purple-700 mb-3 flex items-center gap-2">
+<div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-700 text-xs font-bold">
+{month.split(' ')[0].slice(0,3)}
+</div>
+{month}
+</div>
+<div className="relative pl-10 space-y-3">
+<div className="tl-line"></div>
+{tasks.map((a,i)=>{
+const isOverdue=a.status==='pending'&&new Date(a.deadline)<today;
+const isDone=a.status==='done';
+return(
+<div key={a.id} className="relative">
+<div className={`tl-dot ${isDone?'done':''} ${isOverdue?'overdue':''}`} style={{top:12}}></div>
+<div className={`card ml-4 py-3 ${isOverdue?'border-red-200 bg-red-50/50':''} ${isDone?'opacity-60':''}`}>
+<div className="flex items-start justify-between">
+<div>
+<div className={`text-sm font-medium ${isDone?'line-through text-gray-400':''}`}>{a.task}</div>
+<div className="flex gap-2 mt-1 flex-wrap">
+<span className={`sb ${a.priority==='high'?'ph':a.priority==='medium'?'pm':'pl'}`}>{a.priority}</span>
+<span className="sb bg-gray-100 text-gray-600">{a.category}</span>
+{a.assignee&&<span className="text-[11px] text-purple-600 font-medium">{a.assignee}</span>}
+</div>
+</div>
+<div className="text-right flex-shrink-0 ml-3">
+<div className={`text-xs font-semibold ${isOverdue?'text-red-600':isDone?'text-green-600':'text-gray-500'}`}>
+{new Date(a.deadline).toLocaleDateString('en-US',{month:'short',day:'numeric'})}
+</div>
+{isOverdue&&<div className="text-[10px] text-red-500 font-bold">OVERDUE</div>}
+{isDone&&<div className="text-[10px] text-green-500 font-bold">DONE</div>}
+</div>
+</div>
+</div>
+</div>
+)})}
+</div>
+</div>
+))}
+{items.length===0&&<p className="text-gray-400 text-sm">No items with deadlines set for this workshop.</p>}
+</div>);
+}
+
+// ── Testimonials ──
+function Testimonials({data,setData}){
+const add=()=>setData(p=>({...p,testimonials:[...p.testimonials,'']}));
+const rm=(i)=>setData(p=>({...p,testimonials:p.testimonials.filter((_,j)=>j!==i)}));
+const upd=(i,v)=>setData(p=>{const t=[...p.testimonials];t[i]=v;return{...p,testimonials:t}});
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Teacher Testimonials</h1>
+<p className="text-gray-500 text-sm mb-6">Manage teacher feedback and quotes.</p>
+{data.testimonials.map((t,i)=>(
+<div key={i} className="card group">
+<div className="flex gap-3">
+<div className="text-3xl text-purple-300">"</div>
+<textarea className="eta flex-1 text-sm italic" value={t} onChange={e=>upd(i,e.target.value)}/>
+<button onClick={()=>rm(i)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600"><Ic name="trash"/></button>
+</div>
+</div>
+))}
+<button onClick={add} className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 text-sm font-medium mt-2"><Ic name="plus"/>Add Testimonial</button>
+</div>);
+}
+
+// ── Forms ──
+function Forms({data,update}){
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Forms & Links</h1>
+<p className="text-gray-500 text-sm mb-6">Manage registration and interest form URLs.</p>
+<div className="card">
+<h3 className="font-semibold mb-3">Teacher Participation Form</h3>
+<p className="text-xs text-gray-500 mb-2">For K-12 teachers interested in attending workshops.</p>
+<input className="ei" value={data.forms.teacherParticipation} onChange={e=>update('forms.teacherParticipation',e.target.value)} placeholder="https://docs.google.com/forms/..."/>
+</div>
+<div className="card">
+<h3 className="font-semibold mb-3">Instructor Interest Form</h3>
+<p className="text-xs text-gray-500 mb-2">For UCLA postdocs interested in becoming BRAINWAVE instructors.</p>
+<input className="ei" value={data.forms.instructorInterest} onChange={e=>update('forms.instructorInterest',e.target.value)} placeholder="https://docs.google.com/forms/..."/>
+</div>
+</div>);
+}
+
+// ── Benchmarking (Admin only) ──
+function Bench({data,update}){
+return(<div>
+<h1 className="text-2xl font-bold mb-1">Research & Benchmarking <span className="sb bg-amber-100 text-amber-700 ml-2 text-xs">INTERNAL ONLY</span></h1>
+<p className="text-gray-500 text-sm mb-6">How other universities run workshops. This section is NOT published to the public site.</p>
+{data.benchmarking.map((b,bi)=>(
+<div key={bi} className="card">
+<input className="ei font-semibold mb-1" value={b.program} onChange={e=>update(`benchmarking.${bi}.program`,e.target.value)}/>
+<input className="ei text-sm text-gray-500 mb-3" value={b.university} onChange={e=>update(`benchmarking.${bi}.university`,e.target.value)}/>
+<div className="grid grid-cols-2 gap-4">
+<div>
+<label className="text-xs font-semibold text-gray-400 block mb-1">Key Strengths</label>
+{b.strengths.map((s,si)=>(
+<div key={si} className="flex items-center gap-1 mb-1">
+<span className="text-green-500 text-xs">&#10003;</span>
+<input className="ei flex-1 text-xs" value={s} onChange={e=>{const n=[...b.strengths];n[si]=e.target.value;update(`benchmarking.${bi}.strengths`,n)}}/>
+</div>
+))}
+</div>
+<div>
+<label className="text-xs font-semibold text-gray-400 block mb-1">Improvement Idea</label>
+<textarea className="eta text-xs" value={b.improvementIdea} onChange={e=>update(`benchmarking.${bi}.improvementIdea`,e.target.value)}/>
+</div>
+</div>
+</div>
+))}
+</div>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

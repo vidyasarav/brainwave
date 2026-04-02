@@ -1,0 +1,307 @@
+{
+  "teacher_participation": {
+    "title": "BRAINWAVE Teacher Participation Form",
+    "description": "Register for an upcoming BRAINWAVE neuroscience workshop. This form helps us tailor the workshop to your needs and confirm your participation.",
+    "sections": [
+      {
+        "title": "Contact Information",
+        "fields": [
+          {
+            "type": "short_text",
+            "label": "Full Name",
+            "required": true
+          },
+          {
+            "type": "email",
+            "label": "Email Address",
+            "required": true
+          },
+          {
+            "type": "phone",
+            "label": "Phone Number",
+            "required": true
+          }
+        ]
+      },
+      {
+        "title": "School & Teaching Information",
+        "fields": [
+          {
+            "type": "short_text",
+            "label": "School Name",
+            "required": true
+          },
+          {
+            "type": "short_text",
+            "label": "School District (e.g., LAUSD)",
+            "required": true
+          },
+          {
+            "type": "dropdown",
+            "label": "Grade Level(s) You Teach",
+            "required": true,
+            "options": [
+              "Elementary (K-5)",
+              "Middle School (6-8)",
+              "High School (9-12)",
+              "Multiple"
+            ]
+          },
+          {
+            "type": "checkboxes",
+            "label": "Subject(s) You Teach",
+            "required": true,
+            "options": [
+              "Science",
+              "Biology",
+              "Chemistry",
+              "Physics",
+              "Psychology",
+              "Math",
+              "Health",
+              "Other"
+            ]
+          },
+          {
+            "type": "short_text",
+            "label": "Years of Teaching Experience",
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": "Workshop Selection",
+        "fields": [
+          {
+            "type": "dropdown",
+            "label": "Which workshop are you registering for?",
+            "required": true,
+            "options": [
+              "Spring 2026 Workshop (Tentative)",
+              "Summer 2026 Workshop",
+              "Other - Contact Me"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "label": "How did you hear about BRAINWAVE?",
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": "Background & Goals",
+        "fields": [
+          {
+            "type": "multiple_choice",
+            "label": "Have you attended a neuroscience workshop before?",
+            "required": true,
+            "options": [
+              "Yes, a BRAINWAVE workshop",
+              "Yes, a different neuroscience workshop",
+              "No, this is my first"
+            ]
+          },
+          {
+            "type": "checkboxes",
+            "label": "What topics interest you most? (Select all that apply)",
+            "required": false,
+            "options": [
+              "Brain anatomy & structure",
+              "Learning & memory",
+              "Sleep & brain health",
+              "Mental health & emotional learning",
+              "Neuroplasticity",
+              "Hands-on dissection activities",
+              "EEG demonstrations",
+              "Technology in neuroscience education"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "label": "What do you hope to gain from this workshop?",
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": "LAUSD Credit & Dietary Needs",
+        "fields": [
+          {
+            "type": "multiple_choice",
+            "label": "Are you seeking LAUSD salary point credit?",
+            "required": false,
+            "options": [
+              "Yes",
+              "No",
+              "Not applicable (I'm not LAUSD)"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "label": "Dietary restrictions or allergies (for catering)",
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "instructor_interest": {
+    "title": "BRAINWAVE Instructor Interest Form",
+    "description": "UCLA postdoctoral fellows: Join us as a BRAINWAVE workshop instructor! Share your neuroscience expertise with K-12 teachers and inspire the next generation.",
+    "sections": [
+      {
+        "title": "Contact Information",
+        "fields": [
+          {
+            "type": "short_text",
+            "label": "Full Name",
+            "required": true
+          },
+          {
+            "type": "email",
+            "label": "UCLA Email Address",
+            "required": true
+          },
+          {
+            "type": "phone",
+            "label": "Phone Number",
+            "required": true
+          }
+        ]
+      },
+      {
+        "title": "Academic & Research Background",
+        "fields": [
+          {
+            "type": "short_text",
+            "label": "Department / Lab",
+            "required": true
+          },
+          {
+            "type": "short_text",
+            "label": "Principal Investigator (PI) Name",
+            "required": true
+          },
+          {
+            "type": "short_text",
+            "label": "PhD Institution & Year",
+            "required": false
+          },
+          {
+            "type": "paragraph",
+            "label": "Research Focus / Area of Expertise",
+            "required": true
+          },
+          {
+            "type": "paragraph",
+            "label": "Brief Bio (100-150 words) - for website",
+            "required": true
+          }
+        ]
+      },
+      {
+        "title": "Teaching & Outreach Experience",
+        "fields": [
+          {
+            "type": "multiple_choice",
+            "label": "Have you taught or led outreach activities before?",
+            "required": true,
+            "options": [
+              "Yes, extensively",
+              "Yes, some experience",
+              "No, but I'm eager to learn"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "label": "Previous teaching or outreach experience (if any)",
+            "required": false
+          },
+          {
+            "type": "checkboxes",
+            "label": "Which topics could you teach or present on?",
+            "required": true,
+            "options": [
+              "Neuroanatomy & brain structure",
+              "Learning & memory mechanisms",
+              "Sleep & circadian rhythms",
+              "Mental health & neuroscience",
+              "Neuroplasticity & brain development",
+              "Sensory systems",
+              "EEG/neuroimaging techniques",
+              "Research methods in neuroscience",
+              "Other (specify below)"
+            ]
+          },
+          {
+            "type": "short_text",
+            "label": "Other topics (if selected above)",
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": "Availability & Commitment",
+        "fields": [
+          {
+            "type": "checkboxes",
+            "label": "Which workshops are you available for?",
+            "required": true,
+            "options": [
+              "Spring 2026 Workshop",
+              "Summer 2026 Workshop",
+              "Future workshops (TBD)",
+              "All"
+            ]
+          },
+          {
+            "type": "multiple_choice",
+            "label": "Can you commit to pre-workshop planning meetings?",
+            "required": true,
+            "options": [
+              "Yes",
+              "Maybe, depends on timing",
+              "No"
+            ]
+          },
+          {
+            "type": "paragraph",
+            "label": "Any scheduling constraints or preferences?",
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": "Additional Information",
+        "fields": [
+          {
+            "type": "paragraph",
+            "label": "Why are you interested in teaching with BRAINWAVE?",
+            "required": true
+          },
+          {
+            "type": "paragraph",
+            "label": "Additional comments or questions",
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "instructions": {
+    "how_to_create": [
+      "1. Go to https://forms.google.com",
+      "2. Click 'Blank' to create a new form",
+      "3. Set the form title and description from the JSON below",
+      "4. Add sections and fields according to the structure provided",
+      "5. Configure field types, labels, and options as specified",
+      "6. Mark required fields with asterisks",
+      "7. Click 'Send' and copy the form URL",
+      "8. Update the admin dashboard: Go to 'Forms & Links' page",
+      "9. Paste the Google Form URLs into the appropriate fields",
+      "10. Click 'Save All Changes' in the admin sidebar"
+    ],
+    "note": "You CANNOT create Google Forms programmatically without OAuth authentication. These forms must be created manually in Google Forms, then the URLs added to the website admin panel."
+  }
+}
