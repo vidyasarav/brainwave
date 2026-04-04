@@ -402,16 +402,16 @@
     font-size: 0.68rem; letter-spacing: 0.15em;
     color: rgba(255,255,255,0.3);
     text-transform: uppercase;
+    margin-top: 48px;
     margin-bottom: 22px;
   }
   .testimonial-track-wrap {
     overflow-x: auto; overflow-y: visible;
     scrollbar-width: none;
-    padding-bottom: 8px;
-    padding-left: 0; padding-right: 0;
+    padding-bottom: 16px;
     /* break out of container padding so cards aren't clipped */
     margin-left: -24px; margin-right: -24px;
-    padding-left: 24px; padding-right: 24px;
+    padding-left: 24px; padding-right: 48px;
     -webkit-overflow-scrolling: touch;
     cursor: grab;
   }
@@ -1395,51 +1395,6 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════════
-     § IMPACT QUOTES
-  ══════════════════════════════════════════════════════════════════════ */
-  #impact-quotes {
-    background: var(--off-white); padding: 100px 0;
-    border-top: 1px solid var(--gray-1);
-  }
-  .iq-eyebrow {
-    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
-    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
-  }
-  #impact-quotes h2 { margin-bottom: 56px; }
-  #impact-quotes h2 em { font-style: italic; color: var(--teal-dim); }
-  .quotes-masonry {
-    columns: 3; column-gap: 24px;
-  }
-  .quote-block {
-    break-inside: avoid; margin-bottom: 24px;
-    background: var(--white); border: 1px solid var(--gray-2);
-    border-radius: var(--radius-lg); padding: 28px 28px 24px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .quote-block:hover { border-color: var(--teal); transform: translateY(-2px); }
-  .quote-block.featured {
-    background: var(--navy); border-color: transparent;
-    grid-column: span 1;
-  }
-  .quote-block.featured .qb-text { color: rgba(255,255,255,0.88); }
-  .quote-block.featured .qb-source { color: rgba(255,255,255,0.45); }
-  .qb-mark {
-    font-family: 'Fraunces', serif; font-size: 3.5rem; line-height: 0.4;
-    color: var(--teal); opacity: 0.4; margin-bottom: 16px; display: block;
-  }
-  .quote-block.featured .qb-mark { opacity: 0.6; }
-  .qb-text {
-    font-family: 'Fraunces', serif; font-size: 1.0rem; font-weight: 300;
-    font-style: italic; line-height: 1.7; color: var(--text); margin-bottom: 18px;
-  }
-  .qb-source {
-    font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--gray-3);
-  }
-  @media (max-width: 768px) { .quotes-masonry { columns: 2; } }
-  @media (max-width: 480px) { .quotes-masonry { columns: 1; } }
-
-  /* ══════════════════════════════════════════════════════════════════════
      § LEAFLET MAP overrides
   ══════════════════════════════════════════════════════════════════════ */
   #school-map { width: 100%; height: 460px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
@@ -1593,71 +1548,6 @@
   .faq-cta p { font-size: 0.94rem; color: var(--text-soft); margin-bottom: 18px; }
   @media (max-width: 768px) { .faq-grid { grid-template-columns: 1fr; } }
 
-  /* ══════════════════════════════════════════════════════════════════════
-     § VOICES TESTIMONIALS (after map)
-  ══════════════════════════════════════════════════════════════════════ */
-  #voices {
-    background: var(--navy);
-    padding: 88px 0;
-  }
-  .voices-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem; letter-spacing: 0.18em;
-    color: var(--teal); text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  #voices h2 { color: var(--white); margin-bottom: 52px; }
-  #voices h2 em { font-style: italic; color: var(--teal); }
-  .voices-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
-  }
-  .voice-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: var(--radius-lg);
-    padding: 36px 34px 30px;
-    position: relative;
-    transition: border-color var(--transition), background var(--transition);
-  }
-  .voice-card:hover {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(200,150,14,0.3);
-  }
-  .voice-card.featured {
-    grid-column: span 2;
-    background: rgba(200,150,14,0.06);
-    border-color: rgba(200,150,14,0.2);
-  }
-  .voice-quote-mark {
-    font-family: 'Fraunces', serif;
-    font-size: 4.5rem; line-height: 0.5;
-    color: var(--teal); opacity: 0.35;
-    margin-bottom: 14px;
-    display: block;
-  }
-  .voice-text {
-    font-family: 'Fraunces', serif;
-    font-size: 1.05rem; font-weight: 300; font-style: italic;
-    color: rgba(255,255,255,0.88); line-height: 1.72;
-    margin-bottom: 24px;
-  }
-  .voice-card.featured .voice-text { font-size: 1.18rem; }
-  .voice-meta { display: flex; align-items: center; gap: 12px; }
-  .voice-avatar {
-    width: 42px; height: 42px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--teal-dim), var(--navy-light));
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 600;
-    color: var(--teal);
-    border: 1.5px solid rgba(200,150,14,0.35);
-    flex-shrink: 0;
-  }
-  .voice-name { font-size: 0.88rem; font-weight: 600; color: var(--white); margin-bottom: 2px; }
-  .voice-school { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
-  @media (max-width: 768px) {
-    .voices-grid { grid-template-columns: 1fr; }
-    .voice-card.featured { grid-column: span 1; }
-  }
 </style>
 <body>
 
@@ -1926,7 +1816,7 @@
       </div>
     </div>
 
-    <div class="testimonial-label reveal">Voices from the Field</div>
+    <div class="testimonial-label reveal">What Educators Are Saying</div>
     <div class="testimonial-track-wrap reveal reveal-delay-1" id="testimonial-track-wrap">
       <div class="testimonial-track">
 
@@ -2123,68 +2013,6 @@
   </div>
 </section>
 
-
-<!-- ══════════════════════════════════ § IMPACT QUOTES ══════════════════════════════════ -->
-<section id="impact-quotes">
-  <span class="section-label">§ QUOTES</span>
-  <div class="container">
-    <div class="iq-eyebrow reveal">In Teachers' Own Words</div>
-    <h2 class="reveal reveal-delay-1">What Educators Say About <em>BRAINWAVE</em></h2>
-    <div class="quotes-masonry reveal reveal-delay-2">
-
-      <div class="quote-block featured">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">Behavior IS Communication! Sleep, attention and the student's wellness are part of the WHOLE Child — if the basic need is not being met, the student will have challenges. BRAINWAVE helped me understand that. Now I know how to help.</p>
-        <div class="qb-source">LAUSD Teacher · Waitlist Survey 2025</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">It was probably the BEST professional development we have ever attended thus far!</p>
-        <div class="qb-source">Workshop Participant · LAUSD</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">ASAP! I'm going to make it my mission to improve the sleep hygiene of my students. I want to have sleep journals in class.</p>
-        <div class="qb-source">Teacher · June 2025 Workshop</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">I will be more flexible when I teach heavy content in the morning, checking to see for symptoms of sleep deprivation. My students deserve that awareness from me.</p>
-        <div class="qb-source">Teacher · December 2025 Workshop</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">I am most excited to introduce a sleep schedule challenge to my homeroom class — so many strategies I can apply right away, including calming, connecting, and cognitive techniques.</p>
-        <div class="qb-source">Teacher · June 2025 Workshop</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">Seeing — and touching — a real human brain was the most exciting thing. It made the science completely real for me. I can't wait to bring that sense of wonder back to my classroom.</p>
-        <div class="qb-source">Teacher · December 2025 Workshop</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">The best part was the environment — everyone was so genuinely excited to share their research and explain it in a way that was easily digestible. I loved the variety of research shared!</p>
-        <div class="qb-source">Workshop Participant · LAUSD</div>
-      </div>
-
-      <div class="quote-block">
-        <span class="qb-mark">"</span>
-        <p class="qb-text">Reinforcing the idea that schools and families are partners in education outcomes. This workshop gave me the science to back that conversation with parents.</p>
-        <div class="qb-source">Teacher · December 2025 Workshop</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
 <!-- ══════════════════════════════════ § TEACHER NETWORK ══════════════════════════════════ -->
 <section id="network">
   <span class="section-label">§ TEACHER NETWORK</span>
@@ -2224,22 +2052,22 @@
       <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--gray-3);text-transform:uppercase;margin-bottom:28px;">60+ schools across Los Angeles · All grade levels · Primarily LAUSD</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">23</div>
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">23+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Elementary</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Grades K–5</div>
         </div>
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">10</div>
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">10+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Middle School</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Grades 6–8</div>
         </div>
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">9</div>
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">9+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">High School</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Grades 9–12</div>
         </div>
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">6</div>
+          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">6+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Magnet &amp; K–12</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Multi-grade programs</div>
         </div>
@@ -2247,69 +2075,6 @@
     </div>
   </div>
 </section>
-
-
-<!-- ══════════════════════════════════ § VOICES ══════════════════════════════════ -->
-<section id="voices">
-  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ VOICES</span>
-  <div class="container">
-    <div class="voices-eyebrow reveal">In Their Own Words</div>
-    <h2 class="reveal reveal-delay-1">Voices from <em>the Classroom</em></h2>
-
-    <div class="voices-grid">
-
-      <div class="voice-card featured reveal reveal-delay-1">
-        <span class="voice-quote-mark">"</span>
-        <p class="voice-text">Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far! I've already shared what I learned with my entire department.</p>
-        <div class="voice-meta">
-          <div class="voice-avatar">MT</div>
-          <div>
-            <div class="voice-name">Science Department Teacher</div>
-            <div class="voice-school">LAUSD · Los Angeles Unified School District</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="voice-card reveal reveal-delay-2">
-        <span class="voice-quote-mark">"</span>
-        <p class="voice-text">Behavior IS communication. Sleep, attention, and student wellness are part of the WHOLE child. BRAINWAVE helped me understand that — now I know how to actually help my students in a way I never did before.</p>
-        <div class="voice-meta">
-          <div class="voice-avatar">JR</div>
-          <div>
-            <div class="voice-name">Elementary School Teacher</div>
-            <div class="voice-school">LAUSD · Waitlist Survey 2025</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="voice-card reveal reveal-delay-3">
-        <span class="voice-quote-mark">"</span>
-        <p class="voice-text">Seeing — and touching — a real human brain was the most exciting thing I've done as a professional. It made the science completely real for me. I can't wait to bring that sense of wonder back to my students.</p>
-        <div class="voice-meta">
-          <div class="voice-avatar">LW</div>
-          <div>
-            <div class="voice-name">Biology Teacher</div>
-            <div class="voice-school">LAUSD · December 2025 Workshop</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="voice-card reveal reveal-delay-2">
-        <span class="voice-quote-mark">"</span>
-        <p class="voice-text">I will be more flexible when I teach heavy content in the morning — checking for signs of sleep deprivation. This workshop gave me the science to back a conversation I've been trying to have for years.</p>
-        <div class="voice-meta">
-          <div class="voice-avatar">AP</div>
-          <div>
-            <div class="voice-name">Middle School Teacher</div>
-            <div class="voice-school">LAUSD · December 2025 Workshop</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
 
 <!-- ══════════════════════════════════ § WORKSHOPS ══════════════════════════════════ -->
 <section id="workshops">
@@ -2518,36 +2283,11 @@
   <div class="container">
     <div class="partners-label reveal">Supported By</div>
     <div class="partners-row reveal reveal-delay-1">
-      <div class="partner-logo">
-        <svg viewBox="0 0 120 44" width="120" height="44">
-          <text x="10" y="30" font-family="serif" font-size="22" font-weight="700" fill="#003B5C">UCLA</text>
-        </svg>
-      </div>
-      <div class="partner-logo">
-        <svg viewBox="0 0 120 44" width="120" height="44">
-          <text x="8" y="30" font-family="sans-serif" font-size="16" font-weight="600" fill="#333">NSF</text>
-          <text x="30" y="30" font-family="sans-serif" font-size="10" fill="#666"> National Science Foundation</text>
-        </svg>
-      </div>
-      <div class="partner-logo">
-        <svg viewBox="0 0 120 44" width="120" height="44">
-          <text x="8" y="30" font-family="sans-serif" font-size="15" font-weight="600" fill="#333">NIH</text>
-          <text x="32" y="30" font-family="sans-serif" font-size="9.5" fill="#666"> Natl Institutes of Health</text>
-        </svg>
-      </div>
-      <div class="partner-logo">
-        <span class="partner-logo-text">Dana Foundation</span>
-      </div>
-      <div class="partner-logo">
-        <span class="partner-logo-text">Broad Foundation</span>
-      </div>
-      <div class="partner-logo">
-        <svg viewBox="0 0 120 44" width="120" height="44">
-          <text x="8" y="30" font-family="sans-serif" font-size="12" font-weight="500" fill="#333">LAUSD Partner</text>
-        </svg>
+      <div class="partner-logo" style="opacity:0.75;filter:none;">
+        <span class="partner-logo-text" style="font-size:1.05rem;letter-spacing:-0.01em;">UCLA Brain Research Institute</span>
       </div>
     </div>
-    <p class="partners-note reveal reveal-delay-2">BRAINWAVE is a collaborative initiative supported by research institutions, philanthropies, and school districts across California.</p>
+    <p class="partners-note reveal reveal-delay-2">BRAINWAVE is a UCLA initiative supported by the Brain Research Institute.</p>
   </div>
 </section>
 
