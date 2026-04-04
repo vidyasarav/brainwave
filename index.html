@@ -1307,7 +1307,7 @@
     opacity: 0.6;
   }
   .team-body { padding: 22px 20px; }
-  .team-name { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .team-name { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; white-space: nowrap; }
   .team-role {
     font-size: 0.78rem; color: var(--teal-dim); font-weight: 500; margin-bottom: 10px;
   }
@@ -2652,9 +2652,9 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 const TEAM_DATA = [
   {
     name: "Vidya Saravanapandian, PhD",
-    role: "Founder & Director",
+    role: "Founder and Director",
     research: "Sleep · Neurodevelopmental Disorders",
-    bio: "IRACDA Postdoctoral Fellow at the Golshani Lab, UCLA. Investigates sleep physiology in neurodevelopmental disorders using mouse models of Angelman Syndrome and Fragile X. Born and raised in India, Vidya earned her PhD in Neuroscience from UCLA and founded BRAINWAVE from a personal conviction: that the brain science changing her own life belonged in every classroom—not just research labs. She leads all workshop design, teacher recruitment, and community partnerships.",
+    bio: "Vidya was born and raised in India. She earned a Ph.D. in Neuroscience from UCLA and a Master of Engineering (M.E.) in Biotechnology from Birla Institute of Technology and Science, Pilani, India. She is an IRACDA Postdoctoral Research Fellow at the Golshani laboratory at UCLA, investigating changes in sleep physiology in neurodevelopmental disorders (NDDs) and their impact on cognitive and developmental outcomes. She is passionate about bridging clinical and animal model research to advance our understanding of NDDs. As a neuroscience education advocate, Vidya has been working with LAUSD schools to bring neuroscience education to K-12 students in low-income communities. Recognizing the importance of early exposure and awareness of brain health, she created BRAINWAVE to empower teachers and impact a greater number of students, particularly those from underserved communities. Through this program, Vidya also strives to build a community of UCLA neuroscientists passionate about teaching and communicating science and help them extend their reach into classrooms. In her free time, she enjoys baking and exploring new hiking trails.",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/Vidya_photo-scaled.jpg",
     initials: "VS", color: "#C8960E"
   },
@@ -2662,7 +2662,7 @@ const TEAM_DATA = [
     name: "Ceazar E. Nave, PhD",
     role: "Instructor",
     research: "Sleep · Circadian Rhythms",
-    bio: "IRACDA Postdoctoral Fellow in the Donlea Lab, UCLA. Studies how environmental and social conditions shape the neural circuits governing sleep and the biological clock. Ceazar has led BRAINWAVE sessions on circadian biology, adolescent sleep, and how sleep deprivation impacts classroom learning. He brings exceptional clarity to complex topics, making sleep neuroscience immediately relevant to teachers' daily experience with students.",
+    bio: "Ceazar is an IRACDA Postdoctoral Research Fellow in the Department of Neurobiology under the supervision of Dr. Jeffrey Donlea. His current research studies how various environmental conditions can shape brain structures and behaviors. Specifically, he is interested in studying how erratic, and harsh environmental conditions shape the neural circuits that govern sleep and the biological clock. Ceazar is incredibly passionate about science communication and making science accessible to everyone – being part of BRAINWAVE, he believes, will allow him to share his excitement about neuroscience with a new audience, especially those that can have a major impact on future scientists!",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/CeazarHeadShot-scaled.jpg",
     initials: "CN", color: "#3b82f6"
   },
@@ -2670,7 +2670,7 @@ const TEAM_DATA = [
     name: "Merel Dagher, PhD",
     role: "Instructor",
     research: "Pain Circuits · Behavioral Neuroscience",
-    bio: "Postdoctoral IRACDA Fellow in the Cahill Lab, UCLA. Her research examines brain circuits involved in chronic pain, reward, and opioid seeking—with a focus on sex differences in pain biology. A passionate advocate for STEM equity and educational outreach, Merel brings a unique perspective on brain-behavior connections that resonates deeply with teachers working with students who face chronic stress or adversity.",
+    bio: "Merel is a Postdoctoral IRACDA Fellow at UCLA researching in areas of behavioral neuroscience. She was born in the country of Syria. Merel and her immigrated to the United States when she was 4 years old. In 2016, she received her Bachelor of Arts degrees in Cognitive Science and Public Health from the University of California, Berkeley. In 2017, she began graduate school at UCLA where her research examined the neurobiological effects of exposure to in utero stress and antidepressants on offspring using a rodent model. In May 2022, she graduated with a PhD in Molecular Toxicology and shortly after, began her postdoctoral research in the laboratory of Dr. Catherine Cahill. Merel's current research examines brain circuits involved in chronic pain and opioid seeking. During her undergraduate and graduate studies, she was fortunate to have incredible professors who encouraged her to pursue higher education by making science accessible and relevant. She has enriched her research experiences with teaching neuroscience and psychiatry courses throughout her academic training. She has a deep interest in STEM outreach and the BRAINWAVE program, which helps her provide resources to young students interested in STEM and empower them to enjoy, succeed, and thrive in their scientific journey.",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/RichSchmittPhotography095.jpeg",
     initials: "MD", color: "#8b5cf6"
   },
@@ -2678,7 +2678,7 @@ const TEAM_DATA = [
     name: "Takahiro Ohara, PhD",
     role: "Instructor",
     research: "Gut–Brain Axis · Microbiota",
-    bio: "Postdoctoral Scholar at UCLA studying the bidirectional communication between gut microbiota and the brain—and how this relationship shapes mental health, behavior, and development. Takahiro joined BRAINWAVE because of the unique opportunity to connect cutting-edge research directly with the educators who shape the next generation. He leads sessions on nutrition, the enteric nervous system, and how gut health affects cognition and mood in students.",
+    bio: "Takahiro grew up in Southern California but spent a good amount of time living on the East Coast and Midwest. He is currently a Postdoctoral Scholar at UCLA studying the interaction between the gut microbiota and the brain (aka the microbiota-gut-brain axis). He joined BRAINWAVE because he enjoys teaching and being able to work directly with teachers, he believes, is a unique opportunity.",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/IMG_6193-scaled.jpeg",
     initials: "TO", color: "#10b981"
   },
@@ -2686,7 +2686,7 @@ const TEAM_DATA = [
     name: "Shivan Bonanno, PhD",
     role: "Instructor",
     research: "Serotonin Circuits · Psychiatric Drugs",
-    bio: "Project Scientist in the Krantz Lab, UCLA. Researches serotonin circuit connectivity and the long-term neural adaptations to psychiatric medications—including SSRIs and antidepressants. Shivan is deeply passionate about inspiring junior scientists and communicating the relevance of brain chemistry to everyday emotional life. In BRAINWAVE workshops, she leads sessions on neurotransmitters, mental health, and the brain science behind mood and behavior.",
+    bio: "Shivan is from Davis, CA, and is currently a Project Scientist in the Krantz lab at UCLA, where he researches the connectivity of serotonin circuits and their long-term adaptations to psychiatric drugs like SSRIs. He has always enjoyed teaching, especially the room for creativity in inspiring junior scientists to treat the scientific process as a personal and rewarding journey. He is very excited to contribute to BRAINWAVE and explore new ways to bring biomedical research to younger students.",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/headshot_bgBlue1.png",
     initials: "SB", color: "#f0a500"
   },
@@ -2694,7 +2694,7 @@ const TEAM_DATA = [
     name: "Kat Silaj, PhD",
     role: "Instructor",
     research: "Learning & Memory · Anxiety",
-    bio: "Assistant Professor of Psychology at Mount Saint Mary's University and UCLA Psychology graduate. A former K–12 educator herself, Kat brings a rare dual perspective to BRAINWAVE—she has lived both the classroom and the research lab. Her expertise in learning, memory consolidation, and anxiety gives teachers practical, evidence-backed strategies. She specializes in inclusive learning and neurodiversity-affirming pedagogy.",
+    bio: "Kat is an Assistant Professor of Psychology at Mount Saint Mary's University and a recent graduate of UCLA's Psychology program. With experience as a former high school teacher, Kat brings a deep passion for making classrooms more inclusive by applying the latest research on how people learn and remember. Their work also looks at how emotional factors like anxiety can shape learning and memory. Kat is driven by a commitment to help both students and educators better understand how their brains work so that they can reach their goals in school and beyond. As a BRAINWAVE educator, Kat is excited to collaborate with educators who share a vision for more inclusive and effective teaching.",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/09/unnamed-2.png",
     initials: "KS", color: "#f43f5e"
   },
@@ -2702,15 +2702,15 @@ const TEAM_DATA = [
     name: "Olivia Justynski, PhD",
     role: "Instructor",
     research: "Cell Migration · Nervous System Development",
-    bio: "Postdoctoral Researcher in the Sagasti Lab and IRACDA Fellow at UCLA. She earned her PhD from Yale in Molecular, Cellular & Developmental Biology, studying how neurons find their correct partners during development. Olivia brings a developmental perspective to BRAINWAVE—helping teachers understand how the brain physically grows and changes from childhood through adolescence, and why that matters for how we teach.",
+    bio: "Olivia is a postdoc in the Sagasti lab at UCLA and an IRACDA fellow. Originally from Rhode Island, she earned her bachelor's degree from Mount Holyoke College and her PhD in molecular, cellular, and developmental biology from Yale University. Her research investigates how migratory cells contribute to skin development in a zebrafish model system. Olivia is passionate about science education and outreach and is excited to participate in BRAINWAVE!",
     photo: "https://bri.ucla.edu/wp-content/uploads/2025/07/Headshot.jpg",
     initials: "OJ", color: "#06b6d4"
   },
   {
     name: "Joseph M. Quintero",
-    role: "Operations",
+    role: "Operations Guru",
     research: "Programs & Events Management",
-    bio: "Programs & Operations Manager at the UCLA Brain Research Institute. Joseph is the organizational backbone behind every BRAINWAVE workshop—coordinating logistics, managing partnerships, and ensuring every detail runs seamlessly so that teachers and researchers can focus entirely on learning. His deep experience with UCLA symposia and community science events has been instrumental in scaling BRAINWAVE from a single workshop to a growing teacher movement.",
+    bio: "Joe Quintero serves as the Programs and Operations Manager of the Brain Research Institute. He collaborates closely with the Director and Chief Administrative Officer to supervise established programs and execute new initiatives. Joe has orchestrated a series of highly successful events, including workshops, poster sessions, and multi-day symposia that have garnered significant attention. His meticulous and strategic event planning has left a lasting impression on attendees, effectively showcasing the institution's and neuroscience community's efforts. Joe is excited to support the BRAINWAVE initiative and help bring neuroscience to educators, empowering them to inspire the next generation of students.",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/10/Quintero_J_Photo-scaled.jpg",
     initials: "JQ", color: "#f0a500",
     isOps: true
