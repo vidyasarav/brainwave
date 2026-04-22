@@ -1067,7 +1067,8 @@
   }
   @media (max-width: 900px) {
     .hero-inner { grid-template-columns: 1fr; }
-    .hero-image-col { display: none; }
+    .hero-image-col { display: block; margin-top: 32px; }
+    .hero-img-wrap img { aspect-ratio: 16/9; }
   }
 
   /* ══════════════════════════════════════════════════════════════════════
@@ -1100,11 +1101,9 @@
   @media (max-width: 900px) {
     .teaching-pillars { grid-template-columns: 1fr; }
     .teaching-images { grid-template-columns: 1fr 1fr; }
-    .teaching-images .teaching-img:last-child { display: none; }
   }
   @media (max-width: 600px) {
     .teaching-images { grid-template-columns: 1fr; }
-    .teaching-images .teaching-img:last-child { display: block; }
   }
 
   /* ══════════════════════════════════════════════════════════════════════
