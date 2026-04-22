@@ -1066,8 +1066,11 @@
     background: linear-gradient(to bottom left, rgba(7,13,40,0.08) 0%, rgba(7,13,40,0.28) 100%);
   }
   @media (max-width: 900px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .hero-image-col { display: block; margin-top: 32px; }
+    .hero-inner { display: flex; flex-direction: column; }
+    .hero-content { display: contents; }
+    .hero-headline { order: 1; }
+    .hero-image-col { order: 2; display: block; margin-top: 20px; margin-bottom: 16px; }
+    .hero-body { order: 3; }
     .hero-img-wrap img { aspect-ratio: 16/9; }
   }
 
@@ -2115,11 +2118,14 @@
   <div class="container">
     <div class="hero-inner">
       <div class="hero-content">
+      <div class="hero-headline">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
         In partnership with the UCLA Brain Research Institute
       </div>
       <h1><span class="hero-brand-line">BRAINWAVE</span>What if every child <em>understood their brain?</em></h1>
+      </div><!-- end hero-headline -->
+      <div class="hero-body">
       <p class="hero-sub">
         BRAINWAVE empowers K–12 teachers with cutting-edge neuroscience, classroom-ready tools, and the inspiration to transform how their students understand their brains, their learning, and their mental health — prioritizing the communities where this knowledge is needed most.
       </p>
@@ -2134,6 +2140,7 @@
         <a href="#story" class="btn btn-outline">Read Our Story</a>
       </div>
       <p class="hero-micro-impact">Reaching 182+ teachers across 60+ Los Angeles schools and counting.</p>
+      </div><!-- end hero-body -->
       </div><!-- end hero-content -->
       <div class="hero-image-col">
         <div class="hero-img-wrap" onclick="openUnibox(this.querySelector('img'))" style="cursor:zoom-in">
