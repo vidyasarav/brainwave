@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BRAINWAVE — Advancing Brain Science in the Classroom</title>
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://brainwaveinitiative.org/">
+<meta property="og:title" content="Advancing brain science in classrooms and communities.">
+<meta property="og:description" content="BRAINWAVE empowers educators with neuroscience knowledge, tools, and inspiration to transform how students understand the brain, learning, and mental health.">
+<meta property="og:image" content="https://brainwaveinitiative.org/images/support_pics/support-7.jpg">
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Advancing brain science in classrooms and communities.">
+<meta name="twitter:description" content="BRAINWAVE empowers educators with neuroscience knowledge, tools, and inspiration to transform how students understand the brain, learning, and mental health.">
+<meta name="twitter:image" content="https://brainwaveinitiative.org/images/support_pics/support-7.jpg">
 <script>
   if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
   window.addEventListener('DOMContentLoaded', function() { window.scrollTo(0, 0); });
@@ -435,6 +446,10 @@
   .testimonial-track-wrap::-webkit-scrollbar { display: none; }
   .testimonial-nav {
     display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end;
+  }
+  @media (max-width: 600px) {
+    .testimonial-nav { justify-content: center; margin-top: 16px; }
+    .testimonial-nav button { width: 56px; height: 56px; font-size: 1.5rem; background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.55); }
   }
   .testimonial-nav button {
     width: 50px; height: 50px; border-radius: 50%;
@@ -2323,19 +2338,6 @@
         <div class="testimonial-track">
 
           <div class="testimonial-card">
-            <span class="testimonial-cohort">Winter 2024</span>
-            <span class="testimonial-quote-mark">"</span>
-            <p class="testimonial-text">The BEST PD that I have ever been to.</p>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar">BW</div>
-              <div>
-                <div class="testimonial-name">Workshop Participant</div>
-                <div class="testimonial-school">LAUSD · Los Angeles</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial-card">
             <span class="testimonial-cohort">Summer 2024</span>
             <span class="testimonial-quote-mark">"</span>
             <p class="testimonial-text">Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far!</p>
@@ -2378,6 +2380,19 @@
             <span class="testimonial-cohort">Winter 2024</span>
             <span class="testimonial-quote-mark">"</span>
             <p class="testimonial-text">Although this is a busy time of year and I was extremely tired this week, I am extremely happy I attended. I have learned a great deal and feel motivated to institute some positive change at my school site.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Winter 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">The BEST PD that I have ever been to.</p>
             <div class="testimonial-meta">
               <div class="testimonial-avatar">BW</div>
               <div>
@@ -3442,6 +3457,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 (function() {
   const wrap = document.getElementById('testimonial-track-wrap');
   if (!wrap) return;
+  /* Mouse drag */
   let isDown = false, startX, scrollLeft;
   wrap.addEventListener('mousedown', e => {
     isDown = true; wrap.style.cursor = 'grabbing';
@@ -3455,7 +3471,18 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     const x = e.pageX - wrap.offsetLeft;
     wrap.scrollLeft = scrollLeft - (x - startX) * 1.2;
   });
-  const STEP = 420;
+  /* Touch swipe */
+  let touchX = 0, touchScroll = 0;
+  wrap.addEventListener('touchstart', e => {
+    touchX = e.touches[0].clientX;
+    touchScroll = wrap.scrollLeft;
+  }, { passive: true });
+  wrap.addEventListener('touchmove', e => {
+    const dx = touchX - e.touches[0].clientX;
+    wrap.scrollLeft = touchScroll + dx;
+  }, { passive: true });
+  /* Arrow nav */
+  const STEP = 360;
   document.getElementById('testimonial-prev')?.addEventListener('click', () => {
     wrap.scrollBy({ left: -STEP, behavior: 'smooth' });
   });
