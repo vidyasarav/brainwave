@@ -10,7 +10,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <style>
@@ -44,7 +44,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; font-size: 16px; }
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     color: var(--text);
     background: var(--white);
     overflow-x: hidden;
@@ -54,22 +54,16 @@
   a { text-decoration: none; color: inherit; }
 
   /* ─── Annotation Label ──────────────────────────────────────────────── */
-  .section-label {
-    position: absolute;
-    top: 16px; left: 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--gray-3);
-    opacity: 0.55;
-    text-transform: uppercase;
-    pointer-events: none;
-    z-index: 10;
-  }
+  .section-label { display: none; }
 
   /* ─── Typography Scale ──────────────────────────────────────────────── */
-  .display { font-family: 'Fraunces', serif; }
-  h1,h2,h3,h4 { font-family: 'Fraunces', serif; line-height: 1.15; }
+  .display { font-family: 'Playfair Display', serif; }
+  h1,h2,h3,h4 {
+    font-family: 'Playfair Display', serif; line-height: 1.15;
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+    font-variant-ligatures: none;
+    font-variant-alternates: normal;
+  }
   h1 { font-size: clamp(2.6rem, 6vw, 5rem); font-weight: 600; }
   h2 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 600; }
   h3 { font-size: clamp(1.25rem, 2vw, 1.55rem); font-weight: 600; }
@@ -80,7 +74,7 @@
     display: inline-flex; align-items: center; gap: 8px;
     padding: 14px 28px;
     border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.92rem; font-weight: 600;
     letter-spacing: 0.01em;
     cursor: pointer; border: none;
@@ -142,7 +136,7 @@
   }
   .nav-logo {
     display: flex; align-items: center; gap: 10px;
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: 1.35rem; font-weight: 700;
     color: var(--white);
     letter-spacing: -0.01em;
@@ -212,22 +206,22 @@
     max-width: 720px;
   }
   .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 14px;
-    background: rgba(200,150,14,0.12);
-    border: 1px solid rgba(200,150,14,0.3);
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 4px 10px;
+    background: rgba(200,150,14,0.08);
+    border: 1px solid rgba(200,150,14,0.2);
     border-radius: 50px;
     font-family: 'DM Mono', monospace;
-    font-size: 0.72rem; letter-spacing: 0.12em;
-    color: var(--teal);
+    font-size: 0.61rem; letter-spacing: 0.08em;
+    color: rgba(200,150,14,0.72);
     text-transform: uppercase;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
   }
   .hero-badge-dot {
-    width: 6px; height: 6px;
+    width: 5px; height: 5px;
     border-radius: 50%;
-    background: var(--teal);
+    background: rgba(200,150,14,0.72);
     animation: pulse-dot 2s infinite;
   }
   @keyframes pulse-dot {
@@ -237,7 +231,11 @@
   #hero h1 {
     color: var(--white);
     margin-bottom: 28px;
+    line-height: 1.08;
     opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+    font-feature-settings: "liga" 0, "calt" 0;
+    font-variant-ligatures: none;
+    font-variant-alternates: normal;
   }
   #hero h1 .acronym-wrap {
     display: block;
@@ -246,8 +244,11 @@
     letter-spacing: 0.05em;
   }
   #hero h1 em {
-    font-style: italic;
+    font-style: normal;
+    font-weight: 700;
     color: var(--teal);
+    display: block;
+    font-size: 1.08em;
   }
   .hero-sub {
     font-size: 1.15rem; font-weight: 300;
@@ -364,7 +365,7 @@
   .stat-cell:last-child { border-right: none; }
   .stat-cell:hover { background: rgba(255,255,255,0.04); }
   .stat-number {
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: clamp(2rem, 3.5vw, 2.8rem);
     font-weight: 700;
     color: var(--teal);
@@ -405,6 +406,18 @@
     margin-top: 48px;
     margin-bottom: 22px;
   }
+  .testimonial-track-outer {
+    position: relative;
+  }
+  .testimonial-track-outer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 100%;
+    background: linear-gradient(to right, transparent, var(--navy));
+    pointer-events: none;
+    z-index: 2;
+  }
   .testimonial-track-wrap {
     overflow-x: auto; overflow-y: visible;
     scrollbar-width: none;
@@ -416,6 +429,24 @@
     cursor: grab;
   }
   .testimonial-track-wrap::-webkit-scrollbar { display: none; }
+  .testimonial-nav {
+    display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end;
+  }
+  .testimonial-nav button {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.9);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+  }
+  .testimonial-nav button:hover {
+    background: rgba(200,150,14,0.2);
+    border-color: rgba(200,150,14,0.5);
+    color: var(--teal);
+  }
   .testimonial-track {
     display: flex; gap: 20px;
     width: max-content;
@@ -435,7 +466,7 @@
     border-color: rgba(200,150,14,0.25);
   }
   .testimonial-quote-mark {
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: 4rem; line-height: 0.5;
     color: var(--teal); opacity: 0.25;
     margin-bottom: 16px;
@@ -445,7 +476,7 @@
     font-size: 1.02rem; line-height: 1.7;
     color: rgba(255,255,255,0.85);
     font-style: italic;
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-weight: 300;
     margin-bottom: 28px;
   }
@@ -454,7 +485,7 @@
     width: 44px; height: 44px; border-radius: 50%;
     background: linear-gradient(135deg, var(--teal-dim), var(--navy-light));
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: 1rem; font-weight: 600;
     color: var(--teal);
     border: 1.5px solid rgba(200,150,14,0.3);
@@ -528,7 +559,7 @@
     border: 2px solid var(--gray-2);
   }
   .step-num {
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: 1.35rem; font-weight: 700;
   }
   .step-number-wrap.active-step .step-num { color: var(--navy); }
@@ -621,6 +652,22 @@
     padding: 0;
     overflow: hidden;
   }
+  .story-intro-eyebrow {
+    text-align: center;
+    padding: 52px 0 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.18);
+  }
+  .story-intro-eyebrow::before {
+    content: '';
+    display: block;
+    width: 48px; height: 1px;
+    background: rgba(200,150,14,0.28);
+    margin: 0 auto 18px;
+  }
   .story-inner {
     display: grid; grid-template-columns: 1fr 1fr; min-height: 560px;
   }
@@ -659,19 +706,21 @@
     margin-bottom: 24px;
   }
   .story-pullquote {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.65rem, 2.8vw, 2.15rem);
     font-weight: 300; font-style: italic;
     color: var(--white);
-    line-height: 1.55;
-    margin-bottom: 28px;
+    line-height: 1.5;
+    margin-bottom: 36px;
+    padding: 8px 0 8px 24px;
+    border-left: 2px solid rgba(200,150,14,0.35);
     position: relative;
   }
   .story-pullquote::before {
     content: '"';
-    font-size: 4em; line-height: 0.3;
-    color: var(--teal); opacity: 0.3;
-    position: absolute; left: -28px; top: 12px;
+    font-size: 4.5em; line-height: 0.28;
+    color: var(--teal); opacity: 0.22;
+    position: absolute; left: -8px; top: 18px;
     font-style: normal;
   }
   .story-attribution {
@@ -714,7 +763,7 @@
   }
   .partner-logo:hover { opacity: 1; filter: none; }
   .partner-logo-text {
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: 1.2rem; font-weight: 600;
     color: var(--text);
     letter-spacing: -0.02em;
@@ -783,6 +832,43 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════════
+     § SUPPORT
+  ══════════════════════════════════════════════════════════════════════ */
+  #support {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 52px 0;
+  }
+  .support-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap;
+  }
+  .support-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 600; color: var(--white);
+    margin-bottom: 6px;
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+  }
+  .support-sub { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+  .support-btn { font-size: 0.84rem; white-space: nowrap; flex-shrink: 0; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § GALLERY LIGHTBOX NAV
+  ══════════════════════════════════════════════════════════════════════ */
+  .gallery-modal-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; width: 48px; height: 48px; border-radius: 50%;
+    font-size: 1.3rem; cursor: pointer; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .gallery-modal-nav:hover { background: rgba(255,255,255,0.22); }
+  #gallery-modal-prev { left: 12px; }
+  #gallery-modal-next { right: 12px; }
+  #gallery-modal { position: relative; }
+
+  /* ══════════════════════════════════════════════════════════════════════
      § FOOTER
   ══════════════════════════════════════════════════════════════════════ */
   #footer {
@@ -823,7 +909,7 @@
     color: var(--teal);
   }
   .footer-col h4 {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.8rem; font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
     color: rgba(255,255,255,0.45);
@@ -837,7 +923,7 @@
   }
   .footer-col li a:hover { color: var(--white); }
   .footer-newsletter h4 {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.8rem; font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
     color: rgba(255,255,255,0.45);
@@ -861,7 +947,7 @@
     color: var(--white);
     outline: none;
     transition: border-color 0.2s;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   .newsletter-input::placeholder { color: rgba(255,255,255,0.25); }
   .newsletter-input:focus { border-color: rgba(200,150,14,0.4); }
@@ -871,7 +957,7 @@
     border: none; border-radius: 8px;
     font-size: 0.82rem; font-weight: 600;
     cursor: pointer; transition: background 0.2s;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   .newsletter-btn:hover { background: #E0A820; }
   .footer-bottom {
@@ -938,29 +1024,227 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════════
-     § ACRONYM TOOLTIP
+     § HERO SPLIT LAYOUT
   ══════════════════════════════════════════════════════════════════════ */
-  .acronym-wrap { position: relative; display: inline-block; cursor: pointer; }
-  .acronym-popup {
-    position: absolute; top: calc(100% + 14px); left: 0;
-    background: rgba(7,13,40,0.97); border: 1px solid rgba(200,150,14,0.25);
-    border-radius: 12px; padding: 18px 22px;
-    white-space: nowrap; pointer-events: none;
-    opacity: 0; transform: translateY(6px);
-    transition: opacity 0.25s, transform 0.25s;
-    z-index: 50;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  .hero-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center; width: 100%;
   }
-  .acronym-wrap:hover .acronym-popup { opacity: 1; transform: translateY(0); }
-  .acronym-row { display: flex; align-items: baseline; gap: 10px; line-height: 1.9; }
-  .acronym-letter {
-    font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 700;
-    color: var(--teal); min-width: 18px;
+  .hero-inner .hero-content { max-width: unset; }
+  .hero-image-col { position: relative; z-index: 2; }
+  .hero-img-wrap {
+    position: relative; border-radius: 18px; overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(200,150,14,0.15);
   }
-  .acronym-word { font-size: 0.82rem; color: rgba(255,255,255,0.7); }
-  .hero-badge-hint {
-    font-family: 'DM Mono', monospace; font-size: 0.62rem;
-    color: rgba(200,150,14,0.5); margin-left: 6px; letter-spacing: 0.05em;
+  .hero-img-wrap img {
+    width: 100%; display: block; aspect-ratio: 4/3;
+    object-fit: cover; object-position: center 30%;
+  }
+  .hero-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom left, rgba(7,13,40,0.08) 0%, rgba(7,13,40,0.28) 100%);
+  }
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-image-col { display: none; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § TEACHING & LEARNING SECTION
+  ══════════════════════════════════════════════════════════════════════ */
+  #teaching { background: var(--white); padding: 112px 0; border-top: 1px solid var(--gray-1); }
+  .teaching-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .teaching-header { text-align: center; margin-bottom: 64px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .teaching-intro { font-size: 1.02rem; line-height: 1.75; color: var(--text-soft); margin-top: 20px; }
+  .teaching-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 64px; }
+  .teaching-pillar {
+    background: var(--off-white); border: 1px solid var(--gray-2); border-top: 3px solid var(--teal);
+    border-radius: var(--radius-lg); padding: 36px 32px;
+    transition: box-shadow var(--transition), transform var(--transition);
+  }
+  .teaching-pillar:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .teaching-pillar-num {
+    font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700;
+    color: var(--teal); opacity: 0.25; line-height: 1; margin-bottom: 12px;
+  }
+  .teaching-pillar h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--text); }
+  .teaching-pillar p { font-size: 0.91rem; }
+  .teaching-images { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 12px; border-radius: var(--radius-lg); overflow: hidden; }
+  .teaching-img { position: relative; overflow: hidden; aspect-ratio: 4/3; background: var(--navy-mid); }
+  .teaching-img img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease; }
+  .teaching-img:hover img { transform: scale(1.04); }
+  @media (max-width: 900px) {
+    .teaching-pillars { grid-template-columns: 1fr; }
+    .teaching-images { grid-template-columns: 1fr 1fr; }
+    .teaching-images .teaching-img:last-child { display: none; }
+  }
+  @media (max-width: 600px) {
+    .teaching-images { grid-template-columns: 1fr; }
+    .teaching-images .teaching-img:last-child { display: block; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § WORKSHOP HIGHLIGHT BLOCKS
+  ══════════════════════════════════════════════════════════════════════ */
+  .workshops-intro-text {
+    font-size: 1.02rem; color: rgba(255,255,255,0.6);
+    margin-bottom: 52px; max-width: 640px; line-height: 1.7;
+  }
+  .wh-blocks { display: flex; flex-direction: column; gap: 16px; margin-bottom: 60px; }
+  .wh-block {
+    display: grid; grid-template-columns: 1fr 380px; min-height: 300px;
+    border-radius: var(--radius-lg); overflow: hidden;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    transition: border-color 0.2s;
+  }
+  .wh-block:hover { border-color: rgba(200,150,14,0.28); }
+  .wh-block.reverse { grid-template-columns: 380px 1fr; }
+  .wh-block.reverse .wh-photos { order: -1; }
+  .wh-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--navy-mid); }
+  .wh-photo { position: relative; overflow: hidden; background: var(--navy-mid); min-height: 140px; }
+  .wh-photo img { width: 100%; height: 100%; object-fit: contain; opacity: 0.92; transition: opacity 0.3s, transform 0.5s; }
+  .wh-photo:hover img { opacity: 1; transform: scale(1.04); }
+  .wh-photo.span-full { grid-column: 1 / -1; }
+  .wh-info { padding: 44px 48px; display: flex; flex-direction: column; justify-content: center; }
+  .wh-block-num {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--teal); opacity: 0.6; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .wh-info h3 { font-size: 1.45rem; font-weight: 600; color: var(--white); margin-bottom: 14px; line-height: 1.3; }
+  .wh-caption { font-size: 0.92rem; color: rgba(255,255,255,0.55); line-height: 1.65; font-style: italic; }
+  @media (max-width: 768px) {
+    .wh-block, .wh-block.reverse { grid-template-columns: 1fr; }
+    .wh-block.reverse .wh-photos { order: 0; }
+    .wh-photos { height: 220px; }
+    .wh-info { padding: 28px 24px; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § UCLA PARTNERSHIP
+  ══════════════════════════════════════════════════════════════════════ */
+  #ucla-partnership { background: var(--navy); padding: 96px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+  .ucla-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .ucla-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .ucla-inner h2 { color: var(--white); margin-bottom: 20px; }
+  .ucla-inner h2 em { color: var(--teal); font-style: italic; }
+  .ucla-body { font-size: 1rem; line-height: 1.78; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+  .ucla-badges { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ucla-badge-item {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px; font-size: 0.82rem; color: rgba(255,255,255,0.7);
+  }
+  .ucla-logo-block {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg); padding: 56px 40px; text-align: center; gap: 16px;
+  }
+  .ucla-logo-name { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 600; color: var(--white); line-height: 1.3; }
+  .ucla-logo-sub { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  .ucla-gonda { font-size: 0.8rem; color: rgba(255,255,255,0.25); margin-top: 4px; }
+  @media (max-width: 768px) { .ucla-inner { grid-template-columns: 1fr; gap: 40px; } }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § MEDIA & GALLERY
+  ══════════════════════════════════════════════════════════════════════ */
+  #gallery { background: var(--off-white); padding: 100px 0; border-top: 1px solid var(--gray-1); }
+  .gallery-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
+  }
+  #gallery h2 { margin-bottom: 48px; }
+  #gallery h2 em { color: var(--teal); font-style: italic; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .gallery-item {
+    position: relative; overflow: hidden; border-radius: var(--radius);
+    aspect-ratio: 4/3; background: var(--navy-mid); cursor: pointer;
+  }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .gallery-item:hover img { transform: scale(1.06); }
+  .gallery-item-overlay {
+    position: absolute; inset: 0; background: rgba(7,13,40,0); transition: background 0.3s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gallery-item:hover .gallery-item-overlay { background: rgba(7,13,40,0.38); }
+  .gallery-zoom { opacity: 0; transition: opacity 0.3s; color: var(--white); }
+  .gallery-item:hover .gallery-zoom { opacity: 1; }
+  @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* Story real image */
+  .story-img-real {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center 20%;
+  }
+  .story-caption {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px;
+    background: linear-gradient(to top, rgba(7,13,40,0.9) 0%, transparent 100%);
+    font-size: 0.8rem; color: rgba(255,255,255,0.6); font-style: italic; line-height: 1.5;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § ACRONYM (story section)
+  ══════════════════════════════════════════════════════════════════════ */
+  .acronym-section {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 36px 0 44px;
+    background: var(--navy);
+  }
+  .acronym-section-inner {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .acronym-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .acronym-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+    flex: 1;
+  }
+  .acronym-grid-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .ag-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem; font-weight: 700;
+    color: rgba(200,150,14,0.7);
+    line-height: 1;
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+    flex-shrink: 0;
+  }
+  .ag-word {
+    font-size: 0.75rem; font-weight: 400;
+    color: rgba(255,255,255,0.38);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .ag-letter-inline {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: rgba(200,150,14,0.7);
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+  }
+  @media (max-width: 700px) {
+    .acronym-grid { gap: 6px 20px; }
+    .acronym-section-inner { flex-direction: column; gap: 10px; }
   }
   .hero-micro-impact {
     font-family: 'DM Mono', monospace;
@@ -1042,7 +1326,7 @@
     text-transform: uppercase; color: var(--gray-3); margin-bottom: 8px;
   }
   .nsc-value {
-    font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700;
+    font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700;
     color: var(--text); line-height: 1;
   }
   .nsc-sub { font-size: 0.8rem; color: var(--text-soft); margin-top: 4px; }
@@ -1054,7 +1338,7 @@
   .filter-btn {
     padding: 6px 14px; border-radius: 50px; border: 1px solid var(--gray-2);
     background: var(--white); font-size: 0.8rem; font-weight: 500; cursor: pointer;
-    transition: all 0.2s; font-family: 'DM Sans', sans-serif; color: var(--text-soft);
+    transition: all 0.2s; font-family: 'Inter', sans-serif; color: var(--text-soft);
   }
   .filter-btn.active, .filter-btn:hover {
     border-color: var(--teal); background: var(--teal-glow); color: var(--teal-dim);
@@ -1075,7 +1359,7 @@
   .tc-avatar {
     width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 600;
+    font-family: 'Playfair Display', serif; font-size: 0.85rem; font-weight: 600;
   }
   .tc-name { font-size: 0.86rem; font-weight: 600; color: var(--text); line-height: 1.3; }
   .tc-school { font-size: 0.75rem; color: var(--text-soft); }
@@ -1164,7 +1448,7 @@
     padding: 10px 20px; border-radius: 50px;
     background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
     color: var(--white); font-size: 0.84rem; font-weight: 500;
-    cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
   }
   .btn-video:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); }
   .btn-video svg { width: 14px; height: 14px; }
@@ -1180,7 +1464,7 @@
   }
   .ws-stat { }
   .ws-stat-num {
-    font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--teal);
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--teal);
   }
   .ws-stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
 
@@ -1303,7 +1587,7 @@
   .team-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
   .team-photo-placeholder {
     width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 600; color: var(--teal);
+    font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 600; color: var(--teal);
     opacity: 0.6;
   }
   .team-body { padding: 22px 20px; }
@@ -1361,7 +1645,7 @@
   .team-modal-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
   .team-modal-photo-init {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 600;
+    font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 600;
     color: var(--teal); opacity: 0.5;
   }
   .team-modal-body { padding: 36px 36px 32px; }
@@ -1370,7 +1654,7 @@
     text-transform: uppercase; color: var(--teal-dim); margin-bottom: 8px;
   }
   .team-modal-name {
-    font-family: 'Fraunces', serif; font-size: 1.55rem; font-weight: 600;
+    font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 600;
     color: var(--text); margin-bottom: 4px; line-height: 1.2;
   }
   .team-modal-research {
@@ -1398,8 +1682,8 @@
      § LEAFLET MAP overrides
   ══════════════════════════════════════════════════════════════════════ */
   #school-map { width: 100%; height: 460px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-  .leaflet-container { font-family: 'DM Sans', sans-serif; }
-  .school-popup h4 { font-family:'Fraunces',serif; font-size:1rem; margin-bottom:4px; color: var(--navy); }
+  .leaflet-container { font-family: 'Inter', sans-serif; }
+  .school-popup h4 { font-family:'Playfair Display',serif; font-size:1rem; margin-bottom:4px; color: var(--navy); }
   .school-popup p { font-size:0.78rem; color: var(--text-soft); margin: 0; }
   .school-popup .sp-tag {
     display: inline-block; margin-top: 6px;
@@ -1418,7 +1702,7 @@
   }
   .msb-cell:last-child { border-right: none; }
   .msb-num {
-    font-family: 'Fraunces', serif; font-size: 1.9rem; font-weight: 700;
+    font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700;
     color: var(--teal); line-height: 1;
   }
   .msb-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 5px; }
@@ -1482,7 +1766,7 @@
     display: flex; align-items: center; justify-content: center;
   }
   .mission-pillar-text h4 {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 0.94rem; font-weight: 600;
     color: var(--text); margin-bottom: 4px;
   }
@@ -1521,7 +1805,7 @@
   }
   .faq-item:hover { border-color: var(--teal); box-shadow: var(--shadow-sm); }
   .faq-q {
-    font-family: 'Fraunces', serif;
+    font-family: 'Playfair Display', serif;
     font-size: 1.05rem; font-weight: 600;
     color: var(--text);
     margin-bottom: 12px;
@@ -1554,27 +1838,7 @@
 <!-- ══════════════════════════════════ § NAV ══════════════════════════════════ -->
 <nav id="nav">
   <span class="section-label">§ NAV</span>
-  <a href="#" class="nav-logo" aria-label="BRAINWAVE Home">
-    <svg class="nav-logo-mark" viewBox="0 0 34 34" fill="none" aria-hidden="true">
-      <circle cx="17" cy="17" r="16.5" stroke="rgba(200,150,14,0.35)" stroke-width="1"/>
-      <!-- Neural nodes -->
-      <circle cx="17" cy="8"  r="2.5" fill="#C8960E" opacity="0.9"/>
-      <circle cx="27" cy="14" r="2"   fill="#C8960E" opacity="0.7"/>
-      <circle cx="25" cy="25" r="2.5" fill="#C8960E" opacity="0.5"/>
-      <circle cx="10" cy="26" r="2"   fill="#C8960E" opacity="0.6"/>
-      <circle cx="8"  cy="14" r="2.5" fill="#C8960E" opacity="0.8"/>
-      <circle cx="17" cy="19" r="3"   fill="#C8960E" opacity="1"/>
-      <!-- Connections -->
-      <line x1="17" y1="10.5" x2="17"  y2="16" stroke="#C8960E" stroke-width="0.8" opacity="0.5"/>
-      <line x1="25" y1="16"   x2="20"  y2="18" stroke="#C8960E" stroke-width="0.8" opacity="0.4"/>
-      <line x1="23" y1="24"   x2="19"  y2="21" stroke="#C8960E" stroke-width="0.8" opacity="0.4"/>
-      <line x1="12" y1="24"   x2="15"  y2="21" stroke="#C8960E" stroke-width="0.8" opacity="0.4"/>
-      <line x1="10" y1="16"   x2="14"  y2="18" stroke="#C8960E" stroke-width="0.8" opacity="0.4"/>
-      <line x1="19" y1="8"    x2="26"  y2="13" stroke="#C8960E" stroke-width="0.8" opacity="0.3"/>
-      <line x1="15" y1="8"    x2="9"   y2="13" stroke="#C8960E" stroke-width="0.8" opacity="0.3"/>
-    </svg>
-    BRAINWAVE
-  </a>
+  <a href="#" class="nav-logo" aria-label="BRAINWAVE Home">BRAINWAVE</a>
 
   <ul class="nav-links">
     <li><a href="#mission">Mission</a></li>
@@ -1603,41 +1867,35 @@
     <canvas id="neural-canvas"></canvas>
   </div>
   <div class="container">
-    <div class="hero-content">
+    <div class="hero-inner">
+      <div class="hero-content">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
-        Supported by the Brain Research Institute at UCLA
-        <span class="hero-badge-hint">↓ hover logo to expand</span>
+        In partnership with the UCLA Brain Research Institute
       </div>
-      <h1>
-        <span class="acronym-wrap">BRAINWAVE
-          <div class="acronym-popup" role="tooltip" aria-label="BRAINWAVE acronym">
-            <div class="acronym-row"><span class="acronym-letter">B</span><span class="acronym-word">Bringing</span></div>
-            <div class="acronym-row"><span class="acronym-letter">R</span><span class="acronym-word">Research And</span></div>
-            <div class="acronym-row"><span class="acronym-letter">I</span><span class="acronym-word">Innovation in</span></div>
-            <div class="acronym-row"><span class="acronym-letter">N</span><span class="acronym-word">Neuroscience to</span></div>
-            <div class="acronym-row"><span class="acronym-letter">W</span><span class="acronym-word">Workshops for</span></div>
-            <div class="acronym-row"><span class="acronym-letter">A</span><span class="acronym-word">Advancing</span></div>
-            <div class="acronym-row"><span class="acronym-letter">V</span><span class="acronym-word">Visionary</span></div>
-            <div class="acronym-row"><span class="acronym-letter">E</span><span class="acronym-word">Educators</span></div>
-          </div>
-        </span><br>
-        What if every child <em>understood their brain?</em>
-      </h1>
+      <h1>BRAINWAVE<br>What if every child <em>understood their brain?</em></h1>
       <p class="hero-sub">
-        BRAINWAVE brings neuroscience into K–12 classrooms by empowering teachers with the knowledge, tools, and inspiration to shape how students understand their brains, learning, and mental health—especially in under-resourced communities where this knowledge is needed most.
+        BRAINWAVE empowers K–12 teachers with cutting-edge neuroscience, classroom-ready tools, and the inspiration to transform how their students understand their brains, their learning, and their mental health — prioritizing the communities where this knowledge is needed most.
       </p>
       <div class="hero-btns">
-        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" aria-label="Join BRAINWAVE (opens in new tab)">
-          Join BRAINWAVE
+        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" aria-label="Get Involved with BRAINWAVE (opens in new tab)">
+          Get Involved
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 8h10M9 4l4 4-4 4"/>
           </svg>
         </a>
         <a href="#impact" class="btn btn-ghost">See Our Impact</a>
+        <a href="#story" class="btn btn-outline">Read Our Story</a>
       </div>
       <p class="hero-micro-impact">Reaching 182+ teachers across 60+ Los Angeles schools and counting.</p>
-    </div>
+      </div><!-- end hero-content -->
+      <div class="hero-image-col">
+        <div class="hero-img-wrap">
+          <img src="images/hero.jpg" alt="BRAINWAVE neuroscience workshop" loading="eager">
+          <div class="hero-img-overlay"></div>
+        </div>
+      </div>
+    </div><!-- end hero-inner -->
   </div>
   <div class="hero-scroll" aria-hidden="true">
     <span>Scroll</span>
@@ -1817,74 +2075,132 @@
     </div>
 
     <div class="testimonial-label reveal">What Educators Are Saying</div>
-    <div class="testimonial-track-wrap reveal reveal-delay-1" id="testimonial-track-wrap">
-      <div class="testimonial-track">
+    <div class="testimonial-track-outer reveal reveal-delay-1">
+      <div class="testimonial-track-wrap" id="testimonial-track-wrap">
+        <div class="testimonial-track">
 
-        <div class="testimonial-card">
-          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
-          <span class="testimonial-quote-mark">"</span>
-          <p class="testimonial-text">This was my first neuroscience education workshop, and I learned so much. Can't wait to bring these activities to my classroom. Very grateful for the invitation!</p>
-          <div class="testimonial-meta">
-            <div class="testimonial-avatar">BW</div>
-            <div>
-              <div class="testimonial-name">Workshop Participant</div>
-              <div class="testimonial-school">LAUSD · Los Angeles</div>
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Winter 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">The BEST PD that I have ever been to.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="testimonial-card">
-          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
-          <span class="testimonial-quote-mark">"</span>
-          <p class="testimonial-text">The best part was the environment — everyone was so nice and genuinely excited to share their research and explain it in a way that was easily digestible. I loved the variety of research that was shared!</p>
-          <div class="testimonial-meta">
-            <div class="testimonial-avatar">BW</div>
-            <div>
-              <div class="testimonial-name">Workshop Participant</div>
-              <div class="testimonial-school">LAUSD · Los Angeles</div>
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far!</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="testimonial-card">
-          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
-          <span class="testimonial-quote-mark">"</span>
-          <p class="testimonial-text">Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far!</p>
-          <div class="testimonial-meta">
-            <div class="testimonial-avatar">BW</div>
-            <div>
-              <div class="testimonial-name">Workshop Participant</div>
-              <div class="testimonial-school">LAUSD · Los Angeles</div>
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">Knowledge is power — once informed, our school community will prioritize sleep, which will hopefully improve student achievement. Too many of our students are sleep deprived, and it clearly impacts their learning.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="testimonial-card">
-          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
-          <span class="testimonial-quote-mark">"</span>
-          <p class="testimonial-text">This experience was amazing. I had a blast learning from scientists and collaborating with educators I wouldn't have otherwise had the chance to work with. I'd love to participate again.</p>
-          <div class="testimonial-meta">
-            <div class="testimonial-avatar">BW</div>
-            <div>
-              <div class="testimonial-name">Workshop Participant</div>
-              <div class="testimonial-school">LAUSD · Los Angeles</div>
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">I now have strategies to address "sleepy" students in my classroom. This will impact their social emotional well-being and my level of frustration.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="testimonial-card">
-          <span class="testimonial-cohort">BRAINWAVE Teacher</span>
-          <span class="testimonial-quote-mark">"</span>
-          <p class="testimonial-text">I anticipate this workshop will impact my students' learning by helping me become a more aware teacher. A big takeaway was the idea of the "weekend brain" — I'll be rethinking my exam schedule to better support students.</p>
-          <div class="testimonial-meta">
-            <div class="testimonial-avatar">BW</div>
-            <div>
-              <div class="testimonial-name">Workshop Participant</div>
-              <div class="testimonial-school">LAUSD · Los Angeles</div>
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Winter 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">Although this is a busy time of year and I was extremely tired this week, I am extremely happy I attended. I have learned a great deal and feel motivated to institute some positive change at my school site.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
             </div>
           </div>
-        </div>
 
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">The actual impact of sleep debt on learning — and what we can do in our classrooms to support sleep-deprived students, especially knowing the impact on memory. Connecting with other educators is always fantastic!!</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">I think it will assist me in providing more perspective to students as to why they should prioritize healthy sleep, instead of just telling them that they need it.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">I'm going to make it my mission — immediately — to improve the sleep hygiene of my students. I want to have sleep journals in class.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Winter 2024</span>
+            <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">I enjoyed everything — this has been one of the most interesting workshops I have ever been in.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="testimonial-nav">
+        <button id="testimonial-prev" aria-label="Previous">&#8592;</button>
+        <button id="testimonial-next" aria-label="Next">&#8594;</button>
       </div>
     </div>
   </div>
@@ -1962,15 +2278,8 @@
             <path d="M7 7h10M7 11h6"/>
           </svg>
         </div>
-        <span class="program-badge badge-free">Free · Residential</span>
-        <h3>Summer Intensive Workshop</h3>
-        <p>A 5-day residential training on the UCLA campus. Neuroscience lectures from faculty, hands-on lab experiences, and collaborative curriculum design. Fully funded for qualifying teachers.</p>
-        <a href="#" class="program-link">
-          Learn More
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
-        </a>
+        <h3>Neuroscience in the Classroom</h3>
+        <p>Teachers explore key topics including sleep and learning, memory and cognition, brain development, neurodiversity (ADHD, autism, dyslexia), and mental health — translated into practical, classroom-ready understanding.</p>
       </div>
       <div class="program-card reveal reveal-delay-2">
         <div class="program-icon amber">
@@ -1980,15 +2289,8 @@
             <path d="M8 7h8M8 11h6M8 15h4"/>
           </svg>
         </div>
-        <span class="program-badge badge-ngss">NGSS-Aligned · Free</span>
-        <h3>Classroom Activity Library</h3>
-        <p>50+ ready-to-use neuroscience lessons designed for K–12 classrooms. Activities aligned to Next Generation Science Standards, available for immediate download at no cost.</p>
-        <a href="#" class="program-link">
-          Learn More
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
-        </a>
+        <h3>Hands-On Workshops &amp; Lab Experiences</h3>
+        <p>Interactive sessions include hands-on neuroscience demonstrations, exposure to real brain specimens and tools, guided visits to UCLA research labs, and insight into how neuroscience research is conducted.</p>
       </div>
       <div class="program-card reveal reveal-delay-3">
         <div class="program-icon blue">
@@ -1999,19 +2301,95 @@
             <path d="M12 8v4M9.5 17.5l-2-2M14.5 17.5l2-2M9.5 9.5l-2 5M14.5 9.5l2 5"/>
           </svg>
         </div>
-        <span class="program-badge badge-alumni">Alumni Network</span>
-        <h3>Educator Community Network</h3>
-        <p>Monthly webinars with UCLA neuroscientists, peer collaboration forums, and ongoing professional development. Stay connected and keep growing after the workshop ends.</p>
-        <a href="#" class="program-link">
-          Learn More
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
-        </a>
+        <h3>Curriculum &amp; Educator Community</h3>
+        <p>Teachers design lesson plans to take back to their classrooms and continue their journey through webinars, peer collaboration, and ongoing engagement with UCLA researchers.</p>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ══════════════════════════════════ § STORY ══════════════════════════════════ -->
+<section id="story">
+  <div class="story-intro-eyebrow">The story behind BRAINWAVE</div>
+  <div class="story-inner">
+    <div class="story-image">
+      <img src="images/founder.jpg" alt="Dr. Vidya Saravanapandian leading a BRAINWAVE workshop with educators" class="story-img-real" loading="lazy">
+      <div class="story-caption">Working alongside educators to bring neuroscience into classrooms</div>
+      <div class="story-image-overlay"></div>
+    </div>
+    <div class="story-content reveal">
+      <div class="story-eyebrow">Our Founding Story</div>
+      <blockquote class="story-pullquote">
+        Neuroscience isn't just for researchers in labs. It belongs in every classroom, in every community.
+      </blockquote>
+      <div class="story-attribution"><strong>Dr. Vidya Saravanapandian</strong></div>
+      <div class="story-role">Founder and Director, BRAINWAVE<br>Sleep Scientist, UCLA Brain Research Institute</div>
+      <p style="color:rgba(255,255,255,0.55);font-size:0.88rem;margin:16px 0 28px;line-height:1.7;">Born and raised in India, Vidya earned her PhD in Neuroscience from UCLA. Recognizing that early exposure to brain science was transforming her own sense of possibility, she created BRAINWAVE to ensure every K–12 teacher in Los Angeles had access to the same knowledge — regardless of their school's ZIP code.</p>
+    </div>
+  </div>
+
+  <div class="acronym-section reveal">
+    <div class="container">
+      <div class="acronym-section-inner">
+        <div class="acronym-section-label">What BRAINWAVE<br>stands for</div>
+        <div class="acronym-grid">
+          <div class="acronym-grid-row"><span class="ag-letter">B</span><span class="ag-word">Bringing</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">R</span><span class="ag-word">Research <span class="ag-letter-inline">A</span>nd</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">I</span><span class="ag-word">Innovation in</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">N</span><span class="ag-word">Neuroscience to</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">W</span><span class="ag-word">Workshops for</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">A</span><span class="ag-word">Advancing</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">V</span><span class="ag-word">Visionary</span></div>
+          <div class="acronym-grid-row"><span class="ag-letter">E</span><span class="ag-word">Educators</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § TEACHING ══════════════════════════════════ -->
+<section id="teaching">
+  <span class="section-label">§ TEACHING</span>
+  <div class="container">
+    <div class="teaching-header reveal">
+      <div class="teaching-eyebrow">Inside the Workshop</div>
+      <h2>Teaching &amp; Learning Experience</h2>
+      <p class="teaching-intro">Each BRAINWAVE workshop is immersive, hands-on, and deeply collaborative. Teachers don't just hear about neuroscience — they experience it through interactive sessions, real research from UCLA labs, and peer learning that translates directly back to their classrooms on Monday morning.</p>
+    </div>
+
+    <div class="teaching-pillars">
+      <div class="teaching-pillar reveal reveal-delay-1">
+        <div class="teaching-pillar-num">01</div>
+        <h3>Neuroscience Foundations</h3>
+        <p>Active UCLA researchers share their discoveries directly — covering topics from memory and sleep to learning, development, and mental health. Science made accessible, relevant, and inspiring.</p>
+      </div>
+      <div class="teaching-pillar reveal reveal-delay-2">
+        <div class="teaching-pillar-num">02</div>
+        <h3>Classroom Applications</h3>
+        <p>Every session bridges research to practice. Teachers leave with evidence-based strategies, lesson frameworks, and classroom-ready activities they can use with any grade level or subject.</p>
+      </div>
+      <div class="teaching-pillar reveal reveal-delay-3">
+        <div class="teaching-pillar-num">03</div>
+        <h3>Interactive Learning</h3>
+        <p>From lab tours and brain specimen handling to VR demos and collaborative lesson design, BRAINWAVE turns learning about the brain into an unforgettable, multi-sensory experience.</p>
+      </div>
+    </div>
+
+    <div class="teaching-images reveal">
+      <div class="teaching-img">
+        <img src="images/teaching-9.jpg" alt="Instructor leading a neuroscience session with teachers" loading="lazy">
+      </div>
+      <div class="teaching-img">
+        <img src="images/teaching-8.jpg" alt="Small group discussion during BRAINWAVE workshop" loading="lazy">
+      </div>
+      <div class="teaching-img">
+        <img src="images/teaching-h3.jpg" alt="BRAINWAVE teachers outside UCLA Neuroscience building" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- ══════════════════════════════════ § TEACHER NETWORK ══════════════════════════════════ -->
 <section id="network">
@@ -2048,30 +2426,31 @@
 
     <!-- School type breakdown -->
     <div class="reveal" style="margin-top:40px;">
-      <div style="font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:6px;">Schools in Our Network</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--gray-3);text-transform:uppercase;margin-bottom:28px;">60+ schools across Los Angeles · All grade levels · Primarily LAUSD</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:6px;">Schools in Our Network</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--gray-3);text-transform:uppercase;margin-bottom:28px;">60+ schools across Los Angeles, spanning multiple grade levels.</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">23+</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">23+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Elementary</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Grades K–5</div>
         </div>
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">10+</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">10+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Middle School</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Grades 6–8</div>
         </div>
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">9+</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">9+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">High School</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Grades 9–12</div>
         </div>
         <div style="background:var(--white);border:1px solid var(--gray-2);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;">
-          <div style="font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">6+</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--teal-dim);line-height:1;margin-bottom:8px;">6+</div>
           <div style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Magnet &amp; K–12</div>
           <div style="font-size:0.78rem;color:var(--gray-3);">Multi-grade programs</div>
         </div>
       </div>
+      <div style="margin-top:16px;font-size:0.78rem;color:var(--gray-3);font-style:italic;">Some schools span multiple grade levels.</div>
     </div>
   </div>
 </section>
@@ -2080,109 +2459,62 @@
 <section id="workshops">
   <span class="section-label" style="color:rgba(255,255,255,0.15)">§ WORKSHOPS</span>
   <div class="container">
-    <div class="workshops-eyebrow reveal">Workshop Archive</div>
+    <div class="workshops-eyebrow reveal">Workshop Highlights</div>
     <h2 class="reveal reveal-delay-1">Where the Learning <em>Happens</em></h2>
+    <p class="workshops-intro-text reveal reveal-delay-2">A glimpse into how educators engage with neuroscience through BRAINWAVE workshops.</p>
 
-    <!-- FEATURED: December 2025 (Most Recent) -->
-    <div class="workshop-featured reveal reveal-delay-2">
-      <div class="workshop-featured-inner">
-        <div class="workshop-photo-grid">
-          <!-- ADD YOUR DEC 2025 PHOTOS HERE — replace .empty slots with <img> tags -->
-          <div class="workshop-photo-slot empty">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span>Add Photo 1</span>
+    <!-- 3 Thematic Blocks -->
+    <div class="wh-blocks">
+
+      <!-- Block 1: Learning Together -->
+      <div class="wh-block reveal">
+        <div class="wh-photos">
+          <div class="wh-photo">
+            <img src="images/teaching-1.jpg" alt="Teachers engaged in neuroscience lecture" loading="lazy">
           </div>
-          <div class="workshop-photo-slot empty">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span>Add Photo 2</span>
-          </div>
-          <div class="workshop-photo-slot empty">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span>Add Photo 3</span>
-          </div>
-          <div class="workshop-photo-slot empty">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span>Add Photo 4</span>
+          <div class="wh-photo">
+            <img src="images/teaching-h1.jpg" alt="BRAINWAVE workshop presentation" loading="lazy">
           </div>
         </div>
-        <div class="workshop-info">
-          <div class="workshop-date-tag">
-            <span class="wdt-latest">Most Recent</span>
-            December 2025 · UCLA Campus
-          </div>
-          <h3>Brains in Rest: The Neuroscience of Sleep and Its Role in Learning, Behavior & Development</h3>
-          <p>Our most recent workshop dove deep into the science of sleep — from circadian biology and sleep architecture to adolescent sleep patterns and sleep in neurodiverse learners. UCLA researchers including Drs. Christopher Colwell, Ketema Paul, Gina Poe, and Ceazar Nave led sessions exploring how the sleeping brain consolidates memory, regulates attention, and supports academic success. Teachers visited working neuroscience labs, handled real brain specimens, and collaborated to design sleep literacy mini-lessons for their own classrooms.</p>
-          <div class="workshop-actions">
-            <!-- Video status: in production — replace with btn-video once ready -->
-            <span class="video-coming-soon">🎬 Video in production — coming soon</span>
-          </div>
-          <div class="workshop-stats-row">
-            <div class="ws-stat">
-              <div class="ws-stat-num">—</div>
-              <div class="ws-stat-label">Teachers Attended</div>
-            </div>
-            <div class="ws-stat">
-              <div class="ws-stat-num">—</div>
-              <div class="ws-stat-label">Avg. Satisfaction</div>
-            </div>
-            <div class="ws-stat">
-              <div class="ws-stat-num">—</div>
-              <div class="ws-stat-label">Would Recommend</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Past workshops: June 2025 + Fall 2024 -->
-    <div class="past-workshops-grid reveal">
-
-      <!-- June 2025 -->
-      <div class="past-workshop-card">
-        <div class="pwc-photos">
-          <!-- ADD YOUR JUNE 2025 PHOTOS HERE -->
-          <div class="pwc-photo empty"></div>
-          <div class="pwc-photo empty"></div>
-          <div class="pwc-photo empty"></div>
-          <div class="pwc-photo empty"></div>
-        </div>
-        <div class="pwc-body">
-          <div class="pwc-date">June 25, 2025 · UCLA</div>
-          <h3>Brains in Rest: The Neuroscience of Sleep and Its Role in Learning, Behavior & Development</h3>
-          <p>Teachers explored sleep stages, circadian rhythms, and how the brain consolidates memory overnight. Sessions covered real-world barriers like screens and stress, sleep challenges in diverse learners, and brain-based pedagogy. Teachers built brain models, analyzed case studies, and designed their own sleep literacy mini-lessons to take back to their classrooms.</p>
-          <div class="pwc-footer">
-            <span class="pwc-attendees"><!-- Add attendee count --> Workshop Cohort 2025</span>
-            <button class="btn-video" onclick="openVideo('https://www.youtube.com/embed/53EPXrjLWSs','June 2025 Workshop Highlights')">
-              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l6 4-6 4V4z"/></svg>
-              Watch Recap
-            </button>
-          </div>
+        <div class="wh-info">
+          <h3>Learning Together</h3>
+          <p class="wh-caption">Exploring neuroscience concepts in interactive sessions — UCLA researchers bring their real discoveries into the room, making complex brain science accessible and immediately relevant to every educator.</p>
         </div>
       </div>
 
-      <!-- Fall 2024 -->
-      <div class="past-workshop-card">
-        <div class="pwc-photos">
-          <!-- ADD YOUR FALL 2024 PHOTOS HERE -->
-          <div class="pwc-photo empty"></div>
-          <div class="pwc-photo empty"></div>
-          <div class="pwc-photo empty"></div>
-          <div class="pwc-photo empty"></div>
-        </div>
-        <div class="pwc-body">
-          <div class="pwc-date">September 25, 2024 · UCLA</div>
-          <h3>Neuroscience of Learning & Memory</h3>
-          <p>BRAINWAVE's inaugural workshop explored how the brain learns and remembers. UCLA researchers covered the brain's pathways for connection in the classroom, the neuroscience of memory consolidation, and why sleep is essential for learning. Teachers heard cutting-edge talks — including why naps improve brain power and what songbirds reveal about human memory — then toured active UCLA neuroscience research labs.</p>
-          <div class="pwc-footer">
-            <span class="pwc-attendees">Workshop Cohort 2024</span>
-            <button class="btn-video" onclick="openVideo('https://www.youtube.com/embed/53EPXrjLWSs','Fall 2024 Workshop Highlights')">
-              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l6 4-6 4V4z"/></svg>
-              Watch Recap
-            </button>
+      <!-- Block 2: Hands-On Exploration -->
+      <div class="wh-block reverse reveal">
+        <div class="wh-photos">
+          <div class="wh-photo">
+            <img src="images/teaching-h2.jpg" alt="Teachers trying VR headsets in neuroscience lab" loading="lazy">
+          </div>
+          <div class="wh-photo">
+            <img src="images/teaching-h5.jpg" alt="UCLA researcher presenting real brain specimens to teachers" loading="lazy">
           </div>
         </div>
+        <div class="wh-info">
+          <h3>Hands-On Exploration</h3>
+          <p class="wh-caption">Hands-on experiences that bring brain science to life — from VR technology and real brain specimens to cutting-edge imaging data, teachers engage directly with the tools of modern neuroscience.</p>
+        </div>
       </div>
-    </div>
+
+      <!-- Block 3: Collaboration & Community -->
+      <div class="wh-block reveal">
+        <div class="wh-photos">
+          <div class="wh-photo">
+            <img src="images/teaching-3.jpg" alt="Educator presenting neural communication concepts" loading="lazy">
+          </div>
+          <div class="wh-photo">
+            <img src="images/teaching-2.jpg" alt="Teachers collaborating during workshop" loading="lazy">
+          </div>
+        </div>
+        <div class="wh-info">
+          <h3>Collaboration &amp; Community</h3>
+          <p class="wh-caption">Building a community of educators learning together — small group discussions, peer lesson design, and connections that extend well beyond the workshop into every classroom these teachers touch.</p>
+        </div>
+      </div>
+
+    </div><!-- end wh-blocks -->
 
     <!-- Next workshop teaser -->
     <div class="upcoming-strip reveal" style="text-align:center; padding: 40px 32px;">
@@ -2232,7 +2564,6 @@
   <span class="section-label">§ TEAM</span>
   <div class="container">
     <div class="team-header reveal">
-      <div class="team-eyebrow">The People Behind BRAINWAVE</div>
       <h2>UCLA Scientists Who Teach</h2>
       <p style="max-width:580px;margin-top:12px;">Our instructors are active postdoctoral researchers at UCLA — experts who bring their real lab discoveries into the classroom. This is what makes BRAINWAVE unique.</p>
     </div>
@@ -2243,38 +2574,6 @@
 </section>
 
 
-<!-- ══════════════════════════════════ § STORY ══════════════════════════════════ -->
-<section id="story">
-  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ STORY</span>
-  <div class="story-inner">
-    <div class="story-image">
-      <div class="story-image-placeholder">
-        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="0.8">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <path d="m21 15-5-5L5 21"/>
-        </svg>
-        <span class="story-image-placeholder-text">Teacher + Students · Photography</span>
-      </div>
-      <div class="story-image-overlay"></div>
-    </div>
-    <div class="story-content reveal">
-      <div class="story-eyebrow">Our Founding Story</div>
-      <blockquote class="story-pullquote">
-        Neuroscience isn't just for researchers in labs. It belongs in every classroom, in every community.
-      </blockquote>
-      <div class="story-attribution"><strong>Dr. Vidya Saravanapandian</strong></div>
-      <div class="story-role">Founder &amp; Director, BRAINWAVE · IRACDA Postdoctoral Fellow, UCLA Golshani Lab</div>
-      <p style="color:rgba(255,255,255,0.55);font-size:0.88rem;margin:16px 0 28px;line-height:1.7;">Born and raised in India, Vidya earned her PhD in Neuroscience from UCLA. Recognizing that early exposure to brain science was transforming her own sense of possibility, she created BRAINWAVE to ensure every K–12 teacher in Los Angeles had access to the same knowledge — regardless of their school's ZIP code.</p>
-      <a href="#" class="btn btn-ghost" style="width:fit-content">
-        Read Our Story
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 8h10M9 4l4 4-4 4"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-</section>
 
 
 <!-- ══════════════════════════════════ § PARTNERS ══════════════════════════════════ -->
@@ -2288,6 +2587,55 @@
       </div>
     </div>
     <p class="partners-note reveal reveal-delay-2">BRAINWAVE is a UCLA initiative supported by the Brain Research Institute.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § UCLA PARTNERSHIP ══════════════════════════════════ -->
+<section id="ucla-partnership">
+  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ UCLA PARTNERSHIP</span>
+  <div class="container">
+    <div class="ucla-inner">
+      <div class="reveal">
+        <div class="ucla-eyebrow">Our Institutional Home</div>
+        <h2>Rooted in <em>UCLA Research</em></h2>
+        <p class="ucla-body">BRAINWAVE is supported by the UCLA Brain Research Institute (BRI) — a leading neuroscience research institution. This partnership gives teachers direct access to active researchers, working labs, and the most current discoveries in brain science. It's what makes BRAINWAVE fundamentally different from any other professional development program.</p>
+        <p class="ucla-body" style="margin-top:-8px;">The UCLA Brain Research Institute advances interdisciplinary research to understand the brain and improve human health. Through this connection, BRAINWAVE brings cutting-edge neuroscience insights into K–12 education.</p>
+        <div class="ucla-badges">
+          <span class="ucla-badge-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Active Research Labs
+          </span>
+          <span class="ucla-badge-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            UCLA Postdoctoral Instructors
+          </span>
+          <span class="ucla-badge-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal)"><path d="M9.5 2a2.5 2.5 0 0 1 5 0v.5A6.5 6.5 0 0 1 12 16a6.5 6.5 0 0 1-2.5-13.5V2z"/></svg>
+            Evidence-Based Curriculum
+          </span>
+          <span class="ucla-badge-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal)"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            LAUSD-Approved PD Credit
+          </span>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="ucla-logo-block">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(200,150,14,0.6)" stroke-width="1">
+            <path d="M9.5 2a2.5 2.5 0 0 1 5 0v.5A6.5 6.5 0 0 1 12 16a6.5 6.5 0 0 1-2.5-13.5V2z"/>
+            <path d="M12 16v4M8 20h8M6.5 9a5.5 5.5 0 0 0 11 0"/>
+          </svg>
+          <div class="ucla-logo-name">UCLA Brain Research Institute</div>
+          <div class="ucla-logo-sub">Gonda Neuroscience &amp; Genetics Research Center</div>
+          <div class="ucla-gonda">1506 Gonda Building · UCLA Campus · Los Angeles, CA</div>
+          <a href="https://bri.ucla.edu/brainwave/" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:0.82rem;padding:10px 20px;margin-top:8px;">
+            Visit BRI BRAINWAVE Page
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2376,6 +2724,89 @@
 </section>
 
 
+<!-- ══════════════════════════════════ § GALLERY ══════════════════════════════════ -->
+<section id="gallery">
+  <span class="section-label">§ GALLERY</span>
+  <div class="container">
+    <div class="gallery-eyebrow reveal">Media &amp; Gallery</div>
+    <h2 class="reveal reveal-delay-1">Inside <em>BRAINWAVE</em></h2>
+
+    <div class="gallery-grid reveal reveal-delay-2">
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-4.jpg" alt="Workshop neuroscience session" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-5.jpg" alt="Teacher discussion at BRAINWAVE workshop" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-7.jpg" alt="Neuroscience presenter at BRAINWAVE" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-12.jpg" alt="BRAINWAVE workshop participants" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-6.jpg" alt="Educators engaged in neuroscience learning" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-10.png" alt="BRAINWAVE workshop activity" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-h4.jpg" alt="Teachers participating in BRAINWAVE" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/teaching-h5.jpg" alt="BRAINWAVE educator community" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Gallery lightbox modal (reuses existing modal styles) -->
+<div class="modal-overlay" id="gallery-modal" onclick="closeGalleryIfOutside(event)">
+  <button class="gallery-modal-nav" id="gallery-modal-prev" onclick="prevGalleryImage()" aria-label="Previous image">&#8592;</button>
+  <div class="modal-box" style="background:transparent;box-shadow:none;max-width:min(900px,95vw);">
+    <div class="modal-header" style="background:rgba(7,13,40,0.9);border-radius:12px 12px 0 0;">
+      <span class="modal-title" id="gallery-modal-title">Photo</span>
+      <button class="modal-close" onclick="closeGalleryModal()" aria-label="Close">✕</button>
+    </div>
+    <img id="gallery-modal-img" src="" alt="" style="width:100%;display:block;border-radius:0 0 12px 12px;max-height:80vh;object-fit:contain;background:#000;">
+  </div>
+  <button class="gallery-modal-nav" id="gallery-modal-next" onclick="nextGalleryImage()" aria-label="Next image">&#8594;</button>
+</div>
+
+
 <!-- ══════════════════════════════════ § CTA ══════════════════════════════════ -->
 <section id="cta">
   <span class="section-label" style="color:rgba(255,255,255,0.15)">§ CTA</span>
@@ -2401,26 +2832,28 @@
 </section>
 
 
+<!-- ══════════════════════════════════ § SUPPORT ══════════════════════════════════ -->
+<section id="support">
+  <div class="container">
+    <div class="support-inner">
+      <div>
+        <p class="support-title">Support BRAINWAVE</p>
+        <p class="support-sub">Help bring neuroscience education to classrooms that need it most.</p>
+      </div>
+      <a href="mailto:vidyas@ucla.edu" class="btn btn-outline support-btn">Support Our Work</a>
+    </div>
+  </div>
+</section>
+
+
 <!-- ══════════════════════════════════ § FOOTER ══════════════════════════════════ -->
 <footer id="footer">
   <span class="section-label" style="color:rgba(255,255,255,0.1)">§ FOOTER</span>
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="#" class="nav-logo" aria-label="BRAINWAVE">
-          <svg class="nav-logo-mark" viewBox="0 0 34 34" fill="none">
-            <circle cx="17" cy="17" r="16.5" stroke="rgba(200,150,14,0.25)" stroke-width="1"/>
-            <circle cx="17" cy="8"  r="2.5" fill="#C8960E" opacity="0.7"/>
-            <circle cx="27" cy="14" r="2"   fill="#C8960E" opacity="0.5"/>
-            <circle cx="17" cy="19" r="3"   fill="#C8960E" opacity="0.9"/>
-            <circle cx="8"  cy="14" r="2.5" fill="#C8960E" opacity="0.6"/>
-            <line x1="17" y1="10.5" x2="17"  y2="16" stroke="#C8960E" stroke-width="0.8" opacity="0.4"/>
-            <line x1="25" y1="16"   x2="20"  y2="18" stroke="#C8960E" stroke-width="0.8" opacity="0.35"/>
-            <line x1="10" y1="16"   x2="14"  y2="18" stroke="#C8960E" stroke-width="0.8" opacity="0.35"/>
-          </svg>
-          BRAINWAVE
-        </a>
-        <p class="footer-tagline">Where Neuroscience Meets the Classroom. A UCLA initiative training K–12 teachers since 2016.</p>
+        <a href="#" class="nav-logo" aria-label="BRAINWAVE">BRAINWAVE</a>
+        <p class="footer-tagline">Where Neuroscience Meets the Classroom. A UCLA initiative bringing neuroscience to K–12 teachers across Los Angeles.</p>
         <div class="footer-social">
           <a href="https://twitter.com/UCLA_BRI" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter / X">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -2439,45 +2872,45 @@
       <div class="footer-col">
         <h4>About</h4>
         <ul>
-          <li><a href="#">Our Mission</a></li>
-          <li><a href="#">Team &amp; Faculty</a></li>
-          <li><a href="#">Research Basis</a></li>
-          <li><a href="#">UCLA Partnership</a></li>
-          <li><a href="#">Press &amp; Media</a></li>
+          <li><a href="#mission">Our Mission</a></li>
+          <li><a href="#team">Team &amp; Faculty</a></li>
+          <li><a href="#manifesto">Research Basis</a></li>
+          <li><a href="#ucla-partnership">UCLA Partnership</a></li>
+          <li><a href="mailto:vidyas@ucla.edu">Press &amp; Media</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Programs</h4>
         <ul>
-          <li><a href="#">Summer Workshop</a></li>
-          <li><a href="#">Activity Library</a></li>
-          <li><a href="#">Educator Network</a></li>
+          <li><a href="#programs">Summer Workshop</a></li>
+          <li><a href="#programs">Activity Library</a></li>
+          <li><a href="#programs">Educator Network</a></li>
           <li><a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener">Register for a Workshop</a></li>
-          <li><a href="#">For Schools</a></li>
+          <li><a href="#network">School Map</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Resources</h4>
         <ul>
-          <li><a href="#">Lesson Plans</a></li>
-          <li><a href="#">Research Papers</a></li>
-          <li><a href="#">Webinar Archive</a></li>
+          <li><a href="#programs">Lesson Plans</a></li>
+          <li><a href="#manifesto">Research Basis</a></li>
+          <li><a href="#gallery">Media &amp; Gallery</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="mailto:vidyas@ucla.edu">Contact Us</a></li>
         </ul>
       </div>
       <div class="footer-col footer-newsletter">
         <h4>Stay Connected</h4>
-        <p>Get neuroscience education updates, new resources, and workshop announcements in your inbox.</p>
-        <div class="newsletter-form">
-          <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email address">
-          <button class="newsletter-btn" type="submit">Go</button>
-        </div>
+        <p>Get neuroscience education updates, new resources, and workshop announcements.</p>
+        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" style="width:fit-content;font-size:0.84rem;padding:11px 22px;margin-top:4px;">
+          Join Our Interest List
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="footer-copy">© 2025 BRAINWAVE. All rights reserved. A UCLA initiative supported by the Brain Research Institute (BRI) · 1506 Gonda Neuroscience &amp; Genetics Research Center · <a href="mailto:vidyas@ucla.edu" style="color:rgba(255,255,255,0.3);hover:color:white">vidyas@ucla.edu</a></div>
-      <div class="footer-ucl">UCLA · Est. 2016</div>
+      <div class="footer-ucl">UCLA · Brain Research Institute</div>
     </div>
   </div>
 </footer>
@@ -2627,7 +3060,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-/* ── Testimonial drag scroll ──────────────────────────────────────── */
+/* ── Testimonial drag scroll + arrow nav ─────────────────────────── */
 (function() {
   const wrap = document.getElementById('testimonial-track-wrap');
   if (!wrap) return;
@@ -2643,6 +3076,13 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     e.preventDefault();
     const x = e.pageX - wrap.offsetLeft;
     wrap.scrollLeft = scrollLeft - (x - startX) * 1.2;
+  });
+  const STEP = 420;
+  document.getElementById('testimonial-prev')?.addEventListener('click', () => {
+    wrap.scrollBy({ left: -STEP, behavior: 'smooth' });
+  });
+  document.getElementById('testimonial-next')?.addEventListener('click', () => {
+    wrap.scrollBy({ left: STEP, behavior: 'smooth' });
   });
 })();
 
@@ -2882,7 +3322,14 @@ function closeTeamModal() {
   document.body.style.overflow = '';
 }
 function closeTeamIfOutside(e) { if (e.target === document.getElementById('team-modal')) closeTeamModal(); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeVideo(); closeTeamModal(); } });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeVideo(); closeTeamModal(); closeGalleryModal(); }
+  const galleryOpen = document.getElementById('gallery-modal')?.classList.contains('open');
+  if (galleryOpen) {
+    if (e.key === 'ArrowLeft')  prevGalleryImage();
+    if (e.key === 'ArrowRight') nextGalleryImage();
+  }
+});
 
 /* ══════════════════════════════════════════════════════════════
    VIDEO MODAL
@@ -2904,6 +3351,38 @@ function closeVideoIfOutside(e) {
   if (e.target === document.getElementById('video-modal')) closeVideo();
 }
 /* keydown handled above with closeVideo + closeTeamModal */
+
+/* ── Gallery lightbox ────────────────────────────────────────────── */
+let galleryItems = [], currentGalleryIndex = 0;
+function openGalleryModal(el) {
+  galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+  currentGalleryIndex = galleryItems.indexOf(el);
+  showGalleryImage(currentGalleryIndex);
+  document.getElementById('gallery-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function showGalleryImage(index) {
+  const img = galleryItems[index].querySelector('img');
+  document.getElementById('gallery-modal-img').src = img.src;
+  document.getElementById('gallery-modal-img').alt = img.alt;
+  document.getElementById('gallery-modal-title').textContent = img.alt || 'Photo';
+}
+function prevGalleryImage() {
+  currentGalleryIndex = (currentGalleryIndex - 1 + galleryItems.length) % galleryItems.length;
+  showGalleryImage(currentGalleryIndex);
+}
+function nextGalleryImage() {
+  currentGalleryIndex = (currentGalleryIndex + 1) % galleryItems.length;
+  showGalleryImage(currentGalleryIndex);
+}
+function closeGalleryModal() {
+  document.getElementById('gallery-modal').classList.remove('open');
+  document.getElementById('gallery-modal-img').src = '';
+  document.body.style.overflow = '';
+}
+function closeGalleryIfOutside(e) {
+  if (e.target === document.getElementById('gallery-modal')) closeGalleryModal();
+}
 
 /* ── Mobile nav toggle ────────────────────────────────────────────── */
 function toggleMenu(btn) {
