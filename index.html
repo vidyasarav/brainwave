@@ -428,7 +428,7 @@
     content: '';
     position: absolute;
     top: 0; right: 0;
-    width: 120px; height: 100%;
+    width: 120px; height: calc(100% - 70px);
     background: linear-gradient(to right, transparent, var(--navy));
     pointer-events: none;
     z-index: 2;
@@ -446,26 +446,27 @@
   .testimonial-track-wrap::-webkit-scrollbar { display: none; }
   .testimonial-nav {
     display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end;
+    position: relative; z-index: 3;
   }
   @media (max-width: 600px) {
     .testimonial-nav { justify-content: center; margin-top: 16px; }
     .testimonial-nav button { width: 56px; height: 56px; font-size: 1.5rem; background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.55); }
   }
   .testimonial-nav button {
-    width: 50px; height: 50px; border-radius: 50%;
-    background: rgba(255,255,255,0.14);
-    border: 1.5px solid rgba(255,255,255,0.4);
-    color: rgba(255,255,255,1);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    border: 2px solid rgba(255,255,255,0.55);
+    color: #fff;
     font-size: 1.35rem;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: background var(--transition), border-color var(--transition), color var(--transition), transform 0.18s ease;
   }
   .testimonial-nav button:hover {
-    background: rgba(200,150,14,0.22);
-    border-color: rgba(200,150,14,0.6);
+    background: rgba(200,150,14,0.25);
+    border-color: rgba(200,150,14,0.7);
     color: var(--teal);
-    transform: scale(1.08);
+    transform: scale(1.1);
   }
   .testimonial-track {
     display: flex; gap: 20px;
@@ -2340,6 +2341,19 @@
           <div class="testimonial-card">
             <span class="testimonial-cohort">Summer 2024</span>
             <span class="testimonial-quote-mark">"</span>
+            <p class="testimonial-text">I now have strategies to address "sleepy" students in my classroom. This will impact their social emotional well-being and my level of frustration.</p>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">BW</div>
+              <div>
+                <div class="testimonial-name">Workshop Participant</div>
+                <div class="testimonial-school">LAUSD · Los Angeles</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <span class="testimonial-cohort">Summer 2024</span>
+            <span class="testimonial-quote-mark">"</span>
             <p class="testimonial-text">Thank you so much, Vidya, for inviting us science teachers to this very powerful workshop! It was probably the BEST professional development we have ever attended thus far!</p>
             <div class="testimonial-meta">
               <div class="testimonial-avatar">BW</div>
@@ -2354,19 +2368,6 @@
             <span class="testimonial-cohort">Summer 2024</span>
             <span class="testimonial-quote-mark">"</span>
             <p class="testimonial-text">Knowledge is power — once informed, our school community will prioritize sleep, which will hopefully improve student achievement. Too many of our students are sleep deprived, and it clearly impacts their learning.</p>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar">BW</div>
-              <div>
-                <div class="testimonial-name">Workshop Participant</div>
-                <div class="testimonial-school">LAUSD · Los Angeles</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial-card">
-            <span class="testimonial-cohort">Summer 2024</span>
-            <span class="testimonial-quote-mark">"</span>
-            <p class="testimonial-text">I now have strategies to address "sleepy" students in my classroom. This will impact their social emotional well-being and my level of frustration.</p>
             <div class="testimonial-meta">
               <div class="testimonial-avatar">BW</div>
               <div>
