@@ -437,19 +437,20 @@
     display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end;
   }
   .testimonial-nav button {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.25);
-    color: rgba(255,255,255,0.9);
-    font-size: 1.2rem;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: rgba(255,255,255,0.14);
+    border: 1.5px solid rgba(255,255,255,0.4);
+    color: rgba(255,255,255,1);
+    font-size: 1.35rem;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: background var(--transition), border-color var(--transition), color var(--transition);
+    transition: background var(--transition), border-color var(--transition), color var(--transition), transform 0.18s ease;
   }
   .testimonial-nav button:hover {
-    background: rgba(200,150,14,0.2);
-    border-color: rgba(200,150,14,0.5);
+    background: rgba(200,150,14,0.22);
+    border-color: rgba(200,150,14,0.6);
     color: var(--teal);
+    transform: scale(1.08);
   }
   .testimonial-track {
     display: flex; gap: 20px;
@@ -1836,6 +1837,180 @@
   .faq-cta p { font-size: 0.94rem; color: var(--text-soft); margin-bottom: 18px; }
   @media (max-width: 768px) { .faq-grid { grid-template-columns: 1fr; } }
 
+  /* ══════════════════════════════════════════════════════════════════════
+     § FACULTY SPEAKERS
+  ══════════════════════════════════════════════════════════════════════ */
+  #faculty-speakers {
+    background: var(--navy);
+    padding: 112px 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .faculty-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .faculty-header { margin-bottom: 56px; }
+  .faculty-header h2 { color: var(--white); }
+  .faculty-header h2 em { color: var(--teal); font-style: italic; }
+  .faculty-subtitle {
+    font-size: 1rem; color: rgba(255,255,255,0.52); margin-top: 14px; max-width: 540px; line-height: 1.7;
+  }
+  .faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .faculty-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .faculty-card:hover {
+    border-color: rgba(200,150,14,0.35);
+    transform: translateY(-4px);
+  }
+  .faculty-photo {
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    background: var(--navy-mid);
+  }
+  .faculty-photo img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center top;
+    transition: transform 0.5s ease;
+    display: block;
+  }
+  .faculty-card:hover .faculty-photo img { transform: scale(1.04); }
+  .faculty-body { padding: 18px 20px 22px; }
+  .faculty-name {
+    font-size: 0.97rem; font-weight: 600; color: var(--white); margin-bottom: 5px;
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+  }
+  .faculty-specialty {
+    font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.09em;
+    text-transform: uppercase; color: rgba(200,150,14,0.65); margin-bottom: 8px;
+  }
+  .faculty-expertise {
+    font-size: 0.8rem; color: rgba(255,255,255,0.42); line-height: 1.55;
+  }
+  .faculty-card { cursor: pointer; }
+  @media (max-width: 1024px) { .faculty-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .faculty-grid { grid-template-columns: 1fr; } }
+
+  /* Faculty lightbox */
+  .faculty-modal-overlay {
+    position: fixed; inset: 0; z-index: 3000;
+    background: rgba(5,10,30,0.88);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .faculty-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .faculty-modal-box {
+    position: relative;
+    max-width: min(760px, 94vw);
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    transform: scale(0.96) translateY(12px);
+    transition: transform 0.28s ease;
+  }
+  .faculty-modal-overlay.open .faculty-modal-box { transform: scale(1) translateY(0); }
+  .faculty-modal-img {
+    width: 100%; display: block;
+    max-height: 72vh; object-fit: contain;
+    background: #000;
+  }
+  .faculty-modal-footer {
+    padding: 18px 24px 22px;
+    text-align: center;
+  }
+  .faculty-modal-name {
+    font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600;
+    color: var(--white); margin-bottom: 4px;
+    font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
+  }
+  .faculty-modal-specialty {
+    font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(200,150,14,0.7);
+  }
+  .faculty-modal-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.85); font-size: 1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.18s;
+  }
+  .faculty-modal-close:hover { background: rgba(0,0,0,0.75); }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     § VIDEO SECTION
+  ══════════════════════════════════════════════════════════════════════ */
+  #video-feature {
+    background: var(--navy);
+    padding: 100px 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .video-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal); text-transform: uppercase; margin-bottom: 16px; text-align: center;
+  }
+  #video-feature h2 {
+    color: var(--white); text-align: center; margin-bottom: 40px;
+  }
+  .video-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .video-embed {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.07);
+  }
+  .video-embed iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  .video-caption {
+    text-align: center; margin-top: 24px;
+    font-size: 1rem; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.6;
+  }
+  .video-credit {
+    text-align: center; margin-top: 10px;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.38); line-height: 1.9;
+  }
+
+  /* Community photo strip — in impact section */
+  .community-strip {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 10px;
+    margin: 56px 0 64px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .community-photo {
+    position: relative; overflow: hidden; aspect-ratio: 16/9;
+    background: var(--navy-mid);
+  }
+  .community-photo img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+  }
+  .community-photo:hover img { transform: scale(1.03); }
+
 </style>
 <body>
 
@@ -2078,6 +2253,15 @@
       </div>
     </div>
 
+    <div class="community-strip reveal">
+      <div class="community-photo">
+        <img src="images/support_pics/support-6.jpg" alt="BRAINWAVE community of educators" loading="lazy">
+      </div>
+      <div class="community-photo">
+        <img src="images/support_pics/support-4.jpg" alt="Teachers celebrating with BRAINWAVE certificates" loading="lazy">
+      </div>
+    </div>
+
     <div class="testimonial-label reveal">What Educators Are Saying</div>
     <div class="testimonial-track-outer reveal reveal-delay-1">
       <div class="testimonial-track-wrap" id="testimonial-track-wrap">
@@ -2205,6 +2389,31 @@
       <div class="testimonial-nav">
         <button id="testimonial-prev" aria-label="Previous">&#8592;</button>
         <button id="testimonial-next" aria-label="Next">&#8594;</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ § VIDEO ══════════════════════════════════ -->
+<section id="video-feature">
+  <div class="container">
+    <div class="video-eyebrow reveal">BRAINWAVE IN ACTION</div>
+    <h2 class="reveal reveal-delay-1"><em>BRAINWAVE</em> in Action</h2>
+    <div class="video-wrap reveal reveal-delay-2">
+      <div class="video-embed">
+        <iframe
+          src="https://www.youtube.com/embed/53EPXrjLWSs"
+          title="BRAINWAVE Workshop Video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <p class="video-caption">A glimpse into BRAINWAVE workshops.</p>
+      <div class="video-credit">
+        Video created by Vidya Saravanapandian<br>
+        Music: Bensound
       </div>
     </div>
   </div>
@@ -2493,7 +2702,7 @@
             <img src="images/teaching-h2.jpg" alt="Teachers trying VR headsets in neuroscience lab" loading="lazy">
           </div>
           <div class="wh-photo">
-            <img src="images/teaching-h5.jpg" alt="UCLA researcher presenting real brain specimens to teachers" loading="lazy">
+            <img src="images/support_pics/support-3.jpg" alt="Brain specimen hands-on activity at BRAINWAVE workshop" loading="lazy">
           </div>
         </div>
         <div class="wh-info">
@@ -2578,6 +2787,79 @@
 </section>
 
 
+
+
+<!-- ══════════════════════════════════ § FACULTY SPEAKERS ══════════════════════════════════ -->
+<section id="faculty-speakers">
+  <span class="section-label" style="color:rgba(255,255,255,0.15)">§ FACULTY SPEAKERS</span>
+  <div class="container">
+    <div class="faculty-header reveal">
+      <div class="faculty-eyebrow">Expert Faculty Speakers</div>
+      <h2>Learning from <em>Leading Experts</em></h2>
+      <p class="faculty-subtitle">Learning from leading experts in neuroscience and brain health — UCLA faculty who bring cutting-edge research directly into the BRAINWAVE classroom.</p>
+    </div>
+    <div class="faculty-grid">
+
+      <div class="faculty-card reveal" onclick="openFacultyModal(this)" data-name="Dr. Christopher Colwell" data-specialty="Circadian Biologist · UCLA">
+        <div class="faculty-photo">
+          <img src="images/faculty_speakers/christopher-colwell.jpg" alt="Dr. Christopher Colwell presenting at BRAINWAVE workshop" loading="lazy">
+        </div>
+        <div class="faculty-body">
+          <div class="faculty-name">Dr. Christopher Colwell</div>
+          <div class="faculty-specialty">Circadian Biologist · UCLA</div>
+          <div class="faculty-expertise">Explores circadian rhythms and their role in brain health and neurodegenerative disease.</div>
+        </div>
+      </div>
+
+      <div class="faculty-card reveal reveal-delay-1" onclick="openFacultyModal(this)" data-name="Dr. Gina Poe" data-specialty="Sleep Neuroscientist · UCLA">
+        <div class="faculty-photo">
+          <img src="images/faculty_speakers/gina-poe.jpg" alt="Dr. Gina Poe presenting at BRAINWAVE workshop" loading="lazy">
+        </div>
+        <div class="faculty-body">
+          <div class="faculty-name">Dr. Gina Poe</div>
+          <div class="faculty-specialty">Sleep Neuroscientist · UCLA</div>
+          <div class="faculty-expertise">Studies how sleep supports memory, learning, and brain plasticity.</div>
+        </div>
+      </div>
+
+      <div class="faculty-card reveal reveal-delay-2" onclick="openFacultyModal(this)" data-name="Dr. Ketema Paul" data-specialty="Sleep Researcher · UCLA">
+        <div class="faculty-photo">
+          <img src="images/faculty_speakers/ketema-paul.jpg" alt="Dr. Ketema Paul presenting at BRAINWAVE workshop" loading="lazy">
+        </div>
+        <div class="faculty-body">
+          <div class="faculty-name">Dr. Ketema Paul</div>
+          <div class="faculty-specialty">Sleep Researcher · UCLA</div>
+          <div class="faculty-expertise">Researches sleep and circadian rhythms and their impact on brain function.</div>
+        </div>
+      </div>
+
+      <div class="faculty-card reveal reveal-delay-3" onclick="openFacultyModal(this)" data-name="Dr. Stephanie White" data-specialty="Neuroscientist · UCLA">
+        <div class="faculty-photo">
+          <img src="images/faculty_speakers/stephanie-white.jpg" alt="Dr. Stephanie White presenting at BRAINWAVE workshop" loading="lazy">
+        </div>
+        <div class="faculty-body">
+          <div class="faculty-name">Dr. Stephanie White</div>
+          <div class="faculty-specialty">Neuroscientist · UCLA</div>
+          <div class="faculty-expertise">Investigates how brain circuits support cognition, decision-making, and behavior.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Faculty Speaker Modal -->
+<div class="faculty-modal-overlay" id="faculty-modal" onclick="closeFacultyIfOutside(event)">
+  <div class="faculty-modal-box">
+    <button class="faculty-modal-close" onclick="closeFacultyModal()" aria-label="Close">✕</button>
+    <img class="faculty-modal-img" id="faculty-modal-img" src="" alt="">
+    <div class="faculty-modal-footer">
+      <div class="faculty-modal-name" id="faculty-modal-name"></div>
+      <div class="faculty-modal-specialty" id="faculty-modal-specialty"></div>
+    </div>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════ § PARTNERS ══════════════════════════════════ -->
@@ -2788,6 +3070,34 @@
 
       <div class="gallery-item" onclick="openGalleryModal(this)">
         <img src="images/teaching-h5.jpg" alt="BRAINWAVE educator community" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/support_pics/support-6.jpg" alt="BRAINWAVE community of educators group photo" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/support_pics/support-4.jpg" alt="Teachers receiving BRAINWAVE certificates" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/support_pics/support-3.jpg" alt="Brain dissection hands-on activity" loading="lazy">
+        <div class="gallery-item-overlay">
+          <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+
+      <div class="gallery-item" onclick="openGalleryModal(this)">
+        <img src="images/support_pics/support-1.jpg" alt="BRAINWAVE workshop session with educators" loading="lazy">
         <div class="gallery-item-overlay">
           <svg class="gallery-zoom" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
         </div>
@@ -3328,7 +3638,7 @@ function closeTeamModal() {
 }
 function closeTeamIfOutside(e) { if (e.target === document.getElementById('team-modal')) closeTeamModal(); }
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeVideo(); closeTeamModal(); closeGalleryModal(); }
+  if (e.key === 'Escape') { closeVideo(); closeTeamModal(); closeGalleryModal(); closeFacultyModal(); }
   const galleryOpen = document.getElementById('gallery-modal')?.classList.contains('open');
   if (galleryOpen) {
     if (e.key === 'ArrowLeft')  prevGalleryImage();
@@ -3387,6 +3697,25 @@ function closeGalleryModal() {
 }
 function closeGalleryIfOutside(e) {
   if (e.target === document.getElementById('gallery-modal')) closeGalleryModal();
+}
+
+/* ── Faculty speaker lightbox ────────────────────────────────────── */
+function openFacultyModal(card) {
+  const img = card.querySelector('.faculty-photo img');
+  document.getElementById('faculty-modal-img').src = img.src;
+  document.getElementById('faculty-modal-img').alt = img.alt;
+  document.getElementById('faculty-modal-name').textContent = card.dataset.name;
+  document.getElementById('faculty-modal-specialty').textContent = card.dataset.specialty;
+  document.getElementById('faculty-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFacultyModal() {
+  document.getElementById('faculty-modal').classList.remove('open');
+  document.getElementById('faculty-modal-img').src = '';
+  document.body.style.overflow = '';
+}
+function closeFacultyIfOutside(e) {
+  if (e.target === document.getElementById('faculty-modal')) closeFacultyModal();
 }
 
 /* ── Mobile nav toggle ────────────────────────────────────────────── */
