@@ -887,7 +887,14 @@
   .gallery-modal-nav:hover { background: rgba(255,255,255,0.22); }
   #gallery-modal-prev { left: 12px; }
   #gallery-modal-next { right: 12px; }
-  #gallery-modal { position: relative; }
+  /* #gallery-modal must stay position:fixed (inherited from .modal-overlay).
+     Do NOT add position:relative here — it overrides fixed and breaks mobile. */
+  @media (max-width: 768px) {
+    #gallery-modal .modal-box { max-width: 95vw; }
+    #gallery-modal .modal-close { width: 44px; height: 44px; font-size: 1.2rem; min-width: 44px; min-height: 44px; }
+    #gallery-modal-img { max-height: 72vh; }
+    .gallery-modal-nav { width: 44px; height: 44px; }
+  }
 
   /* ══════════════════════════════════════════════════════════════════════
      § FOOTER
