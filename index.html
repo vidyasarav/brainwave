@@ -666,6 +666,60 @@
   .program-card:hover .program-link { gap: 10px; color: var(--teal); }
 
   /* ══════════════════════════════════════════════════════════════════════
+     § WORKSHOP TOPICS
+  ══════════════════════════════════════════════════════════════════════ */
+  #workshop-topics {
+    background: var(--off-white);
+    padding: 96px 0;
+    border-top: 1px solid var(--gray-1);
+  }
+  .topics-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--teal-dim); text-transform: uppercase; margin-bottom: 16px;
+  }
+  #workshop-topics h2 { margin-bottom: 52px; }
+  .topics-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .topic-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-2);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px 28px;
+    position: relative; overflow: hidden;
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .topic-card:hover {
+    border-color: var(--teal);
+    box-shadow: var(--shadow-md), 0 0 0 4px rgba(200,150,14,0.06);
+    transform: translateY(-3px);
+  }
+  .topic-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--teal), transparent);
+    opacity: 0; transition: opacity var(--transition);
+  }
+  .topic-card:hover::before { opacity: 1; }
+  .topic-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; flex-shrink: 0;
+  }
+  .topic-icon.teal  { background: var(--teal-glow); }
+  .topic-icon.amber { background: var(--amber-soft); }
+  .topic-icon.blue  { background: rgba(0,100,200,0.08); }
+  .topic-card h4 {
+    font-size: 1rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 10px; line-height: 1.35;
+  }
+  .topic-card p {
+    font-size: 0.86rem; color: var(--text-soft); line-height: 1.65; margin: 0;
+  }
+  @media (max-width: 1024px) { .topics-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px)  { .topics-grid { grid-template-columns: 1fr; } }
+
+  /* ══════════════════════════════════════════════════════════════════════
      § STORY
   ══════════════════════════════════════════════════════════════════════ */
   #story {
@@ -2612,6 +2666,115 @@
         <h3>Curriculum &amp; Educator Community</h3>
         <p>Teachers design lesson plans to take back to their classrooms and continue their journey through webinars, peer collaboration, and ongoing engagement with UCLA researchers.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ § WORKSHOP TOPICS ══════════════════════════════════ -->
+<section id="workshop-topics">
+  <span class="section-label">§ WORKSHOP TOPICS</span>
+  <div class="container">
+    <div class="topics-eyebrow reveal">What We Cover</div>
+    <h2 class="reveal reveal-delay-1">Workshop <em>Topics</em></h2>
+    <div class="topics-grid">
+
+      <div class="topic-card reveal reveal-delay-1">
+        <div class="topic-icon teal">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <path d="M12 2C8 2 4 5.5 4 10c0 2.4 1 4.5 2.6 6l1 1.4c.3.4.4.9.4 1.3V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-1.3c0-.4.1-.9.4-1.3l1-1.4C19 14.5 20 12.4 20 10c0-4.5-4-8-8-8z"/>
+            <path d="M9 21h6"/>
+          </svg>
+        </div>
+        <h4>Learning &amp; Memory</h4>
+        <p>How the brain encodes, stores, and retrieves information—plus evidence-based strategies teachers can use to strengthen learning and retention in the classroom.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-2">
+        <div class="topic-icon blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+            <path d="M19 3v4M21 5h-4"/>
+          </svg>
+        </div>
+        <h4>Sleep &amp; Brain Development</h4>
+        <p>The science of sleep and its critical role in attention, behavior, and learning—equipping educators to recognize sleep-related challenges and support student success.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-3">
+        <div class="topic-icon amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f0a500" stroke-width="1.8">
+            <circle cx="9" cy="7" r="3"/>
+            <circle cx="17" cy="7" r="2"/>
+            <path d="M3 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"/>
+            <path d="M17 11c1.7.5 3 2 3 4"/>
+          </svg>
+        </div>
+        <h4>Neurodiversity &amp; Inclusive Classrooms</h4>
+        <p>Understanding ADHD, autism, dyslexia, and diverse learning profiles—helping teachers create inclusive environments where every student can thrive.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-4">
+        <div class="topic-icon teal">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <path d="M12 20V10"/>
+            <path d="M18 20V4"/>
+            <path d="M6 20v-4"/>
+            <path d="M3 20h18"/>
+          </svg>
+        </div>
+        <h4>Brain Development Across Childhood</h4>
+        <p>How the brain grows and changes from early childhood through adolescence—and what that means for teaching, behavior, and learning.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-1">
+        <div class="topic-icon amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f0a500" stroke-width="1.8">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </div>
+        <h4>Mental Health &amp; the Brain</h4>
+        <p>Exploring the neuroscience of stress, emotion, and mental health—providing tools to support student well-being in the classroom.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-2">
+        <div class="topic-icon teal">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3"/>
+            <circle cx="12" cy="12" r="8"/>
+            <line x1="12" y1="2" x2="12" y2="4"/>
+            <line x1="12" y1="20" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="4" y2="12"/>
+            <line x1="20" y1="12" x2="22" y2="12"/>
+          </svg>
+        </div>
+        <h4>Attention, Focus &amp; Executive Function</h4>
+        <p>How attention works in the brain—and practical strategies to support focus, self-regulation, and executive function skills.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-3">
+        <div class="topic-icon blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/>
+          </svg>
+        </div>
+        <h4>Hands-On Neuroscience Activities</h4>
+        <p>Interactive demonstrations and classroom-ready activities that bring brain science to life for students.</p>
+      </div>
+
+      <div class="topic-card reveal reveal-delay-4">
+        <div class="topic-icon amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f0a500" stroke-width="1.8">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+            <line x1="6" y1="1" x2="6" y2="4"/>
+            <line x1="10" y1="1" x2="10" y2="4"/>
+            <line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+        </div>
+        <h4>Translating Research to Practice</h4>
+        <p>Bridging cutting-edge neuroscience research with real classroom strategies teachers can use immediately.</p>
+      </div>
+
     </div>
   </div>
 </section>
