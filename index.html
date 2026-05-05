@@ -364,7 +364,7 @@
   #impact h2 span { color: var(--teal); font-style: italic; }
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 0;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: var(--radius-lg);
@@ -1020,8 +1020,10 @@
   /* ══════════════════════════════════════════════════════════════════════
      Responsive
   ══════════════════════════════════════════════════════════════════════ */
-  @media (max-width: 1024px) {
+  @media (max-width: 1280px) {
     .stats-grid { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 1024px) {
     .footer-top { grid-template-columns: 1fr 1fr 1fr; }
     .footer-brand { grid-column: 1/-1; }
   }
@@ -2334,6 +2336,13 @@
         </div>
         <div class="stat-label">Teachers<br>Waitlisted</div>
         <div class="stat-bar"><div class="stat-bar-fill" data-width="80"></div></div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">
+          <span class="count-up" data-target="20000">0</span><span class="stat-suffix">+</span>
+        </div>
+        <div class="stat-label">Students<br>Impacted</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-width="70"></div></div>
       </div>
     </div>
 
