@@ -130,6 +130,13 @@
   .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
   section { position: relative; }
 
+  /* Offset all anchor-linked sections below the 68px sticky nav */
+  #mission, #programs, #explore-programs, #impact, #team, #faq, #cta,
+  #story, #network, #gallery, #manifesto, #workshops, #faculty-speakers,
+  #journey, #teaching, #ucla-partnership {
+    scroll-margin-top: 88px;
+  }
+
   /* ══════════════════════════════════════════════════════════════════════
      § NAV
   ══════════════════════════════════════════════════════════════════════ */
@@ -1962,6 +1969,11 @@
   #unibox-next { right: 16px; }
   #unibox-prev:hover, #unibox-next:hover { background: rgba(255,255,255,0.24); }
   #unibox-prev.ub-hidden, #unibox-next.ub-hidden { display: none; }
+  @media (max-width: 768px) {
+    #unibox-img { max-width: 95vw; max-height: 80vh; }
+    #unibox-close { width: 44px; height: 44px; top: 16px; right: 16px; font-size: 1.1rem; }
+    #unibox-prev, #unibox-next { width: 44px; height: 44px; }
+  }
   /* Clickable cues */
   .teaching-img, .wh-photo, .community-photo, .story-image { cursor: zoom-in; }
 
@@ -1976,6 +1988,14 @@
   .faculty-eyebrow {
     font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
     color: var(--teal); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .faculty-institute-tag {
+    font-size: 0.78rem; color: rgba(255,255,255,0.38); letter-spacing: 0.04em;
+    margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+  }
+  .faculty-institute-tag::before {
+    content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal); opacity: 0.7; flex-shrink: 0;
   }
   .faculty-header { margin-bottom: 56px; }
   .faculty-header h2 { color: var(--white); }
@@ -3054,6 +3074,7 @@
   <div class="container">
     <div class="faculty-header reveal">
       <div class="faculty-eyebrow">Expert Faculty Speakers</div>
+      <div class="faculty-institute-tag">Featuring faculty from the UCLA Brain Research Institute</div>
       <h2>Learning from <em>Leading Experts</em></h2>
       <p class="faculty-subtitle">Learning from leading experts in neuroscience and brain health — UCLA faculty who bring cutting-edge research directly into the BRAINWAVE classroom.</p>
     </div>
