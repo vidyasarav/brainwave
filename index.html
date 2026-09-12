@@ -3856,8 +3856,9 @@ let leafletMap = null, currentMapFilter = 'all', schoolMarkers = [];
 function initLeafletMap() {
   if (leafletMap || typeof L === 'undefined') return;
   leafletMap = L.map('school-map', { center:[34.02,-118.35], zoom:10, scrollWheelZoom:false });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution:'© OpenStreetMap, © CartoDB', subdomains:'abcd', maxZoom:18
+  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    attribution:'© <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom:20
   }).addTo(leafletMap);
   renderMapMarkers();
 }
