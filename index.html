@@ -3636,14 +3636,16 @@
             <label class="sf-label" for="sf-message">Message <span style="color:rgba(255,255,255,0.3);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem;">(Optional)</span></label>
             <textarea class="sf-textarea" id="sf-message" name="message" placeholder="Anything you'd like to share (optional)"></textarea>
           </div>
+          <p id="sf-submit-error" style="display:none;font-size:0.84rem;color:#e08080;margin-top:12px;margin-bottom:0;">We're sorry, your message could not be sent. Please try again.</p>
           <button type="submit" class="btn btn-primary sf-submit">Submit Interest</button>
         </form>
       </div>
-      <!-- Shown when no submission endpoint is configured -->
-      <div id="sf-unconfigured" style="display:none;text-align:center;padding:40px 0;">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" style="margin-bottom:16px;opacity:0.8;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        <p style="color:var(--white);font-size:1rem;font-weight:600;margin-bottom:10px;">Form not yet connected</p>
-        <p style="color:rgba(255,255,255,0.52);font-size:0.88rem;line-height:1.75;max-width:360px;margin:0 auto;">This form is ready but hasn't been connected to a submission service. To enable submissions, configure a form endpoint and re-deploy. See setup instructions in CLAUDE.md.</p>
+      <!-- Shown after successful submission -->
+      <div id="sf-success" style="display:none;text-align:center;padding:40px 0;">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" style="margin-bottom:18px;"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+        <p style="color:var(--white);font-size:1.15rem;font-weight:600;margin-bottom:12px;">Thank you for your interest in supporting BRAINWAVE!</p>
+        <p style="color:rgba(255,255,255,0.58);font-size:0.9rem;line-height:1.75;max-width:380px;margin:0 auto 28px;">We've received your information and will be in touch soon.</p>
+        <button class="btn btn-outline" onclick="closeSupportModal()">Close</button>
       </div>
     </div>
   </div>
@@ -4291,6 +4293,11 @@ function openSupportModal() {
 function closeSupportModal() {
   document.getElementById('support-modal').classList.remove('open');
   document.body.style.overflow = '';
+  // Reset to form view for a fresh open next time
+  var wrap = document.getElementById('sf-form-wrap');
+  var success = document.getElementById('sf-success');
+  if (wrap) wrap.style.display = '';
+  if (success) success.style.display = 'none';
 }
 function closeSupportIfOutside(e) {
   if (e.target === document.getElementById('support-modal')) closeSupportModal();
@@ -4300,6 +4307,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!form) return;
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    // Validate required fields
     var valid = true;
     var nameField = document.getElementById('sf-field-name');
     var name = document.getElementById('sf-name').value.trim();
@@ -4311,8 +4319,40 @@ document.addEventListener('DOMContentLoaded', function() {
     var interest = document.querySelector('input[name="sf-interest"]:checked');
     if (!interest) { interestField.classList.add('has-error'); valid = false; } else { interestField.classList.remove('has-error'); }
     if (!valid) return;
-    document.getElementById('sf-form-wrap').style.display = 'none';
-    document.getElementById('sf-unconfigured').style.display = 'block';
+    // Clear any previous error banner and disable submit during request
+    var errBanner = document.getElementById('sf-submit-error');
+    if (errBanner) errBanner.style.display = 'none';
+    var submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    var org = document.getElementById('sf-org').value.trim();
+    var message = document.getElementById('sf-message').value.trim();
+    fetch('https://formspree.io/f/xeaowvyr', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        organization: org || 'Not provided',
+        interest: interest.value,
+        message: message || 'Not provided',
+        _replyto: email,
+        _subject: 'New BRAINWAVE Support Interest — ' + name
+      })
+    })
+    .then(function(res) {
+      if (res.ok) {
+        document.getElementById('sf-form-wrap').style.display = 'none';
+        document.getElementById('sf-success').style.display = 'block';
+      } else {
+        throw new Error('submission failed');
+      }
+    })
+    .catch(function() {
+      if (errBanner) errBanner.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Interest';
+    });
   });
   ['sf-name', 'sf-email'].forEach(function(id) {
     document.getElementById(id).addEventListener('input', function() {
