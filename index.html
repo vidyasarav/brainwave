@@ -1829,6 +1829,8 @@
     font-size: 0.92rem; color: var(--text-soft); line-height: 1.8;
     margin-bottom: 20px;
   }
+  .team-modal-bio p { margin-bottom: 14px; }
+  .team-modal-bio p:last-child { margin-bottom: 0; }
   .team-modal-close {
     position: absolute; top: 16px; right: 16px;
     width: 36px; height: 36px; border-radius: 50%;
@@ -3954,8 +3956,8 @@ const TEAM_DATA = [
   {
     name: "Vidya Saravanapandian, PhD",
     role: "Founder and Director",
-    research: "Sleep · Neurodevelopmental Disorders",
-    bio: "Vidya was born and raised in India. She earned a Ph.D. in Neuroscience from UCLA and a Master of Engineering (M.E.) in Biotechnology from Birla Institute of Technology and Science, Pilani, India. She is an IRACDA Postdoctoral Research Fellow at the Golshani laboratory at UCLA, investigating changes in sleep physiology in neurodevelopmental disorders (NDDs) and their impact on cognitive and developmental outcomes. She is passionate about bridging clinical and animal model research to advance our understanding of NDDs. As a neuroscience education advocate, Vidya has been working with LAUSD schools to bring neuroscience education to K-12 students in low-income communities. Recognizing the importance of early exposure and awareness of brain health, she created BRAINWAVE to empower teachers and impact a greater number of students, particularly those from underserved communities. Through this program, Vidya also strives to build a community of UCLA neuroscientists passionate about teaching and communicating science and help them extend their reach into classrooms. In her free time, she enjoys baking and exploring new hiking trails.",
+    research: "Neuroscience · Education · Community Engagement",
+    bio: "<p>Vidya Saravanapandian, Ph.D., is Director of Neuroscience Community Engagement &amp; Public Education at the UCLA Brain Research Institute and an Adjunct Assistant Professor at the David Geffen School of Medicine at UCLA. She is the Founder and Director of BRAINWAVE, an initiative connecting neuroscientists with K–12 educators and communities to make current brain science accessible, relevant, and useful beyond the laboratory.</p><p>Vidya earned her Ph.D. in Neuroscience from UCLA, where her research focused on sleep and EEG biomarkers in neurodevelopmental disorders. She subsequently continued her research and teaching training at UCLA as an NIH-funded IRACDA Postdoctoral Fellow, an experience that further shaped her interest in connecting scientific research with education. She also holds an M.E. in Biotechnology from BITS Pilani and a B.Tech. in Biotechnology from Bharathidasan Institute of Technology in India.</p><p>Her work now bridges neuroscience, education, and community engagement. Through her role at the UCLA Brain Research Institute, she develops programs that connect scientists directly with educators, students, and communities and create opportunities for neuroscience research to reach audiences beyond the laboratory.</p><p>Vidya founded BRAINWAVE to help make neuroscience more accessible to K–12 educators and the students they serve. Through BRAINWAVE, she is developing a growing portfolio of professional development programs that bring educators together with UCLA neuroscientists through expert-led discussions, hands-on science and research experiences, and opportunities to translate current neuroscience into meaningful learning experiences for classrooms.</p><p>Her broader work is centered on building connections between scientists, educators, and communities and creating pathways for neuroscience knowledge to have a wider impact in education and society.</p>",
     photo: "https://bri.ucla.edu/wp-content/uploads/2024/08/Vidya_photo-scaled.jpg",
     initials: "VS", color: "#C8960E"
   },
@@ -4175,7 +4177,7 @@ function openTeamModal(idx) {
   document.getElementById('tm-role').textContent = m.role + (m.isOps ? ' · UCLA Brain Research Institute' : ' · UCLA BRAINWAVE');
   document.getElementById('tm-name').textContent = m.name;
   document.getElementById('tm-research').textContent = 'Research Focus: ' + m.research;
-  document.getElementById('tm-bio').textContent = m.bio;
+  document.getElementById('tm-bio').innerHTML = m.bio;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
