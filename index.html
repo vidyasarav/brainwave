@@ -1416,6 +1416,24 @@
   .lausd-badge-text strong { color: var(--text); font-weight: 600; display: block; }
   .lausd-badge-text span { color: var(--text-soft); font-size: 0.78rem; }
 
+  /* LAUSD prominent callout (programs section) */
+  .lausd-callout {
+    display: flex; align-items: flex-start; gap: 18px;
+    background: var(--amber-soft); border: 1px solid rgba(240,165,0,0.28);
+    border-radius: 12px; padding: 22px 26px; margin-top: 40px;
+  }
+  .lausd-callout-icon { flex-shrink: 0; margin-top: 1px; }
+  .lausd-callout-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #8a5c00; margin-bottom: 8px;
+  }
+  .lausd-callout-body {
+    font-size: 0.88rem; color: var(--text-soft); line-height: 1.72; margin-bottom: 8px;
+  }
+  .lausd-callout-tags {
+    font-size: 0.75rem; color: rgba(138,92,0,0.65); letter-spacing: 0.02em;
+  }
+
   /* ══════════════════════════════════════════════════════════════════════
      § TEACHER NETWORK
   ══════════════════════════════════════════════════════════════════════ */
@@ -2741,6 +2759,17 @@
         <p>Teachers design lesson plans to take back to their classrooms and continue their journey through webinars, peer collaboration, and ongoing engagement with UCLA researchers.</p>
       </div>
     </div>
+    <div class="lausd-callout reveal">
+      <svg class="lausd-callout-icon" width="26" height="26" viewBox="0 0 26 26" fill="none">
+        <circle cx="13" cy="13" r="12" stroke="#f0a500" stroke-width="1.5"/>
+        <path d="M8 13l3.5 3.5L18 9" stroke="#f0a500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <p class="lausd-callout-label">LAUSD-Approved Professional Development</p>
+        <p class="lausd-callout-body">BRAINWAVE offers neuroscience professional development approved through the Los Angeles Unified School District's Joint Salary Point Credit Committee (JSPCC). Eligible LAUSD teachers can earn salary point credit through approved BRAINWAVE workshops while learning directly from UCLA neuroscientists and educators.</p>
+        <p class="lausd-callout-tags">Professional development&nbsp;&bull;&nbsp;Salary point credit&nbsp;&bull;&nbsp;UCLA neuroscience</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2981,7 +3010,7 @@
         Neuroscience isn't just for researchers in labs. It belongs in every classroom, in every community.
       </blockquote>
       <div class="story-attribution"><strong>Dr. Vidya Saravanapandian</strong></div>
-      <div class="story-role">Founder and Director, BRAINWAVE<br>Sleep Scientist, UCLA Brain Research Institute</div>
+      <div class="story-role">Founder and Director, BRAINWAVE<br>Director, Neuroscience Community Engagement &amp; Public Education<br>UCLA Brain Research Institute</div>
       <p style="color:rgba(255,255,255,0.55);font-size:0.88rem;margin:16px 0 28px;line-height:1.7;">Born and raised in India, Vidya earned her PhD in Neuroscience from UCLA. Recognizing that early exposure to brain science was transforming her own sense of possibility, she founded BRAINWAVE in 2024 to ensure every K–12 teacher in Los Angeles had access to the same knowledge — regardless of their school's ZIP code.</p>
     </div>
   </div>
@@ -3223,7 +3252,7 @@
   <div class="container">
     <div class="team-header reveal">
       <h2>UCLA Scientists Who Teach</h2>
-      <p style="max-width:580px;margin-top:12px;">Our instructors are active postdoctoral researchers at UCLA — experts who bring their real lab discoveries into the classroom. This is what makes BRAINWAVE unique.</p>
+      <p style="max-width:580px;margin-top:12px;">BRAINWAVE brings together UCLA faculty, researchers, postdoctoral scholars, and educators who share their expertise with K–12 teachers and help translate current neuroscience into meaningful learning experiences.</p>
     </div>
     <div class="team-grid" id="team-grid">
       <!-- Populated by JS TEAM_DATA array -->
