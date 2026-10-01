@@ -920,20 +920,51 @@
   #support {
     background: var(--navy);
     border-top: 1px solid rgba(255,255,255,0.07);
-    padding: 52px 0;
+    padding: 72px 0;
   }
   .support-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 32px; flex-wrap: wrap;
+    display: flex; align-items: flex-start; flex-direction: column;
+    gap: 24px;
   }
+  .support-content { max-width: 720px; }
   .support-title {
     font-family: 'Playfair Display', serif;
-    font-size: 1.15rem; font-weight: 600; color: var(--white);
-    margin-bottom: 6px;
+    font-size: 1.25rem; font-weight: 600; color: var(--white);
+    margin-bottom: 12px;
     font-feature-settings: "liga" 0, "clig" 0, "calt" 0;
   }
+  .support-subheading { font-size: 1rem; color: rgba(255,255,255,0.72); line-height: 1.65; margin-bottom: 18px; font-style: italic; }
+  .support-body { font-size: 0.91rem; color: rgba(255,255,255,0.5); line-height: 1.82; margin-bottom: 18px; }
+  .support-closing { font-size: 0.91rem; color: rgba(255,255,255,0.65); line-height: 1.75; font-style: italic; border-left: 2px solid rgba(0,200,160,0.3); padding-left: 16px; }
   .support-sub { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
-  .support-btn { font-size: 0.84rem; white-space: nowrap; flex-shrink: 0; }
+  .support-btn { font-size: 0.84rem; white-space: nowrap; flex-shrink: 0; margin-top: 8px; }
+  /* Support interest form modal */
+  .sf-body { padding: 28px 32px 36px; }
+  .sf-intro { color: rgba(255,255,255,0.58); font-size: 0.9rem; line-height: 1.75; margin-bottom: 28px; }
+  .sf-field { margin-bottom: 20px; }
+  .sf-label { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.62); margin-bottom: 8px; }
+  .sf-label span { color: var(--teal); }
+  .sf-input, .sf-textarea {
+    width: 100%; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+    padding: 11px 14px; font-size: 0.9rem; color: var(--white);
+    font-family: 'Inter', sans-serif; outline: none;
+    transition: border-color 0.2s; box-sizing: border-box;
+  }
+  .sf-input::placeholder, .sf-textarea::placeholder { color: rgba(255,255,255,0.22); }
+  .sf-input:focus, .sf-textarea:focus { border-color: rgba(200,150,14,0.5); }
+  .sf-textarea { height: 96px; resize: vertical; }
+  .sf-options { display: flex; flex-direction: column; gap: 8px; }
+  .sf-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; transition: border-color 0.2s, background 0.2s; }
+  .sf-option:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+  .sf-option input[type="radio"] { accent-color: var(--teal); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+  .sf-option-label { font-size: 0.9rem; color: rgba(255,255,255,0.72); }
+  .sf-error-msg { font-size: 0.78rem; color: #e08080; margin-top: 6px; display: none; }
+  .sf-field.has-error .sf-error-msg { display: block; }
+  .sf-field.has-error .sf-input,
+  .sf-field.has-error .sf-textarea { border-color: rgba(200,80,80,0.45); }
+  .sf-field.has-error .sf-options { border-radius: 8px; outline: 1px solid rgba(200,80,80,0.35); outline-offset: 2px; }
+  .sf-submit { width: 100%; margin-top: 10px; }
 
   /* ══════════════════════════════════════════════════════════════════════
      § GALLERY LIGHTBOX NAV
@@ -2227,7 +2258,7 @@
         <a href="#story" class="btn btn-outline">Read Our Story</a>
         <a href="#programs-2026" class="btn btn-outline">2026–2027 Programs</a>
       </div>
-      <p class="hero-micro-impact">Reaching 182+ teachers across 60+ Los Angeles schools and counting.</p>
+      <p class="hero-micro-impact">Reaching 191+ teachers across 60+ Los Angeles schools and counting.</p>
       </div><!-- end hero-body -->
       </div><!-- end hero-content -->
       <div class="hero-image-col">
@@ -2380,7 +2411,7 @@
     <div class="stats-grid reveal reveal-delay-2">
       <div class="stat-cell">
         <div class="stat-number">
-          <span class="count-up" data-target="182">0</span><span class="stat-suffix">+</span>
+          <span class="count-up" data-target="191">0</span><span class="stat-suffix">+</span>
         </div>
         <div class="stat-label">Teachers<br>Engaged</div>
         <div class="stat-bar"><div class="stat-bar-fill" data-width="88"></div></div>
@@ -3011,7 +3042,7 @@
     <div class="reveal reveal-delay-1" style="margin-bottom:40px;">
       <div class="map-stats-bar">
         <div class="msb-cell">
-          <div class="msb-num">182+</div>
+          <div class="msb-num">191+</div>
           <div class="msb-label">Teachers Engaged</div>
         </div>
         <div class="msb-cell">
@@ -3553,14 +3584,70 @@
 <section id="support">
   <div class="container">
     <div class="support-inner">
-      <div>
+      <div class="support-content">
         <p class="support-title">Support BRAINWAVE</p>
-        <p class="support-sub">Help bring neuroscience education to classrooms that need it most.</p>
+        <p class="support-subheading">Help bring neuroscience beyond the laboratory and into classrooms and communities.</p>
+        <p class="support-body">BRAINWAVE connects K–12 educators with neuroscientists to make current brain science accessible, relevant, and useful for the students they serve. Your support helps us expand educator workshops, develop hands-on neuroscience experiences and classroom-ready resources that teachers can bring back to their schools, and extend programming on sleep, learning, brain development, mental health, neurodiversity, technology, and other timely topics to more educators and communities.</p>
+        <p class="support-closing">By supporting educators, BRAINWAVE can reach far beyond a single workshop—bringing neuroscience into classrooms and helping more young people understand their brains, their development, and themselves.</p>
       </div>
-      <a href="mailto:vidyas@ucla.edu" class="btn btn-outline support-btn">Support Our Work</a>
+      <button class="btn btn-outline support-btn" onclick="openSupportModal()">Support BRAINWAVE</button>
     </div>
   </div>
 </section>
+
+
+<!-- ══════════════════════════════════ § SUPPORT MODAL ══════════════════════════════════ -->
+<div id="support-modal" class="modal-overlay" onclick="closeSupportIfOutside(event)" role="dialog" aria-modal="true" aria-labelledby="sf-modal-title">
+  <div class="modal-box" style="width:min(560px,94vw);max-height:90vh;overflow-y:auto;">
+    <div class="modal-header">
+      <span class="modal-title">BRAINWAVE · Support Interest Form</span>
+      <button class="modal-close" onclick="closeSupportModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="sf-body">
+      <div id="sf-form-wrap">
+        <h2 id="sf-modal-title" style="font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--white);margin:0 0 14px;font-weight:600;">Interested in Supporting BRAINWAVE?</h2>
+        <p class="sf-intro">Thank you for your interest in supporting BRAINWAVE. Your partnership can help us expand neuroscience professional development for educators, develop hands-on learning experiences and classroom resources, and bring neuroscience education to more schools and communities.<br><br>Please share your information below, and our team will follow up with opportunities to support or partner with BRAINWAVE.</p>
+        <form id="support-form" novalidate>
+          <div class="sf-field" id="sf-field-name">
+            <label class="sf-label" for="sf-name">Name <span>*</span></label>
+            <input class="sf-input" type="text" id="sf-name" name="name" required autocomplete="name" placeholder="Your name">
+            <p class="sf-error-msg">Please enter your name.</p>
+          </div>
+          <div class="sf-field" id="sf-field-email">
+            <label class="sf-label" for="sf-email">Email <span>*</span></label>
+            <input class="sf-input" type="email" id="sf-email" name="email" required autocomplete="email" placeholder="you@example.com">
+            <p class="sf-error-msg">Please enter a valid email address.</p>
+          </div>
+          <div class="sf-field" id="sf-field-org">
+            <label class="sf-label" for="sf-org">Organization / Affiliation <span style="color:rgba(255,255,255,0.3);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem;">(Optional)</span></label>
+            <input class="sf-input" type="text" id="sf-org" name="organization" autocomplete="organization" placeholder="Organization or affiliation (optional)">
+          </div>
+          <div class="sf-field" id="sf-field-interest">
+            <label class="sf-label">How are you interested in supporting BRAINWAVE? <span>*</span></label>
+            <div class="sf-options" id="sf-options">
+              <label class="sf-option"><input type="radio" name="sf-interest" value="Financial support"><span class="sf-option-label">Financial support</span></label>
+              <label class="sf-option"><input type="radio" name="sf-interest" value="Sponsorship or partnership"><span class="sf-option-label">Sponsorship or partnership</span></label>
+              <label class="sf-option"><input type="radio" name="sf-interest" value="Resources or in-kind support"><span class="sf-option-label">Resources or in-kind support</span></label>
+              <label class="sf-option"><input type="radio" name="sf-interest" value="Other"><span class="sf-option-label">Other</span></label>
+            </div>
+            <p class="sf-error-msg">Please select an option.</p>
+          </div>
+          <div class="sf-field" id="sf-field-message">
+            <label class="sf-label" for="sf-message">Message <span style="color:rgba(255,255,255,0.3);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem;">(Optional)</span></label>
+            <textarea class="sf-textarea" id="sf-message" name="message" placeholder="Anything you'd like to share (optional)"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary sf-submit">Submit Interest</button>
+        </form>
+      </div>
+      <!-- Shown when no submission endpoint is configured -->
+      <div id="sf-unconfigured" style="display:none;text-align:center;padding:40px 0;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.5" style="margin-bottom:16px;opacity:0.8;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <p style="color:var(--white);font-size:1rem;font-weight:600;margin-bottom:10px;">Form not yet connected</p>
+        <p style="color:rgba(255,255,255,0.52);font-size:0.88rem;line-height:1.75;max-width:360px;margin:0 auto;">This form is ready but hasn't been connected to a submission service. To enable submissions, configure a form endpoint and re-deploy. See setup instructions in CLAUDE.md.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════ § FOOTER ══════════════════════════════════ -->
@@ -4195,6 +4282,49 @@ function toggleMenu(btn) {
     }
   });
 }
+
+/* ── Support interest form modal ── */
+function openSupportModal() {
+  document.getElementById('support-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSupportModal() {
+  document.getElementById('support-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeSupportIfOutside(e) {
+  if (e.target === document.getElementById('support-modal')) closeSupportModal();
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('support-form');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var valid = true;
+    var nameField = document.getElementById('sf-field-name');
+    var name = document.getElementById('sf-name').value.trim();
+    if (!name) { nameField.classList.add('has-error'); valid = false; } else { nameField.classList.remove('has-error'); }
+    var emailField = document.getElementById('sf-field-email');
+    var email = document.getElementById('sf-email').value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailField.classList.add('has-error'); valid = false; } else { emailField.classList.remove('has-error'); }
+    var interestField = document.getElementById('sf-field-interest');
+    var interest = document.querySelector('input[name="sf-interest"]:checked');
+    if (!interest) { interestField.classList.add('has-error'); valid = false; } else { interestField.classList.remove('has-error'); }
+    if (!valid) return;
+    document.getElementById('sf-form-wrap').style.display = 'none';
+    document.getElementById('sf-unconfigured').style.display = 'block';
+  });
+  ['sf-name', 'sf-email'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', function() {
+      document.getElementById('sf-field-' + id.slice(3)).classList.remove('has-error');
+    });
+  });
+  document.querySelectorAll('input[name="sf-interest"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      document.getElementById('sf-field-interest').classList.remove('has-error');
+    });
+  });
+});
 </script>
 
 </body>
