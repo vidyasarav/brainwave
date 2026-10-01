@@ -923,10 +923,10 @@
     padding: 72px 0;
   }
   .support-inner {
-    display: flex; align-items: flex-start; flex-direction: column;
-    gap: 24px;
+    display: flex; align-items: center; flex-direction: row;
+    gap: 56px;
   }
-  .support-content { max-width: 720px; }
+  .support-content { flex: 1; min-width: 0; }
   .support-title {
     font-family: 'Playfair Display', serif;
     font-size: 1.25rem; font-weight: 600; color: var(--white);
@@ -936,8 +936,29 @@
   .support-subheading { font-size: 1rem; color: rgba(255,255,255,0.72); line-height: 1.65; margin-bottom: 18px; font-style: italic; }
   .support-body { font-size: 0.91rem; color: rgba(255,255,255,0.5); line-height: 1.82; margin-bottom: 18px; }
   .support-closing { font-size: 0.91rem; color: rgba(255,255,255,0.65); line-height: 1.75; font-style: italic; border-left: 2px solid rgba(0,200,160,0.3); padding-left: 16px; }
-  .support-sub { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
-  .support-btn { font-size: 0.84rem; white-space: nowrap; flex-shrink: 0; margin-top: 8px; }
+  .support-cta-col {
+    flex-shrink: 0; width: 220px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 14px;
+  }
+  .support-cta-label {
+    font-size: 0.82rem; color: rgba(255,255,255,0.48);
+    line-height: 1.55; letter-spacing: 0.01em;
+  }
+  .support-cta-btn {
+    background: var(--amber); color: var(--navy);
+    font-size: 0.95rem; font-weight: 700; padding: 14px 26px;
+    border: none; white-space: nowrap;
+  }
+  .support-cta-btn:hover {
+    background: #E0A820;
+    box-shadow: 0 0 28px rgba(240,165,0,0.35);
+    transform: translateY(-1px);
+  }
+  @media (max-width: 768px) {
+    .support-inner { flex-direction: column; align-items: flex-start; gap: 28px; }
+    .support-cta-col { width: 100%; align-items: flex-start; text-align: left; }
+  }
   /* Support interest form modal */
   .sf-body { padding: 28px 32px 36px; }
   .sf-intro { color: rgba(255,255,255,0.58); font-size: 0.9rem; line-height: 1.75; margin-bottom: 28px; }
@@ -3590,7 +3611,10 @@
         <p class="support-body">BRAINWAVE connects K–12 educators with neuroscientists to make current brain science accessible, relevant, and useful for the students they serve. Your support helps us expand educator workshops, develop hands-on neuroscience experiences and classroom-ready resources that teachers can bring back to their schools, and extend programming on sleep, learning, brain development, mental health, neurodiversity, technology, and other timely topics to more educators and communities.</p>
         <p class="support-closing">By supporting educators, BRAINWAVE can reach far beyond a single workshop—bringing neuroscience into classrooms and helping more young people understand their brains, their development, and themselves.</p>
       </div>
-      <button class="btn btn-outline support-btn" onclick="openSupportModal()">Support BRAINWAVE</button>
+      <div class="support-cta-col">
+        <p class="support-cta-label">Interested in supporting our work?</p>
+        <button class="btn support-cta-btn" onclick="openSupportModal()">Support BRAINWAVE →</button>
+      </div>
     </div>
   </div>
 </section>
