@@ -1034,22 +1034,38 @@
     margin-bottom: 24px;
     max-width: 220px;
   }
+  .footer-social-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+  }
   .footer-social {
     display: flex; gap: 12px;
   }
   .social-btn {
-    width: 36px; height: 36px;
+    width: 38px; height: 38px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.14);
     display: flex; align-items: center; justify-content: center;
     transition: border-color var(--transition), background var(--transition);
-    color: rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.55);
   }
   .social-btn:hover {
     border-color: rgba(200,150,14,0.4);
     background: var(--teal-glow);
     color: var(--teal);
   }
+  .nav-ig-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .nav-ig-link:hover { border-color: rgba(255,255,255,0.4); transform: scale(1.08); }
+  .nav-ig-link:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
   .footer-col h4 {
     font-family: 'Inter', sans-serif;
     font-size: 0.8rem; font-weight: 600;
@@ -2243,6 +2259,19 @@
         async src="//gc.zgo.at/count.js"></script>
 <body>
 
+<!-- Hidden SVG gradient defs — referenced by Instagram icons throughout the page -->
+<svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <radialGradient id="ig-grad" cx="30%" cy="107%" r="150%">
+      <stop offset="0%"   stop-color="#fdf497"/>
+      <stop offset="10%"  stop-color="#fdf497"/>
+      <stop offset="50%"  stop-color="#fd5949"/>
+      <stop offset="68%"  stop-color="#d6249f"/>
+      <stop offset="100%" stop-color="#285aeb"/>
+    </radialGradient>
+  </defs>
+</svg>
+
 <!-- ══════════════════════════════════ § NAV ══════════════════════════════════ -->
 <nav id="nav">
   <span class="section-label">§ NAV</span>
@@ -2259,6 +2288,14 @@
 
   <div class="nav-right">
     <span class="nav-ucl">UCLA</span>
+    <a href="https://www.instagram.com/brainwave.educationprogram/" target="_blank" rel="noopener noreferrer" class="nav-ig-link" aria-label="Follow BRAINWAVE on Instagram (opens in new tab)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
+        <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
+        <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.6" fill="none"/>
+        <circle cx="17.3" cy="6.7" r="1.1" fill="white"/>
+      </svg>
+    </a>
     <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary nav-cta">Register for a Workshop</a>
   </div>
   <button class="nav-burger" aria-label="Menu" onclick="toggleMenu(this)">
@@ -3706,12 +3743,18 @@
         <a href="#" class="nav-logo" aria-label="BRAINWAVE">BRAINWAVE</a>
         <p class="footer-tagline">Advancing brain science in the classroom. Empowering educators and communities to transform how we understand the brain.</p>
         <p style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;color:rgba(255,255,255,0.2);text-transform:uppercase;margin-top:10px;">Est. 2024 · Los Angeles, CA</p>
+        <p class="footer-social-label">Follow BRAINWAVE</p>
         <div class="footer-social">
           <a href="https://twitter.com/UCLA_BRI" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter / X">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
-          <a href="https://www.instagram.com/brainwave.educationprogram/" target="_blank" rel="noopener" class="social-btn" aria-label="Follow BRAINWAVE on Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <a href="https://www.instagram.com/brainwave.educationprogram/" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Follow BRAINWAVE on Instagram (opens in new tab)" style="border-color:rgba(253,82,73,0.25);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
+              <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
+              <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.6" fill="none"/>
+              <circle cx="17.3" cy="6.7" r="1.1" fill="white"/>
+            </svg>
           </a>
           <a href="https://www.facebook.com/Brain.Research.Institute.UCLA" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
