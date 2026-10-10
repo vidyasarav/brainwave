@@ -100,6 +100,14 @@
     box-shadow: 0 0 28px rgba(200,150,14,0.45);
     transform: translateY(-1px);
   }
+  .btn-amber {
+    background: var(--amber); color: var(--navy); font-weight: 700;
+  }
+  .btn-amber:hover {
+    background: #e09800;
+    box-shadow: 0 0 28px rgba(240,165,0,0.5);
+    transform: translateY(-1px);
+  }
   .btn-ghost {
     background: transparent; color: var(--white);
     border: 1.5px solid rgba(255,255,255,0.5);
@@ -171,6 +179,7 @@
     color: rgba(255,255,255,0.78);
     font-size: 0.88rem; font-weight: 500;
     letter-spacing: 0.01em;
+    white-space: nowrap;
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--white); }
@@ -1045,13 +1054,14 @@
     display: flex; gap: 12px;
   }
   .social-btn {
-    width: 38px; height: 38px;
-    border-radius: 8px;
+    width: 44px; height: 44px;
+    border-radius: 11px;
     border: 1px solid rgba(255,255,255,0.14);
     display: flex; align-items: center; justify-content: center;
-    transition: border-color var(--transition), background var(--transition);
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
     color: rgba(255,255,255,0.55);
   }
+  .social-btn:hover { transform: scale(1.08); }
   .social-btn:hover {
     border-color: rgba(200,150,14,0.4);
     background: var(--teal-glow);
@@ -1059,8 +1069,8 @@
   }
   .nav-ig-link {
     display: flex; align-items: center; justify-content: center;
-    width: 30px; height: 30px;
-    border-radius: 7px;
+    width: 40px; height: 40px;
+    border-radius: 10px;
     border: 1px solid rgba(255,255,255,0.15);
     transition: border-color 0.2s, transform 0.2s;
   }
@@ -1152,6 +1162,12 @@
   ══════════════════════════════════════════════════════════════════════ */
   @media (max-width: 1280px) {
     .stats-grid { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 1180px) {
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 0.83rem; }
+    .nav-cta { padding: 9px 15px; font-size: 0.79rem; }
+    .nav-ucl { display: none; }
   }
   @media (max-width: 1024px) {
     .footer-top { grid-template-columns: 1fr 1fr 1fr; }
@@ -2284,19 +2300,20 @@
     <li><a href="#team">Team</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#cta">Get Involved</a></li>
+    <li><a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener">Join the Teacher Community</a></li>
   </ul>
 
   <div class="nav-right">
     <span class="nav-ucl">UCLA</span>
     <a href="https://www.instagram.com/brainwave.educationprogram/" target="_blank" rel="noopener noreferrer" class="nav-ig-link" aria-label="Follow BRAINWAVE on Instagram (opens in new tab)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
         <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
         <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.6" fill="none"/>
         <circle cx="17.3" cy="6.7" r="1.1" fill="white"/>
       </svg>
     </a>
-    <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary nav-cta">Register for a Workshop</a>
+    <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" class="btn btn-amber nav-cta" aria-label="Register for the October 17 BRAINWAVE Workshop (opens in new tab)">Register: Oct 17 →</a>
   </div>
   <button class="nav-burger" aria-label="Menu" onclick="toggleMenu(this)">
     <span></span><span></span><span></span>
@@ -2326,8 +2343,8 @@
         BRAINWAVE empowers K–12 teachers with cutting-edge neuroscience, classroom-ready tools, and the inspiration to transform how their students understand their brains, their learning, and their mental health — prioritizing the communities where this knowledge is needed most.
       </p>
       <div class="hero-btns">
-        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" aria-label="Get Involved with BRAINWAVE (opens in new tab)">
-          Get Involved
+        <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" aria-label="Join the BRAINWAVE Teacher Community (opens in new tab)">
+          Join the BRAINWAVE Teacher Community
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 8h10M9 4l4 4-4 4"/>
           </svg>
@@ -2964,22 +2981,17 @@
       <h3 style="font-size:1.6rem; margin:0 0 8px; color:#fff;">Brains in Rest</h3>
       <p style="color:rgba(255,255,255,0.45); font-size:0.9rem; margin:0 0 20px; font-style:italic; line-height:1.5;">The Neuroscience of Sleep and Its Role in Learning, Behavior, and Development</p>
       <p style="color:rgba(255,255,255,0.62); font-size:0.93rem; line-height:1.75; margin:0 0 28px;">Explore how sleep and circadian rhythms shape learning, memory, behavior, and brain development — and experience some of the ways scientists study sleep and the sleeping brain.</p>
-      <!-- Hidden detail rows — uncomment and fill when confirmed:
-      <div class="p26-detail" style="display:none; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:8px;">
-        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Date</strong><span data-field="date"></span>
+      <div class="p26-detail" style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:8px;">
+        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Date</strong><span>Saturday, October 17, 2026</span>
       </div>
-      <div class="p26-detail" style="display:none; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:8px;">
-        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Time</strong><span data-field="time"></span>
+      <div class="p26-detail" style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:8px;">
+        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Time</strong><span>9:00 AM–3:00 PM</span>
       </div>
-      <div class="p26-detail" style="display:none; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:8px;">
-        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Location</strong><span data-field="location"></span>
+      <div class="p26-detail" style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:20px;">
+        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Location</strong><span>UCLA</span>
       </div>
-      <div class="p26-detail" style="display:none; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:20px;">
-        <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Speakers</strong><span data-field="speakers"></span>
-      </div>
-      <a href="#" class="btn btn-primary p26-register" style="display:none;" data-field="registration-link">Register</a>
-      -->
-      <p style="color:rgba(255,255,255,0.35); font-size:0.85rem; font-style:italic; margin:0;">Registration information coming soon.</p>
+      <p style="color:rgba(255,255,255,0.45); font-size:0.83rem; margin:0 0 20px; line-height:1.6;">Free professional development workshop for K–12 teachers · LAUSD salary point credit available for eligible participants upon completion</p>
+      <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" class="btn btn-amber" aria-label="Register for the October 17 BRAINWAVE Workshop (opens in new tab)">Register for the October 17 Workshop →</a>
     </div>
 
     <!-- Upcoming program 2: Winter 2027 -->
@@ -3017,7 +3029,7 @@
     <div class="upcoming-strip reveal" style="text-align:center; padding:40px 32px;">
       <h3 style="font-size:1.35rem; margin:0 0 14px; color:#fff;">Stay Connected</h3>
       <p style="color:rgba(255,255,255,0.55); max-width:540px; margin:0 auto 28px; font-size:0.92rem; line-height:1.75;">New BRAINWAVE workshops will be announced throughout the academic year. Join our educator network to receive upcoming workshop dates, registration announcements, and new neuroscience education opportunities.</p>
-      <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary">Join the Educator Network</a>
+      <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary">Join the BRAINWAVE Teacher Community</a>
     </div>
 
   </div>
@@ -3237,7 +3249,7 @@
       <div class="upcoming-label" style="margin-bottom:12px;">Next Workshop</div>
       <h3 style="font-size:1.5rem; margin:0 0 12px; color:#fff;">Stay Tuned — More Coming Soon</h3>
       <p style="color:rgba(255,255,255,0.55); max-width:520px; margin:0 auto 24px;">Our next workshop date and topic will be announced here. Join the waitlist to be the first to know and secure your spot.</p>
-      <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary">Join the Waitlist</a>
+      <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary">Join the BRAINWAVE Teacher Community</a>
     </div>
   </div>
 </section>
@@ -3504,7 +3516,7 @@
           How do I register, and when is the next workshop?
         </div>
         <p class="faq-a">
-          Submit your interest through our <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" style="color:var(--teal-dim);font-weight:600;">Teacher Interest Form</a> — it takes less than 5 minutes. We'll notify you when the next workshop date is confirmed. Spots fill quickly, so joining the waitlist early is the best way to secure your place. Questions? Email <a href="mailto:vidyas@ucla.edu" style="color:var(--teal-dim);font-weight:600;">vidyas@ucla.edu</a>.
+          The next BRAINWAVE workshop is scheduled for <strong style="color:rgba(255,255,255,0.85);">Saturday, October 17, 2026</strong> — register directly at <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" style="color:var(--amber);font-weight:600;">the October 17 registration form</a>. To stay connected and receive announcements for future workshops, join the <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" style="color:var(--teal-dim);font-weight:600;">BRAINWAVE Teacher Community</a> — it takes less than 5 minutes. Questions? Email <a href="mailto:vidyas@ucla.edu" style="color:var(--teal-dim);font-weight:600;">vidyas@ucla.edu</a>.
         </p>
       </div>
 
@@ -3646,7 +3658,7 @@
       </p>
       <div class="cta-buttons">
         <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-white">
-          Teacher Interest Form
+          Join the BRAINWAVE Teacher Community
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 8h10M9 4l4 4-4 4"/>
           </svg>
@@ -3745,23 +3757,44 @@
         <p style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;color:rgba(255,255,255,0.2);text-transform:uppercase;margin-top:10px;">Est. 2024 · Los Angeles, CA</p>
         <p class="footer-social-label">Follow BRAINWAVE</p>
         <div class="footer-social">
-          <a href="https://twitter.com/UCLA_BRI" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter / X">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
+
+          <!-- INSTAGRAM — active BRAINWAVE account -->
           <a href="https://www.instagram.com/brainwave.educationprogram/" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Follow BRAINWAVE on Instagram (opens in new tab)" style="border-color:rgba(253,82,73,0.25);">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
               <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
               <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="1.6" fill="none"/>
               <circle cx="17.3" cy="6.7" r="1.1" fill="white"/>
             </svg>
           </a>
-          <a href="https://www.facebook.com/Brain.Research.Institute.UCLA" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+
+          <!-- LINKEDIN — uncomment and add URL when BRAINWAVE LinkedIn account is created
+          <a href="https://www.linkedin.com/company/REPLACE-WITH-BRAINWAVE-HANDLE" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Follow BRAINWAVE on LinkedIn (opens in new tab)" style="border-color:rgba(10,102,194,0.3);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/>
+              <path d="M7.5 10h-2v7h2v-7zm-1-3a1.25 1.25 0 1 0 0 2.5A1.25 1.25 0 0 0 6.5 7zm4.5 3h-1.9v7H11v-3.5c0-1.5.6-2.1 1.6-2.1.9 0 1.4.5 1.4 2.1V17H16v-3.9c0-2.4-1.2-3.3-2.8-3.3-1.2 0-1.9.6-2.2 1V10z" fill="white"/>
+            </svg>
           </a>
-          <a href="https://www.youtube.com/channel/UC9mWmo5Kj0S0DErM17BXUoQ" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.5C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#050a1f"/></svg>
+          -->
+
+          <!-- YOUTUBE — uncomment and replace URL with BRAINWAVE channel when created
+          <a href="https://www.youtube.com/@REPLACE-WITH-BRAINWAVE-CHANNEL" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="BRAINWAVE on YouTube (opens in new tab)" style="border-color:rgba(255,0,0,0.3);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="4" fill="#FF0000"/>
+              <polygon points="10,8.5 10,15.5 16,12" fill="white"/>
+            </svg>
           </a>
+          -->
+
+          <!-- X — uncomment and replace URL with BRAINWAVE X/Twitter account when created
+          <a href="https://x.com/REPLACE-WITH-BRAINWAVE-HANDLE" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Follow BRAINWAVE on X (opens in new tab)" style="border-color:rgba(255,255,255,0.15);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="4" fill="#000000"/>
+              <path d="M17.75 4.5h2.5l-5.47 6.25L21 19.5h-5.04l-3.52-4.6-4.03 4.6H5.92l5.85-6.68L3.5 4.5h5.17l3.18 4.2 3.9-4.2zm-.88 13.5h1.38L7.23 5.9H5.74L16.87 18z" fill="white"/>
+            </svg>
+          </a>
+          -->
+
         </div>
       </div>
       <div class="footer-col">
@@ -3779,7 +3812,7 @@
           <li><a href="#programs">Summer Workshop</a></li>
           <li><a href="#programs">Activity Library</a></li>
           <li><a href="#programs">Educator Network</a></li>
-          <li><a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener">Register for a Workshop</a></li>
+          <li><a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener">Join the Teacher Community</a></li>
           <li><a href="#network">School Map</a></li>
         </ul>
       </div>
@@ -3797,7 +3830,7 @@
         <h4>Stay Connected</h4>
         <p>Get neuroscience education updates, new resources, and workshop announcements.</p>
         <a href="https://forms.gle/YRxeEUySRqwBHTsy5" target="_blank" rel="noopener" class="btn btn-primary" style="width:fit-content;font-size:0.84rem;padding:11px 22px;margin-top:4px;">
-          Join Our Interest List
+          Join the BRAINWAVE Teacher Community
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
       </div>
