@@ -1163,6 +1163,11 @@
   @media (max-width: 1280px) {
     .stats-grid { grid-template-columns: repeat(3,1fr); }
   }
+  .nav-cta-short { display: none; }
+  @media (max-width: 1300px) {
+    .nav-cta-long { display: none; }
+    .nav-cta-short { display: inline; }
+  }
   @media (max-width: 1180px) {
     .nav-links { gap: 18px; }
     .nav-links a { font-size: 0.83rem; }
@@ -2313,7 +2318,10 @@
         <circle cx="17.3" cy="6.7" r="1.1" fill="white"/>
       </svg>
     </a>
-    <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" class="btn btn-amber nav-cta" aria-label="Register for the October 17 BRAINWAVE Workshop (opens in new tab)">Register: Oct 17 →</a>
+    <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" class="btn btn-amber nav-cta" aria-label="Register for the October 2026 BRAINWAVE Workshop (opens in new tab)">
+      <span class="nav-cta-long">Register for October 2026 Workshop →</span>
+      <span class="nav-cta-short">Oct 17 Workshop →</span>
+    </a>
   </div>
   <button class="nav-burger" aria-label="Menu" onclick="toggleMenu(this)">
     <span></span><span></span><span></span>
@@ -2990,8 +2998,9 @@
       <div class="p26-detail" style="display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:20px;">
         <strong style="color:rgba(255,255,255,0.75); min-width:90px;">Location</strong><span>UCLA</span>
       </div>
-      <p style="color:rgba(255,255,255,0.45); font-size:0.83rem; margin:0 0 20px; line-height:1.6;">Free professional development workshop for K–12 teachers · LAUSD salary point credit available for eligible participants upon completion</p>
-      <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" class="btn btn-amber" aria-label="Register for the October 17 BRAINWAVE Workshop (opens in new tab)">Register for the October 17 Workshop →</a>
+      <p style="color:rgba(255,255,255,0.45); font-size:0.83rem; margin:0 0 12px; line-height:1.6;">Free professional development workshop for K–12 teachers · LAUSD salary point credit available for eligible participants upon completion</p>
+      <p style="color:var(--amber); font-size:0.85rem; font-weight:600; letter-spacing:0.03em; margin:0 0 20px;">Registration is now open!</p>
+      <a href="https://forms.gle/NSeXr4hAwXkEj3Nv7" target="_blank" rel="noopener" class="btn btn-amber" aria-label="Register for Brains in Rest — October 17 BRAINWAVE Workshop (opens in new tab)">Register for Brains in Rest →</a>
     </div>
 
     <!-- Upcoming program 2: Winter 2027 -->
@@ -3524,7 +3533,7 @@
 
     <div class="faq-cta reveal">
       <p>Still have questions? We'd love to hear from you.</p>
-      <a href="mailto:vidyas@ucla.edu" class="btn btn-outline">
+      <a href="mailto:brainwave.neuroscienceeducation@gmail.com" class="btn btn-outline">
         Contact Us
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 8h10M9 4l4 4-4 4"/>
